@@ -1,0 +1,24 @@
+{% from 'macros/formInputs.twig' import textInput %}
+<div class="card bg-success-subtle border-success">
+	<form class="card-body form" method="post" action="{{url_for('user.login')}}">
+		<h3>Log In To Your
+			{{app.name}}
+			Account</h3>
+		<hr>
+		<div class="row mb-3">
+			<div class="col">
+				{{textInput('email','email',"Email Address")}}
+			</div>
+		</div>
+		<div class="row mb-3">
+			<div class="col">
+				{{textInput('password','password',"Password")}}
+			</div>
+		</div>
+		<div class="row">
+			<div class="col d-flex justify-content-end gap-3">
+				<button type="submit" class="btn btn-success btn-lg">Login</button>
+			</div>
+		</div>
+	</form>
+</div>

@@ -1,0 +1,34 @@
+{% from 'macros.html.twig' import agencyBadge %}
+<div class="dropdown agencyChooser">
+	<span class="dropdown-toggle border border-subtle bg-white d-flex rounded-2 d-flex align-items-center py-1 px-2 gap-2" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+		<div class="agencyTarget pe-none">
+			{% if app.user.getActiveAgency %}
+				{{agencyBadge(app.user.getActiveAgency)}}
+			{% else %}
+				<div class="agency-badge d-flex align-items-center gap-1 lh-1" style="font-size: .9rem; height: 32px">
+					<div class="pe-none">
+						<strong>No Agency</strong><br>
+					</div>
+				</div>
+			{% endif %}
+		</div>
+	</span>
+	<ul class="dropdown-menu">
+		<li>
+			<span class="dropdown-item">
+				<div class="agency-badge d-flex align-items-center gap-1 lh-1" style="font-size: .9rem; height: 32px">
+					<div class="pe-none">
+						<strong>No Agency</strong><br>
+					</div>
+				</div>
+			</span>
+		</li>
+		{% for a in app.user.getAgencies %}
+			<li>
+				<span class="dropdown-item">
+					{{agencyBadge(a)}}
+				</span>
+			</li>
+		{% endfor %}
+	</ul>
+</div>

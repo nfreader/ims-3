@@ -1,0 +1,38 @@
+{% from 'macros/formInputs.twig' import textInput, markdownEditor %}
+
+<div class="card">
+	<form class="card-body form" action="{{url_for('event.new',{'incident':incident})}}" method="post">
+		<h3>Add a New Event</h3>
+		<hr>
+		<div class="row mb-3">
+			<div class="col">
+				{{textInput('text','title',"Event Title")}}
+			</div>
+			<div class="col">
+				<label for="new_event_form_severity" class="form-label required fw-bold">Severity
+					<i class="fa-solid fa-asterisk text-danger" data-bs-toggle="tooltip" data-bs-title="Required Field"></i>
+				</label>
+				<div class="btn-group" role="group" aria-label="Basic radio toggle button group" style="width: 100%;">
+					{% set enum = enum('\\App\\Domain\\Event\\Data\\Severity') %}
+					{% for label, case in enum.cases %}
+						<input type="radio" class="btn-check" name="severity" id="severity_{{case.value}}" value="{{case.value}}">
+						<label class="btn btn-outline-{{case.getClass}}" for="severity_{{case.value}}">{{case.value|title}}</label>
+					{% endfor %}
+				</div>
+			</div>
+		</div>
+		<div class="row mb-3">
+			<div class="col">
+				<div class="mb-3">
+					{{markdownEditor('desc','Event Description')}}
+				</div>
+			</div>
+		</div>
+		<div class="row">
+			<div class="col d-flex justify-content-end gap-3">
+				<button type="reset" class="btn btn-secondary btn-lg">Cancel</button>
+				<button type="submit" class="btn btn-primary btn-lg">Add Event</button>
+			</div>
+		</div>
+	</form>
+</div>

@@ -1,0 +1,58 @@
+{% from 'macros.html.twig' import empty, tag %}
+{% from 'macros/formInputs.twig' import markdownEditor %}
+{% for c in comments %}
+	<div class="card">
+		<div class="card-header d-flex justify-content-between align-items-center">
+			<div>
+				<i class="fa-solid fa-comment"></i>
+				{{loop.index}}
+				by
+				{{c.getCreatorName}}
+				-
+				{{c.getCreated|date}}
+				{% if c.getUpdated %}
+					{{tag('edited','This comment has been edited')}}
+				{% endif %}
+				{% if c.getAction.showTag %}
+					{{tag(c.getAction.getPastTense,c.getAction.getTitle)}}
+				{% endif %}
+			</div>
+			<div class="dropdown">
+				<a href="#" class="dropdown-toggle no-caret text-dark fs-5" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+					<i class="fa-solid fa-ellipsis"></i>
+				</a>
+				<ul class="dropdown-menu">
+					<li>
+						<a class="dropdown-item toggleCommentEditor" href="#" data-comment-target="{{c.getId}}">
+							<i class="fa-solid fa-pen"></i>
+							Edit Comment</a>
+					</li>
+				</ul>
+			</div>
+		</div>
+		<div class="card-body" id="comment-{{c.getId}}">
+			<div id="comment-{{c.getId}}-content">{{c.getText|markdown_to_html}}</div>
+			<form class="form visually-hidden commentEditor" action="{{url_for('comment.edit',{'comment':c.getId})}}" method="post" autocomplete="off" id="comment-{{c.getId}}-editor" data-comment-id="{{c.getId}}" data-upload-url="{{url_for('event.attachment.new',{'incident':c.getIncident, 'event':c.getEvent})}}">
+				<div class="row mb-3">
+					<div class="col">
+						{{markdownEditor('text','Edit Comment', c.getText)}}
+					</div>
+				</div>
+				<div class="row">
+					{% if c.getAction.showTag %}
+						<div class="col">
+							<p class="mb-0">
+								<i class="fa-solid fa-triangle-exclamation"></i>
+								Editing this comment won't edit it in the event</p>
+						</div>
+					{% endif %}
+					<div class="col d-flex justify-content-end gap-3">
+						<button type="reset" class="btn btn-secondary btn-sm">Cancel</button>
+						<button type="submit" class="btn btn-primary btn-sm">Save Changes</button>
+					</div>
+				</div>
+			</form>
+		</div>
+	</div>
+	<div class="border-start py-3 ms-4 border-5 border-secondary"></div>
+{% endfor %}

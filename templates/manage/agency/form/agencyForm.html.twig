@@ -1,0 +1,30 @@
+{% from 'macros/formInputs.twig' import textInput %}
+<div class="card bg-body-tertiary border-secondary">
+	<form class="card-body form" method="post" action="{{url_for('agency.new')}}" enctype="multipart/form-data">
+		<h3>New Agency</h3>
+		<hr>
+		<div class="row mb-3">
+			<div class="col">
+				{{textInput('text','name',"Agency Name")}}
+			</div>
+            <div class="col">
+				{{textInput('file','logo',"Agency Logo", false, {'accept': 'image/png'})}}
+                <div class="form-text">The logo file must be a square PNG between 512px and 256px wide</div>
+			</div>
+		</div>
+        <div class="row mb-3">
+            <div class="col">
+                {{textInput('text','fullname',"Full Agency Name", false)}}
+            </div>
+            <div class="col">
+                {{textInput('text','location',"Location", false)}}
+            </div>
+        </div>
+		<div class="row">
+			<div class="col d-flex justify-content-end gap-3">
+				<button type="reset" class="btn btn-secondary btn-lg">Cancel</button>
+				<button type="submit" class="btn btn-primary btn-lg">Create New Agency</button>
+			</div>
+		</div>
+	</form>
+</div>

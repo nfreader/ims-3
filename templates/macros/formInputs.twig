@@ -1,0 +1,41 @@
+{% macro textInput(type = 'text', name, label, required = true, attributes = {}) %}
+	{% if label %}
+	<label for="{{name}}" class="form-label fw-bold">{{label}}
+		{% if required %}
+			<i class="fa-solid fa-asterisk text-danger" data-bs-toggle="tooltip" data-bs-title="Required Field"></i>
+		{% endif %}
+	</label>
+	{% endif %}
+	<input type="{{type}}" id="{{name}}" name="{{name}}" class="form-control" placeholder="{{label}}" aria-label="{{label}}" {{required ? 'required' : ''}} {% for key, value in attributes %} {{key}}="{{value}}" {% endfor %}>
+{% endmacro %}
+
+{% macro markdownEditor(name, label, value = null) %}
+	<label for="{{name}}" class="form-label fw-bold">{{label}}
+		<i class="fa-solid fa-asterisk text-danger" data-bs-toggle="tooltip" data-bs-title="Required Field"></i>
+	</label>
+	<div class="card">
+		<div class="card-header p-0 border-bottom-0">
+			<ul class="nav nav-tabs" id="mdEditorTabs" role="tablist" style="margin-top: -1px; margin-left: -1px;">
+				<li class="nav-item" role="presentation">
+					<button class="nav-link active" id="write-tab" data-bs-toggle="tab" data-bs-target="#write-tab-pane" type="button" role="tab" aria-controls="write-tab-pane" aria-selected="true">Write</button>
+				</li>
+				<li class="nav-item" role="presentation">
+					<button class="nav-link" id="preview-tab" data-bs-toggle="tab" data-bs-target="#preview-tab-pane" type="button" role="tab" aria-controls="preview-tab-pane" aria-selected="true">Preview</button>
+				</li>
+			</ul>
+		</div>
+		<div class="card-body">
+			<div class="tab-content" id="mdEditorContent">
+				<div class="tab-pane fade show active" id="write-tab-pane" role="tabpanel" aria-labelledby="write-tab" tabindex="0">
+					<textarea class="form-control" name="{{name}}" id="mdeditor" rows="5" required>{{value}}</textarea>
+					<div class="form-text mt-2">
+						<i class="fa-brands fa-markdown"></i>
+						Markdown is supported!</div>
+				</div>
+				<div class="tab-pane fade" id="preview-tab-pane" role="tabpanel" aria-labelledby="preview-tab" tabindex="0">
+					Nothing to preview
+				</div>
+			</div>
+		</div>
+	</div>
+{% endmacro %}

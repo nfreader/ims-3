@@ -1,0 +1,14 @@
+{% from 'macros.html.twig' import empty %}
+
+<div class="list-group mb-3">
+    {% for i in incidents %}
+    <li class="list-group-item">
+        <h4><a href="{{url_for('incident.view',{'incident': i.getId})}}">{{i.name}}</a></h4>
+        <small class="text-muted">#{{i.getId}} created {{i.created|date}} by {{i.getCreatorName}}</small>
+    </li>
+    {% else %}
+    <li class="list-group-item">
+    {{empty('No Active Incidents')}}
+    </li>
+    {% endfor %}
+</div>

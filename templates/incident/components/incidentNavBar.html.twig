@@ -1,0 +1,17 @@
+<ul class="nav nav-tabs my-3">
+	<li class="nav-item">
+		<a class="nav-link" href="{{url_for('incident.view',{'incident': incident.getId})}}">
+			<i class="fa-solid fa-shield"></i>
+			Incident</a>
+	</li>
+	<li class="nav-item">
+		<a class="nav-link" href="#">
+			<i class="fa-solid fa-chart-line"></i>
+			Activity Log</a>
+	</li>
+	<li class="nav-item">
+		<a class="nav-link" href="{{url_for('incident.settings',{'incident':incident.getId})}}">
+			<i class="fa-solid fa-screwdriver-wrench"></i>
+			Settings</a>
+	</li>
+</ul>

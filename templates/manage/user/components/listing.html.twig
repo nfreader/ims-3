@@ -1,0 +1,26 @@
+{% from 'macros.html.twig' import empty %}
+
+<div class="list-group mb-3">
+	{% for u in users %}
+		<div class="list-group-item">
+			<div class="d-flex w-100">
+                {% if u.isStatus %}
+				<span class="badge event-severity text-bg-success bg-opacity-100">Active</span>
+                {% else %}
+                <span class="badge event-severity text-bg-danger bg-opacity-100">Inactive</span>
+                {% endif %}
+				<div class="flex-grow-1 ms-4">
+					<div class="d-flex justify-content-between">
+						<div>
+							<h5><a href="{{url_for('user.view',{'user': u.getId})}}" class="icon-link"><i class="fa-solid fa-user"></i> <span class="font-monospace">{{u.getName}}</span> {{u.getEmail}}</a></h5>
+						</div>
+						<small class="text-end">Registered
+							{{u.getCreated|date}}</small>
+					</div>
+				</div>
+			</div>
+		</div>
+	{% else %}
+		<div class="list-group-item">{{empty("No Users")}}</div>
+	{% endfor %}
+</div>

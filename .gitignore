@@ -1,0 +1,9 @@
+db/
+config/*
+docs/
+logs/
+node_modules/
+tmp/
+vendor/
+public/build/
+public/uploads/

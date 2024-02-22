@@ -1,0 +1,52 @@
+{% from 'macros/formInputs.twig' import markdownEditor %}
+
+<div class="card">
+	<form class="card-body form" action="{{url_for('comment.new',{'incident':incident, 'event':event})}}" method="post" data-upload-url="{{url_for('event.attachment.new',{'incident':incident, 'event':event})}}" autocomplete="off" id="addCommentForm">
+		<h3>Add a New Comment</h3>
+		<hr>
+		<div class="row mb-3">
+			<div class="col">
+				<div class="mb-3">
+					{{markdownEditor('text','Comment')}}
+				</div>
+			</div>
+		</div>
+		<div class="row">
+			<div class="col d-flex justify-content-end gap-3">
+				<div class="dropdown">
+					<button class="btn btn-success btn-lg dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+						Comment and. . .
+					</button>
+					<ul class="dropdown-menu">
+						<li>
+							<button type="submit" name="action" value="prepend" class="dropdown-item add-comment"><i class="fa-solid fa-arrows-up-to-line"></i> Prepend to Event<br><small>This comment will be added to the top of this event</small></button>
+						</li>
+						<li>
+							<button type="submit" name="action" value="append" class="dropdown-item add-comment"><i class="fa-solid fa-arrows-down-to-line"></i> Append to Event<br><small>This comment will be added to the bottom of this event</small></button>
+						</li>
+						<li>
+							<button type="submit" name="action" value="replace" class="dropdown-item add-comment text-bg-warning" href="replace"><i class="fa-solid fa-circle-minus"></i> Replace Event<br><small>This event will be replaced with this comment</small></button>
+						</li>
+					</ul>
+				</div>
+				<div class="vr"></div>
+				<button type="submit" class="btn btn-success btn-lg" name="action" value="comment" default>Comment</button>
+			</div>
+		</div>
+	</form>
+</div>
+
+<script>
+// const commentForm = document.querySelector('#addCommentForm')
+// const addCommenButtonsList = document.querySelectorAll('.add-comment')
+// const addCommentButtons = [...addCommenButtonsList].map((b) => {
+// 	b.addEventListener('click', (e) => {
+// 		e.preventDefault()
+// 		console.log(commentForm)
+// 		var data = new FormData(commentForm)
+// 		data.append('action',b.getAttribute('href'))
+// 		console.log(data)
+
+// 	})
+// })
+</script>

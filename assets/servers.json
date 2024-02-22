@@ -1,0 +1,13 @@
+{
+    "dmca": {
+        "version": "TGMC",
+        "round_id": "24646",
+        "serverdata": {
+            "address": "us.tgmc.tgstation13.org",
+            "port": 5337,
+            "servername": "TG Marine Corps [US-West]",
+            "dbname": "TGMC",
+            "rawlogsurl": "https:\/\/tgstation13.org\/raw-logs-tgmc\/tgmc\/",
+        }
+    }
+}

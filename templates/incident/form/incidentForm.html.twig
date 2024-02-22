@@ -1,0 +1,22 @@
+{% from 'macros/formInputs.twig' import textInput %}
+<div class="card bg-body-tertiary border-secondary">
+	<form class="card-body form" method="post" action="{{url_for('incident.new')}}">
+		<h3>New Incident</h3>
+		<hr>
+		<div class="row mb-3">
+			<div class="col">
+				{{textInput('text','name',"Incident Name")}}
+			</div>
+		</div>
+		<div class="row">
+			<div class="col d-flex align-items-center gap-2">
+				<span>Posting as:</span>
+				{% include 'base/agencyChooser.html.twig' %}
+			</div>
+			<div class="col d-flex justify-content-end gap-3">
+				<button type="reset" class="btn btn-secondary btn-lg">Cancel</button>
+				<button type="submit" class="btn btn-primary btn-lg">Create New Incident</button>
+			</div>
+		</div>
+	</form>
+</div>

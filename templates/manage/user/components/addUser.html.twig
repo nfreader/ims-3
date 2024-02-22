@@ -1,0 +1,36 @@
+{% from 'macros/formInputs.twig' import textInput %}
+
+<a href="#" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#addUser">
+	<i class="fa-solid fa-user-plus"></i>
+	Add user</a>
+<div class="modal fade" id="addUser" tabindex="-1" aria-labelledby="addUserLabel" aria-hidden="true">
+	<div class="modal-dialog">
+		<div class="modal-content">
+			<div class="modal-header">
+				<h1 class="modal-title fs-5" id="addUserLabel">Create New User</h1>
+				<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+			</div>
+			<form class="modal-body" name="addUserForm" id="addUserForm" autocomplete="off" action="{{url_for('user.create')}}" method="post">
+				<div class="row mb-3">
+					<div class="col">
+						{{textInput('text','firstName',"First Name")}}
+					</div>
+					<div class="col">
+						{{textInput('text','lastName',"Last Name")}}
+					</div>
+				</div>
+				<div class="row mb-3">
+					<div class="col">
+						{{textInput('email','email',"Email Address")}}
+					</div>
+				</div>
+        <p class="mb-0">This user will be created with a random password. They'll be prompted to set a new password when they log in for the first time.</p>
+			</form>
+			<div class="modal-footer">
+				<button type="reset" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+				<button type="submit" class="btn btn-primary" form="addUserForm">Create User</button>
+			</div>
+		</div>
+	</div>
+</div>
+

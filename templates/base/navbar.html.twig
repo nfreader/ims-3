@@ -1,0 +1,33 @@
+<nav class="navbar sticky-top navbar-expand-lg bg-body-tertiary border-bottom">
+	<div class="container">
+		<a class="navbar-brand fw-bold" href="{{url_for('home')}}">{{app.name}}</a>
+		<button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+			<span class="navbar-toggler-icon"></span>
+		</button>
+		<div class="collapse navbar-collapse justify-content-between" id="navbarSupportedContent">
+			<form class="d-flex" role="search" id="globalNav">
+				<span class="navbar-text me-2">Incident:</span>
+				<select name="incident" class="form-select" id="incidentGlobal">
+					<option value="" selected disabled>Select an Incident</option>
+				</select>
+				<span class="navbar-text mx-2">Event:</span>
+				<select name="event" class="form-select" id="eventGlobal">
+					<option value="" selected disabled>Select an Event</option>
+				</select>
+			</form>
+			{% if app.user %}
+				<ul class="navbar-nav d-flex align-items-center">
+					<li class="navbar-item">
+						{% include 'base/agencyChooser.html.twig' %}
+					</li>
+					{% include 'base/authMenu.html.twig' %}
+				</ul>
+
+			{% endif %}
+		</div>
+	</nav>
+	<div class="container">
+		<a href="{{url_for('manage.home')}}" class="bg-danger-subtle border border-secondary-subtle border-top-0 py-1 px-3 link-underline link-underline-opacity-0 rounded-bottom">Manage application
+			<i class="fa-solid fa-angles-right"></i>
+		</a>
+	</div>

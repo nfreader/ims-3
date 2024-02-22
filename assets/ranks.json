@@ -1,0 +1,30 @@
+{
+  "Player": {
+    "backColor": "#646464",
+    "icon": "user"
+  },
+  "Admin": {
+    "backColor": "#e74c3c",
+    "icon": "hammer"
+  },
+  "Senior Admin": {
+    "backColor": "#d47d7d",
+    "icon": "hammer"
+  },
+  "Headmin": {
+    "backColor": "#992d22",
+    "icon": "hammer"
+  },
+  "Maintainer": {
+    "backColor": "#2688ff",
+    "icon": "hammer"
+  },
+  "Mentor": {
+    "backColor": "#2ecc71",
+    "icon": "hammer"
+  },
+  "Trial Admin": {
+    "backColor": "#ff7a00",
+    "icon": "hammer"
+  }
+}

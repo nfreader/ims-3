@@ -1,0 +1,18 @@
+{% extends 'base.html.twig' %}
+{% block body %}
+	<h3>
+		<code>{{error.message}}</code>
+	</h3>
+	<div class="list-group">
+		{% for t in error.trace %}
+			<div class="list-group-item d-flex">
+				<h1 class="me-3">{{loop.index}}</h1>
+				<div>
+					<span class="font-monospace d-block">{{t.file}}:{{t.line}}</span>
+					<code>{{t.class}}{{t.type}}{{t.function}}()</code>
+				</div>
+			</div>
+		{% endfor %}
+	</div>
+	{{dump()}}
+{% endblock %}

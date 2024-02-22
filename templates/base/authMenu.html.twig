@@ -1,0 +1,13 @@
+<li class="nav-item dropdown">
+	<a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+		Logged in as
+		{{app.user.getName}}
+	</a>
+	<ul class="dropdown-menu">
+		<li>
+			<form class="form px-2 d-grid" action="{{url_for('user.logout')}}" method="post">
+				<button type="submit" class="btn btn-danger btn-sm">Log Out</button>
+			</form>
+		</li>
+	</ul>
+</li>

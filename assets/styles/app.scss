@@ -1,0 +1,69 @@
+@import "~bootstrap/scss/functions";
+@import "~bootstrap/scss/variables";
+@import "~bootstrap/scss/mixins";
+
+$custom-colors: map-merge(
+  $theme-colors,
+  (
+    "critical": #ff80ff,
+  )
+);
+
+// Merge the maps
+$theme-colors: map-merge($theme-colors, $custom-colors);
+$theme-colors-rgb: map-loop($theme-colors, to-rgb, "$value");
+// $utilities-colors: map-merge($utilities-colors, $theme-colors-rgb);
+// $utilities-text-colors: map-loop($utilities-colors, rgba-css-var, "$key", "text");
+// $utilities-bg-colors: map-loop($utilities-colors, rgba-css-var, "$key", "bg");
+
+@import "~bootstrap/scss/bootstrap";
+
+@import "~@fortawesome/fontawesome-free/css/all.css";
+@import "~@fortawesome/fontawesome-free/css/v4-shims.css";
+@import "~@fortawesome/fontawesome-free/css/v5-font-face.css";
+
+input,
+textarea {
+  font-family: var(--bs-font-monospace);
+}
+
+.list-group-item {
+  overflow: hidden;
+}
+
+.event-severity {
+  writing-mode: vertical-rl;
+  text-orientation: mixed;
+  text-align: center;
+  display: block;
+  border-radius: 0;
+  transform: rotate(180deg);
+  margin: calc(var(--bs-list-group-item-padding-y) * -1)
+    calc(var(--bs-list-group-item-padding-x) * -1);
+  text-transform: uppercase !important;
+}
+#mdEditorTabs.nav-tabs .nav-link.active {
+  border: var(--bs-card-border-width) solid var(--bs-card-border-color);
+  border-bottom-color: white;
+}
+
+.card-body p:last-child {
+  margin-bottom: 0 !important;
+}
+
+#mdeditor.targeted {
+  outline: 4px dashed black;
+  outline-offset: -15px;
+  position: relative;
+}
+
+.markdown-content p img {
+  max-width: 75%;
+  height: auto;
+}
+
+.dropdown-toggle.no-caret::after {
+  display: none !important;
+}
+
+@import './list-group.scss';

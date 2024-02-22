@@ -1,0 +1,43 @@
+{% extends 'base.html.twig' %}
+{% block body %}
+	{% from 'macros.html.twig' import empty, tag %}
+	<h5 class="">
+		<a href="{{url_for('incident.view',{'incident':incident.getId})}}" class="icon-link">
+			<i class="fa-solid fa-angles-left"></i>
+			Back To
+		</a>
+		<span>
+			<i class="fa-solid fa-shield"></i>
+			{{incident.getId}}</span>
+		{{incident.getName}}
+	</h5>
+	<div class="card">
+		<h2 class="card-header d-flex justify-content-between align-items-center text-bg-{{event.getSeverity.getClass}}">
+			<div>
+				<i class="fa-solid fa-message"></i>
+				<span class="font-monospace">{{event.getId}}</span>
+				-
+				{{event.getTitle}}
+			</div>
+			<div style="font-size: 1rem" class="text-end">
+				{% if not event.getEdited %}
+				created 
+				{{event.created|date}}
+				by
+				{{event.getCreatorName}}
+				{% else %}
+				edited
+				{{event.getEdited|date}}
+				by
+				{{event.getEditorName}}
+				{% endif %}
+			</div>
+		</h2>
+		<div class="card-body markdown-content">
+			{{event.getDesc|markdown_to_html}}
+		</div>
+	</div>
+	<div class="border-start py-3 ms-4 border-5 border-secondary"></div>
+	{% include 'comment/components/listing.html.twig' %}
+	{% include 'comment/form/commentForm.html.twig' with {'incident':incident.getId, 'event': event.getId} only %}
+{% endblock %}

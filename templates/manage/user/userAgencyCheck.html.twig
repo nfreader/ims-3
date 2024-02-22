@@ -1,0 +1,37 @@
+{% extends 'manage/base.html.twig' %}
+
+{% block body %}
+	<h2 class="mb-0">Confirm Your Changes</h2>
+	<hr>
+	{% for c in changes %}
+		<div class="row justify-content-center gap-3 text-center mb-3 w-100 mx-auto">
+			<div class="col rounded-2 border border-subtle bg-body-tertiary py-3 d-flex justify-content-center align-items-center">
+				<div>
+					<span class="fw-bold fs-4">
+						{{c.target.getName}}
+					</span>
+					<br>{{c.target.getEmail}}
+				</div>
+			</div>
+			<div class="col rounded-2 border border-subtle bg-success-subtle py-3 d-flex justify-content-center align-items-center text-success">
+				<div>
+					<i class="fa-solid fa-square-plus fs-4 d-block"></i>
+					will be added to
+				</div>
+			</div>
+			<div class="col rounded-2 border border-subtle bg-body-tertiary py-3 d-flex justify-content-center align-items-center">
+				<div>
+					<img class="d-block mx-auto" src="/uploads/{{c.agency.getLogo}}" height="48" width="48"/>
+					<span class="fw-bold fs-4">
+						{{c.agency.getName}}
+					</span>
+					<br>{{c.agency.getFullname}}<br>
+                    With the title <em>{{c.title}}</em>
+				</div>
+			</div>
+		</div>
+	{% endfor %}
+        <form action="{{url_for('user.agencies.confirm',{'user': changes[0].target.getId})}}" method="post" class="form d-flex justify-content-end">
+            <button type="submit" class="btn btn-primary">Confirm Changes</button>
+        </form>
+{% endblock %}

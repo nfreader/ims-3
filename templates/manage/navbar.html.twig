@@ -1,0 +1,46 @@
+<nav class="navbar navbar-expand-lg bg-danger-subtle border-secondary-subtle border-bottom py-0">
+	<div class="container">
+		<a class="navbar-brand fw-bold" href="{{url_for('manage.home')}}">
+			<i class="fa-solid fa-lock"></i>
+		</a>
+		<button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+			<span class="navbar-toggler-icon"></span>
+		</button>
+		<div class="collapse navbar-collapse justify-content-between" id="navbarSupportedContent">
+			<ul class="navbar-nav">
+				<li class="nav-item">
+					<a class="nav-link icon-link" href="#">
+						<i class="fa-solid fa-layer-group"></i>
+						Incidents</a>
+				</li>
+				<li class="nav-item">
+					<a class="nav-link icon-link" href="#">
+						<i class="fa-solid fa-message"></i>
+						Events</a>
+				</li>
+				<li class="nav-item">
+					<a class="nav-link icon-link" href="{{url_for('agencies.home')}}">
+						<i class="fa-solid fa-landmark"></i>
+						Agencies</a>
+				</li>
+				<li class="nav-item">
+					<a class="nav-link icon-link" href="{{url_for('users.home')}}">
+						<i class="fa-solid fa-users"></i>
+						Users</a>
+				</li>
+				<li class="nav-item">
+					<a class="nav-link icon-link" href="{{url_for('logs')}}">
+						<i class="fa-solid fa-bars"></i>
+						Logs</a>
+				</li>
+			</ul>
+			<ul class="navbar-nav">
+			{% include 'base/authMenu.html.twig' %}
+			</ul>
+	</div>
+</nav>
+<div class="container">
+	<a href="{{url_for('home')}}" class="bg-secondary-subtle border border-secondary-subtle border-top-0 py-1 px-3 link-underline link-underline-opacity-0 rounded-bottom">
+		<i class="fa-solid fa-angles-left"></i>
+		Back to application</a>
+</div>

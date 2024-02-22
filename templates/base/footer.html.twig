@@ -1,0 +1,30 @@
+		<div class="container">
+			<footer class="pt-5 my-5 text-body-secondary border-top d-flex justify-content-between align-items-center">
+				<span>{{app.name}} {{app.version}}
+				&middot; &copy; 2023</span>
+				<div>
+				<a href="{{url_for('log.db')}}?search={{request_id}}" class="btn btn-primary" target="_blank">View DB Logs</a>
+				<button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#contextModal">
+					View Context
+				</button>
+				</div>
+			</footer>
+			<div class="modal" tabindex="-1" id="contextModal" aria-labelledby="contextModalLabel" aria-hidden="true">
+				<div class="modal-dialog modal-fullscreen">
+					<div class="modal-content">
+						<div class="modal-header">
+							<h5 class="modal-title" id="contextModalLabel">Context</h5>
+							<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+						</div>
+						<div class="modal-body">
+							{{dump()}}
+						</div>
+						<div class="modal-footer">
+							<button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</body>
+</html>

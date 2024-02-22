@@ -1,0 +1,12 @@
+version: "3.1"
+services:
+  bb_mariadb:
+    image: mariadb:latest
+    container_name: ims-mariadb
+    volumes:
+      - ./db:/var/lib/mysql
+    environment:
+      - MYSQL_ROOT_PASSWORD=123
+      - MARIADB_DATABASE=ims
+    ports:
+      - "3306:3306"

@@ -1,0 +1,21 @@
+<div class="toast-container position-fixed top-0 start-50 translate-middle-x p-3">
+{% for label, messages in flash %}
+	{% for message in messages %}
+		<div class="toast ssr text-bg-{{label}}" role="alert" aria-live="assertive" aria-atomic="true">
+			<div class="toast-body d-flex justify-content-between align-items-center">
+				<span>{{message}}</span> <button type="button" class="btn-close" data-bs-dismiss="toast" aria-label="Close"></button>
+			</div>
+		</div>
+	{% endfor %}
+{% endfor %}
+<div id="notification" class="toast" role="alert" aria-live="assertive" aria-atomic="true">
+  <div class="toast-header">
+    <strong class="me-auto">{{app.name}}</strong>
+    <button type="button" class="btn-close" data-bs-dismiss="toast" aria-label="Close"></button>
+  </div>
+  <div class="toast-body">
+    
+  </div>
+</div>
+</div>
+

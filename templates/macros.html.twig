@@ -1,0 +1,104 @@
+{% macro PlayerBadge(badge, popover = true) %}
+	{% if user.has('ADMIN') and popover %}
+		<span class="playerBadge badge link-underline-opacity-0 link-underline" style="background:{{badge.getBackColor}}; color:{{badge.getForecolor}};" data-rank="{{badge.getTitle}}" data-bs-title="{{badge.getTitle}}" data-bs-container="body" data-bs-toggle="popover" data-bs-content="<div class='btn-group'> <a href='{{url_for("tgdb.player",{"ckey":badge.getCkey})}}' class='btn btn-outline-primary'><i class='fas fa-user'></i></a> <a href='{{url_for("tgdb.bans.ckey",{"ckey":badge.getCkey})}}' class='btn btn-outline-primary'><i class='fas fa-hammer'></i></a> <a href='{{url_for("tgdb.notes.ckey",{"ckey":badge.getCkey})}}' class='btn btn-outline-primary'><i class='fas fa-sticky-note'></i></a> <a href='#' class='btn btn-outline-primary'><i class='fas fa-circle'></i></a> </div>">
+			<i class="fas fa-{{badge.geticon}}"></i>
+			{{badge.getckey}}</span>
+	{% else %}
+		<span class="playerBadge badge link-underline-opacity-0 link-underline" style="background:{{badge.getBackColor}}; color:{{badge.getForecolor}};" data-rank="{{badge.getTitle}}" data-bs-title="{{badge.getTitle}}" data-bs-container="body" data-bs-toggle="tooltip">
+			<i class="fas fa-{{badge.geticon}}"></i>
+			{{badge.getckey}}</span>
+	{% endif %}
+{% endmacro %}
+
+{% macro RoundBadge(round, link = true) %}
+	<{{link?'a':'span'}} href="{{url_for('round',{'id':round})}}" class="roundBadge badge text-bg-dark link-underline link-underline-opacity-0">
+		<i class="fa-solid fa-circle"></i>
+		{{round ?: 'Invalid Round'}}
+	</{{link?'a':'span'}}>
+{% endmacro %}
+
+{% macro JobBadge(badge) %}
+	<span class="jobBadge badge" style="{{badge.style}}">
+		<i class="{{badge.icon}}"></i>
+		{{badge.name}}</span>
+{% endmacro %}
+
+{% macro BanBadge(status) %}
+	<span class="banBadge badge bg-{{status.getCssClass}}-subtle text-{{status.getCssClass}}-emphasis border border-{{status.getCssClass}}-subtle">
+		{{status.value}}
+	</span>
+{% endmacro %}
+
+{% macro pagination(nbPages = 5, currentPage = 1, url, extraClasses = '', showIfOne = true) %}
+	{% set classes = '' %}
+	{% set param = '' %}
+	{% if not query %}
+		{% set query = '' %}
+	{% endif %}
+	{% if nbPages > 1 %}
+		{# Number of page around current page+1 #}
+		{% set nearbyPagesLimit = 5 %}
+		<nav class="{{extraClasses}}">
+			<ul class="pagination justify-content-center mb-0">
+				<li class="page-item">
+					<a class="page-link {{currentPage != 1 ?: 'disabled'}}" href="{{url}}{{query}}">First</a>
+				</li>
+				{% for i in 1..nbPages %}
+					{% if 0 == (currentPage - nearbyPagesLimit) - loop.index %}
+						{# dot before #}
+					{% elseif 0 == (currentPage + nearbyPagesLimit) - loop.index %}
+						{# dot after #}
+					{% elseif 0 < (currentPage - nearbyPagesLimit) - loop.index %}
+						{# hide all before #}
+					{% elseif 0 > (currentPage + nearbyPagesLimit) - loop.index %}
+						{# hide all after #}
+					{% else %}
+						<li class="page-item {{currentPage == loop.index ? 'active'}}">
+							<a class="page-link" href="{{url}}{{param}}/page/{{loop.index}}{{query}}">{{ loop.index }}</a>
+						</li>
+					{% endif %}
+				{% endfor %}
+				<li class="page-item {{currentPage != nbPages ?: 'disabled'}}">
+					<a class="page-link" href="{{url}}{{param}}/page/{{nbPages}}{{query}}">Last</a>
+				</li>
+			</ul>
+		</nav>
+	{% else %}
+		{% if showIfOne %}
+			<p class="text-center text-muted mb-0">Page 1 of 1</p>
+		{% endif %}
+	{% endif %}
+{% endmacro %}
+
+{% macro Hotbar(hotbar) %}
+	<div class="btn-group mb-3" role="group" aria-label="Hotbar">
+		{% for b in hotbar %}
+			<a class="btn btn-outline-primary" href="{{url_for(b.url,b.params)}}">
+				<i class="{{b.icon}}"></i>
+				{{b.title}}</a>
+		{% endfor %}
+	</div>
+{% endmacro %}
+
+{% macro empty(text) %}
+	<p class="text-center text-muted mb-0">«
+		{{text}}
+		»</p>
+{% endmacro %}
+
+
+{% macro tag(text,title) %}
+	<small style="font-size:.75rem;">
+		<span class="badge bg-body-secondary text-dark border border-secondary fw-normal align-middle" data-bs-toggle="tooltip" data-bs-title="{{title}}">{{text}}</span>
+	</small>
+{% endmacro %}
+
+{% macro agencyBadge(agency, container = false) %}
+	<div class="agency-badge d-flex align-items-center gap-1 lh-1" style="font-size: .9rem" data-agency-id="{{agency.getId}}">
+		<img class="pe-none" src="/uploads/{{agency.getLogo}}" width="32" height="32"/>
+		<div class="pe-none">
+			<strong>{{agency.getName}}</strong><br>
+			{{agency.getTitle}}
+		</div>
+	</div>
+{% endmacro %}

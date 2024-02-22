@@ -1,0 +1,14 @@
+{% extends 'manage/base.html.twig' %}
+
+{% block body %}
+	<div class="d-flex align-items-center justify-content-between">
+		<h2>
+			<i class="fa-solid fa-users"></i>
+			Users</h2>
+			{% include 'manage/user/components/addUser.html.twig' %}
+	</div>
+	<hr>
+	{% include 'manage/user/components/listing.html.twig' %}
+
+	
+{% endblock %}

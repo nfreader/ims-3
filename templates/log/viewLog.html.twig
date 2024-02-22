@@ -1,0 +1,36 @@
+{% extends 'manage/base.html.twig' %}
+
+{% block body %}
+	<h2 class="d-flex justify-content-between align-items-center">
+		<span>Database Log</span>
+		<form action="{{url_for('log.db')}}" method="post">
+			<button type="submit" class="btn btn-danger">Clear Log File</button>
+		</form>
+	</h2>
+	<hr>
+    <p>Showing {{lines|length}} entries</p>
+	<div class="list-group">
+		{% set lastRequest = lines[0].context.request %}
+		<div class="list-group-item">
+			<code>{{lastRequest}}</code>
+		</div>
+		{% for l in lines %}
+			{% if lastRequest != l.context.request %}
+				<div class="list-group-item">
+					<code>{{l.context.request}}</code>
+				</div>
+				{% set lastRequest = l.context.request %}
+			{% endif %}
+			<div class="list-group-item">
+				<pre>{{l.message}}</pre>
+                <div class="list-group">
+                {% for t in l.context.trace %}
+                    <div class="list-group-item">
+                    <code>{{t.class}}{{t.type}}{{t.function}}</code>
+                    </div>
+                {% endfor %}
+                </div>
+			</div>
+		{% endfor %}
+	</div>
+{% endblock %}

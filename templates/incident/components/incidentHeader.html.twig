@@ -1,0 +1,19 @@
+	<h2 class="d-flex justify-content-between align-items-center">
+		<div>
+			<span class="text-muted">
+				{% if incident.getAgency %}
+					<img src="/uploads/{{incident.getAgency.getLogo}}" height="48" width="48"/>
+				{% else %}
+					<i class="fa-solid fa-shield"></i>
+				{% endif %}
+				{{incident.getId}}</span>
+			{{incident.getName}}
+		</div>
+		<div style="font-size: 1rem" class="text-muted">
+			created
+			{{incident.created|date}}
+			by
+			{{incident.getCreatorName}}
+		</div>
+	</h2>
+	{% include 'incident/components/incidentNavBar.html.twig' %}
