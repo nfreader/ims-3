@@ -1,18 +1,31 @@
 {% extends 'base.html.twig' %}
 {% block body %}
+	{% if app.display_error_details %}
 	<h3>
 		<code>{{error.message}}</code>
 	</h3>
-	<div class="list-group">
-		{% for t in error.trace %}
-			<div class="list-group-item d-flex">
-				<h1 class="me-3">{{loop.index}}</h1>
-				<div>
-					<span class="font-monospace d-block">{{t.file}}:{{t.line}}</span>
-					<code>{{t.class}}{{t.type}}{{t.function}}()</code>
+	{% else %}
+	<h3>
+		An Error Occurred - {{error.getCode}} 
+	</h3>
+	<p class="lead">Please include this request ID when reporting this error: <code>{{request_id}}</code></p>
+	{% endif %}
+	{% include [
+				'errors/exceptions/' ~ type ~ '.html.twig',
+				'errors/' ~ error.getCode ~ '.html.twig', 
+				'errors/generic.html.twig'
+			] ignore missing %}
+	{% if app.display_error_details %}
+		<div class="list-group">
+			{% for t in error.trace %}
+				<div class="list-group-item d-flex">
+					<h1 class="me-3">{{loop.index}}</h1>
+					<div>
+						<span class="font-monospace d-block">{{t.file}}:{{t.line}}</span>
+						<code>{{t.class}}{{t.type}}{{t.function}}()</code>
+					</div>
 				</div>
-			</div>
-		{% endfor %}
-	</div>
-	{{dump()}}
+			{% endfor %}
+		</div>
+	{% endif %}
 {% endblock %}

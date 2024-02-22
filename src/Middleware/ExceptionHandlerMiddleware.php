@@ -104,7 +104,10 @@ class ExceptionHandlerMiddleware implements MiddlewareInterface
 
     private function renderHtml(Throwable $exception, ResponseInterface $response): ResponseInterface
     {
+        $type = explode('\\', get_class($exception));
+        $type = end($type);
         return $this->twig->render($response, 'error.html.twig', [
+            'type' => $type,
             'error' => $exception
         ]);
     }
