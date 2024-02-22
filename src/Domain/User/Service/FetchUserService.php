@@ -17,7 +17,7 @@ class FetchUserService
 
     public function getUser(int $id): User
     {
-        $user = $this->userRepository->findOneBy([$id], 'u.id = ?');
+        $user = $this->userRepository->getUser($id);
         $user->setAgencies($this->agencyMembership->getAgenciesForUser($user->getId()));
         return $user;
     }

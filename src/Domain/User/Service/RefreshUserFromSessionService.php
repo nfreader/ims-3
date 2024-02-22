@@ -28,8 +28,13 @@ class RefreshUserFromSessionService
         $user = $session->get('user', null);
         if($user) {
             $user = $this->userRepository->getUser($session->get('user'));
-            $user->setAgencies($this->membershipRepository->getAgenciesForUser($user->getId()));
-            // $user->setActiveAgency($session->get('activeAgency', null));
+            $agencies = $this->membershipRepository->getAgenciesForUser($user->getId());
+            $user->setAgencies($agencies);
+            foreach($agencies as $a) {
+                if($a->getId() == $session->get('activeAgency', null)) {
+                    $user->setActiveAgency($a);
+                }
+            }
             return $user;
         }
         return null;

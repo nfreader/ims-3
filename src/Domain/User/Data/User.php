@@ -79,10 +79,10 @@ class User implements JsonSerializable
      *
      * @return array|null
      */
-    public function getAgencyList(): ?array
+    public function getAgencyList(): array
     {
         if (!$this->agencies) {
-            return null;
+            return [];
         }
         return array_values(array_map(function ($a) {
             return ['id' => $a->getId(),'title' => $a->getTitle()];
@@ -110,14 +110,7 @@ class User implements JsonSerializable
      */
     public function getActiveAgency(): ?Agency
     {
-        if(!$this->activeAgency) {
-            return null;
-        }
-        foreach($this->getAgencies() as $a) {
-            if($a->getId() === $this->activeAgency) {
-                return $a;
-            }
-        }
+        return $this->activeAgency;
     }
 
     /**
