@@ -10,6 +10,7 @@ class Agency
         private int $id,
         private string $name,
         private DateTimeImmutable $created,
+        private bool $active,
         private ?string $logo = null,
         private ?string $fullname = null,
         private ?string $location = null,
@@ -51,5 +52,10 @@ class Agency
     public function getTitle(): ?string
     {
         return $this->title;
+    }
+
+    public function isActive(): bool
+    {
+        return $this->active;
     }
 }

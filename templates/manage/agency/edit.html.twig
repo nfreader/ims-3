@@ -1,0 +1,43 @@
+{% extends 'manage/base.html.twig' %}
+
+{% block body %}
+	{% include 'manage/agency/components/agencyHeader.html.twig' %}
+	<div class="d-flex justify-content-center">
+		<form class="form bg-body-tertiary p-2 border border-subtle rounded-2 col-md-6 col-12" method="post" enctype="multipart/form-data" autocomplete="off">
+			<div class="row mb-3">
+				<div class="col">
+					<label for="name" class="form-label fw-bold">Agency Name
+						<i class="fa-solid fa-asterisk text-danger" data-bs-toggle="tooltip" data-bs-title="Required Field"></i>
+					</label>
+					<input type="text" id="name" name="name" class="form-control" aria-label="Agency Name" required value="{{agency.getName}}">
+				</div>
+			</div>
+			<div class="row mb-3">
+				<div class="col">
+					<label for="name" class="form-label fw-bold">Full Name
+					</label>
+					<input type="text" id="fullname" name="fullname" class="form-control" aria-label="Full Name" value="{{agency.getFullName}}">
+				</div>
+			</div>
+			<div class="row mb-3">
+				<div class="col">
+					<label for="name" class="form-label fw-bold">Location
+					</label>
+					<input type="text" id="location" name="location" class="form-control" aria-label="Location" value="{{agency.getLocation}}">
+				</div>
+			</div>
+			<div class="row mb-3">
+				<div class="col">
+					<label for="name" class="form-label fw-bold">Logo
+					</label>
+					<input type="file" id="logo" name="logo" class="form-control" aria-label="Logo" value="{{agency.getLogo}}" accept="image/*">
+				</div>
+			</div>
+            <div class="row">
+				<div class="col d-flex justify-content-end">
+					<button type="submit" class="btn btn-primary">Save Changes</button>
+				</div>
+			</div>
+		</form>
+	</div>
+{% endblock %}

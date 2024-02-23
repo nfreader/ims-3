@@ -15,7 +15,7 @@ class ListAgenciesAction extends Action
     public function action(): Response
     {
         $agencies = $this->agencyRepository->getAgencies();
-        return $this->render('manage/agency/agency.html.twig', [
+        return $this->render('manage/agency/listing.html.twig', [
             'agencies' => $agencies
         ]);
     }

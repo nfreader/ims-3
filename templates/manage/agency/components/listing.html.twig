@@ -1,8 +1,12 @@
 <div class="list-group mb-3">
 	{% for a in agencies %}
-		<div class="list-group-item p-0">
+		<a class="list-group-item p-0" href="{{url_for('agency.view',{agency: a.getId})}}">
 			<div class="row g-0">
-				<div class="col-md-2 bg-body-secondary d-flex justify-content-center align-items-center"><img src="/uploads/{{a.getLogo}}" height="128" width="128"/></div>
+				<div class="col-md-2 bg-body-secondary d-flex justify-content-center align-items-center">
+					{% if a.getLogo %}
+						<img src="/uploads/{{a.getLogo}}" height="128" width="128"/>
+					{% endif %}
+				</div>
 				<div class="col-md-10 p-3" style="height: 192px">
 					<h2 class="card-title fw-bold">{{a.getName}}</h2>
 					{% if a.getFullname %}
@@ -13,6 +17,6 @@
 					{% endif %}
 				</div>
 			</div>
-		</div>
+		</a>
 	{% endfor %}
 </div>

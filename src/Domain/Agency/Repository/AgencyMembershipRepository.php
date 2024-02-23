@@ -31,6 +31,7 @@ class AgencyMembershipRepository extends Repository
             'a.created',
             'a.fullname',
             'a.location',
+            'a.active',
             'ua.title'
         ], [
             'ua.target = ?'

@@ -21,7 +21,7 @@ class NewAgencyAction extends Action
         $request = $this->getRequest();
         $files = $request->getUploadedFiles();
         $logo = null;
-        if($files) {
+        if(!$files['logo']->getError()) {
             $file = $request->getUploadedFiles()['logo'];
             $logo = $this->logoUploader->uploadLogo($file);
         }

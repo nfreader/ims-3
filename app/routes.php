@@ -42,6 +42,8 @@ return function (App $app) {
         $app->group('/agencies', function (RouteCollectorProxy $app) {
             $app->get('', \App\Action\Agency\ListAgenciesAction::class)->setName('agencies.home');
             $app->post('/new', \App\Action\Agency\NewAgencyAction::class)->setName('agency.new');
+            $app->get('/{agency:[0-9]+}', \App\Action\Agency\ViewAgencyAction::class)->setName('agency.view');
+            $app->map(['GET','POST'], '/{agency:[0-9]+}/edit', \App\Action\Agency\EditAgencyAction::class)->setName('agency.edit');
         });
         $app->group('/users', function (RouteCollectorProxy $app) {
             $app->get('', \App\Action\User\ListUsersAction::class)->setName('users.home');

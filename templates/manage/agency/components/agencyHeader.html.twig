@@ -1,0 +1,22 @@
+<div class="d-flex justify-content-start gap-4">
+	<div class="bg-body-tertiary p-2 border border-subtle rounded-2">
+        <a href="{{url_for('agency.view',{'agency':agency.getId})}}">
+		{% if agency.getLogo %}
+			<img src="/uploads/{{agency.getLogo}}" height="128" width="128"/>
+			{% else %}
+            <div style="width: 128px; height: 128px;"></div>
+		{% endif %}
+        </a>
+	</div>
+	<div class="flex-grow-1 d-flex justify-content-between">
+		<div>
+			<h2 class="fw-bold mb-0">{{agency.getName}}</h2>
+			<h4>{{agency.getFullname}}</h4>
+			<h5 class="text-secondary">{{agency.getLocation}}</h5>
+		</div>
+		<div>
+			<a href="{{url_for('agency.edit',{'agency':agency.getId})}}" class="btn btn-secondary">Edit Agency</a>
+		</div>
+	</div>
+</div>
+<hr>

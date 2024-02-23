@@ -10,9 +10,18 @@ class AgencyCreationService
     #[Inject()]
     private AgencyRepository $agencyRepository;
 
-    public function createNewAgency(string $name, ?string $logo, ?string $fullname, ?string $location): int
-    {
-        return $this->agencyRepository->insertNewAgency($name, $logo, $fullname, $location);
+    public function createNewAgency(
+        string $name,
+        ?string $logo,
+        ?string $fullname,
+        ?string $location
+    ): int {
+        return $this->agencyRepository->insertNewAgency(
+            $name,
+            $logo,
+            $fullname,
+            $location
+        );
     }
 
 }
