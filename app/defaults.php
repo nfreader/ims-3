@@ -7,7 +7,8 @@ $settings['application'] = [
     'timezone' => 'UTC',
     'date_format' => 'F j, Y \a\t H:i:s (e)',
     'interval_format' => '%a minutes',
-    'display_error_details' => false
+    'display_error_details' => false,
+    'environment' => $_SERVER['APP_ENV'] ?? 'prod'
 ];
 
 $settings['root'] = dirname(__DIR__);

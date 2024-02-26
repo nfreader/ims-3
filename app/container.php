@@ -40,6 +40,7 @@ use Slim\Views\TwigMiddleware;
 use Symfony\Component\HttpFoundation\Session\Session;
 use Symfony\Component\HttpFoundation\Session\Storage\MockArraySessionStorage;
 use Symfony\Component\HttpFoundation\Session\Storage\NativeSessionStorage;
+use Twig\Extra\Html\HtmlExtension;
 use Twig\Extra\String\StringExtension;
 use Twig\Extra\Markdown\MarkdownRuntime;
 use Twig\Loader\FilesystemLoader;
@@ -143,6 +144,7 @@ return [
         $twig->addExtension(new EnumExtension());
         $twig->addExtension(new \Twig\Extension\DebugExtension());
         $twig->addExtension(new StringExtension());
+        $twig->addExtension(new HtmlExtension());
 
         $twig->addRuntimeLoader(new class () implements RuntimeLoaderInterface {
             public function load($class)
