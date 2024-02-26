@@ -14,24 +14,13 @@ class EditUserAgenciesAction extends Action
 
     public function action(): Response
     {
-        $this->getSession()->set('agency_changes', null);
-        $changes = $this->agencyMembership->getAgencyMembershipChanges(
-            $this->getArg('user'),
-            $this->request->getParsedBody(),
-        );
-        $tmp = [];
-        foreach($changes as $c) {
-            $tmp[] = [
-                'target' => $c['target']->getId(),
-                'agency' => $c['agency']->getId(),
-                'title' => $c['title'],
-                'action' => $c['action']
-            ];
-        }
-        $this->getSession()->set('agency_changes', $tmp);
-        return $this->render('manage/user/userAgencyCheck.html.twig', [
-            'changes' => $changes
-        ]);
+        $data = $this->request->getParsedBody();
+        $this->agencyMembership->changeMembership($this->getArg('user'), $data['agency'], $this->getUser());
+
+        return $this->json($this->request->getParsedBody());
+        // return $this->render('manage/user/userAgencyCheck.html.twig', [
+        //     'changes' => $changes
+        // ]);
     }
 
 }

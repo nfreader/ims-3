@@ -23,6 +23,8 @@ Encore
     .addEntry('app', './assets/app.js')
     .addEntry('mdeditor', './assets/mdeditor.js')
     .addEntry('globalNav', './assets/globalNav.js')
+    
+    .addEntry("addMemberToAgency", "./assets/Vue/agencyMembers.js")
 
     // enables the Symfony UX Stimulus bridge (used in assets/bootstrap.js)
     .enableStimulusBridge('./assets/controllers.json')

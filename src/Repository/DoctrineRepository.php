@@ -9,21 +9,28 @@ use ReflectionClass;
 
 class DoctrineRepository
 {
-    public ?string $entityClass = User::class;
+    public ?string $entityClass = null;
 
     public array $entityMetadata = [];
 
     public function __construct(public Connection $connection)
     {
-        $this->getEntityMetadata();
+        if($this->entityClass) {
+            $this->getEntityMetadata($this->entityClass);
+        }
     }
 
-    private function getEntityMetadata()
+    private function getEntityMetadata(string $class)
     {
-        $metadata = new ReflectionClass($this->entityClass);
+        $metadata = new ReflectionClass($class);
         foreach($metadata->getProperties() as $p) {
             $this->entityMetadata[$p->getName()] = $p;
         }
+    }
+
+    public function overrideMetadata(string $class): void
+    {
+        $this->getEntityMetadata($class);
     }
 
     public function qb(): QueryBuilder

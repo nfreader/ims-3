@@ -18,7 +18,9 @@ class User implements JsonSerializable
         private int $createdIp,
         private bool $status = false,
         private array $agencies = [],
-        private ?Agency $activeAgency = null
+        private ?Agency $activeAgency = null,
+        private ?string $agencyTitle = null,
+        private ?string $agencyList = null
     ) {
     }
 
@@ -57,7 +59,10 @@ class User implements JsonSerializable
         return [
             'id' => $this->getId(),
             'email' => $this->getEmail(),
-            'status' => $this->isStatus()
+            'status' => $this->isStatus(),
+            'firstName' => $this->firstName,
+            'lastName' => $this->lastName,
+            'agencyList' => explode(',', $this->agencyList)
         ];
     }
 
@@ -137,4 +142,10 @@ class User implements JsonSerializable
         }
         return false;
     }
+
+    public function getAgencyTitle(): ?string
+    {
+        return $this->agencyTitle;
+    }
+
 }

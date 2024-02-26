@@ -3,6 +3,8 @@
 namespace App\Domain\Agency\Repository;
 
 use App\Domain\Agency\Data\Agency;
+use App\Domain\User\Data\User;
+use App\Domain\User\Repository\UserRepository;
 use App\Repository\DoctrineRepository;
 use App\Repository\QueryBuilder;
 use App\Repository\Repository;
@@ -15,7 +17,7 @@ class AgencyRepository extends DoctrineRepository
 
     public string $alias = 'a';
 
-    public array $columns = [
+    public const COLUMNS = [
         'a.id',
         'a.name',
         'a.logo',
@@ -51,7 +53,7 @@ class AgencyRepository extends DoctrineRepository
     public function getAgencies(): array
     {
         $queryBuilder = $this->qb();
-        $queryBuilder->select(...$this->columns);
+        $queryBuilder->select(...self::COLUMNS);
         $queryBuilder->from($this->table, $this->alias);
         $result = $this->connection->executeQuery($queryBuilder->getSQL());
         $result = $result->fetchAllAssociative();
@@ -64,8 +66,7 @@ class AgencyRepository extends DoctrineRepository
     public function getAgency(int $id): ?Agency
     {
         $queryBuilder = $this->qb();
-        $queryBuilder->select(...$this->columns);
-        $queryBuilder->select(...$this->columns);
+        $queryBuilder->select(...self::COLUMNS);
         $queryBuilder->from($this->table, $this->alias);
         $queryBuilder->where('a.id = '. $queryBuilder->createNamedParameter($id));
         $result = $queryBuilder->executeQuery($queryBuilder->getSQL(), [$id]);
@@ -87,6 +88,23 @@ class AgencyRepository extends DoctrineRepository
         $queryBuilder->where('id = '. $queryBuilder->createPositionalParameter($id));
         $result = $queryBuilder->executeQuery($queryBuilder->getSQL(), [$name, $fullname, $location, $logo, $id]);
         return $result->rowCount();
+    }
+
+    public function getUsersForAgency(int $id): array
+    {
+        $queryBuilder = $this->qb();
+        $queryBuilder->select('ua.title as agencyTitle', ...UserRepository::COLUMNS)
+        ->from('user_agency', 'ua')
+        ->join('ua', 'user', 'u', 'u.id = ua.target')
+        ->where('ua.agency = '. $queryBuilder->createPositionalParameter($id))
+        ->groupBy('ua.id');
+        $result = $queryBuilder->executeQuery($queryBuilder->getSQL(), [$id]);
+        $this->overrideMetadata(User::class);
+        $return = [];
+        foreach($result->fetchAllAssociative() as $r) {
+            $return[] = new User(...$this->mapRow($r));
+        }
+        return $return;
     }
 
 }

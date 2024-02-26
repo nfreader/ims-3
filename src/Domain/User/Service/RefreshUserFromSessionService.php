@@ -19,7 +19,7 @@ class RefreshUserFromSessionService
     public function __construct(private ContainerInterface $container)
     {
         $this->userRepository = new UserRepository($container->get(Connection::class));
-        $this->membershipRepository = new AgencyMembershipRepository($container);
+        $this->membershipRepository = new AgencyMembershipRepository($container->get(Connection::class));
     }
 
     public function refreshUser(): ?User

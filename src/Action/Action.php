@@ -154,7 +154,9 @@ abstract class Action
 
     protected function render(string $template = 'debug.html.twig', mixed $data = []): ResponseInterface
     {
-
+        if('application/json' === $this->request->getHeaderLine('Accept')) {
+            return $this->json($data);
+        }
         return $this->twigRenderer->render($this->getResponse(), $template, $data);
     }
 

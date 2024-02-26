@@ -15,8 +15,10 @@ class ViewAgencyAction extends Action
 
     public function action(): Response
     {
+        $agency = $this->agencyService->getAgency($this->getArg('agency'));
         return $this->render('manage/agency/agency.html.twig', [
-            'agency' => $this->agencyService->getAgency($this->getArg('agency'))
+            'agency' => $agency,
+            'members' => $this->agencyService->getUsersForAgency($agency->getId())
         ]);
     }
 }

@@ -1,0 +1,23 @@
+<a href="#" class="btn btn-success" data-bs-toggle="modal" data-bs-target="#addMemberModal">Add Members</a>
+
+<div class="modal fade" id="addMemberModal" tabindex="-1" aria-labelledby="addMemberModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h1 class="modal-title fs-5" id="addMemberModalLabel">Add Members to {{agency.getName}}</h1>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body p-0" id="addMemberToAgency" data-current-agency="{{agency.getId}}">
+
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+        <button type="button" class="btn btn-primary">Save changes</button>
+      </div>
+    </div>
+  </div>
+</div>
+{{ webpack_entry_script_tags('addMemberToAgency') }}
+<script>
+
+</script>
