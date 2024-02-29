@@ -202,7 +202,7 @@ abstract class Action
      */
     public function addSuccessMessage(string $message): self
     {
-        $this->session->getFlashbag()->add('success', $message);
+        $this->session->getFlashbag()->add('success', $message."\nDEPRECATED\n");
 
         return $this;
     }
@@ -219,7 +219,7 @@ abstract class Action
      */
     public function addMessage(string $message): self
     {
-        $this->session->getFlashbag()->add('info', $message);
+        $this->session->getFlashbag()->add('info', $message."\nDEPRECATED\n");
 
         return $this;
     }
@@ -236,7 +236,7 @@ abstract class Action
      */
     public function addErrorMessage(string $message): self
     {
-        $this->session->getFlashbag()->add('danger', $message);
+        $this->session->getFlashbag()->add('danger', $message."\nDEPRECATED\n");
         return $this;
     }
 
