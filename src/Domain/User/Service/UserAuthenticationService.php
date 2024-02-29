@@ -18,9 +18,7 @@ class UserAuthenticationService
 
     public function authenticateUser(array $data): User
     {
-        if (!$user = $this->userRepository->findOneBy([
-            $data['email']
-        ], 'u.email = ?')) {
+        if (!$user = $this->userRepository->getUserByEmail($data['email'])) {
             throw new ValidationException('Errors were detected', ['This username or email address is already in use']);
         }
         if(!$user->checkPassword($data['password'])) {
