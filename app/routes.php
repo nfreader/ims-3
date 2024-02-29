@@ -2,7 +2,6 @@
 
 // Define app routes
 
-use App\Action\User\RegisterUserAction;
 use Slim\App;
 use Slim\Routing\RouteCollectorProxy;
 
