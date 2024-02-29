@@ -76,3 +76,10 @@ textarea {
 }
 
 @import './list-group.scss';
+
+.badge-tag {
+  font-size: .5rem;
+  margin-top: -5px;
+  pointer-events: none;
+  user-select: none;
+}

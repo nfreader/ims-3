@@ -88,9 +88,7 @@
 
 
 {% macro tag(text,title) %}
-	<small style="font-size:.75rem;">
-		<span class="badge bg-body-secondary text-dark border border-secondary fw-normal align-middle" data-bs-toggle="tooltip" data-bs-title="{{title}}">{{text}}</span>
-	</small>
+		<span class="badge badge-tag bg-body-secondary text-dark border border-secondary fw-normal align-middle" data-bs-toggle="tooltip" data-bs-title="{{title}}">{{text}}</span>
 {% endmacro %}
 
 {% macro agencyBadge(agency, container = false) %}
