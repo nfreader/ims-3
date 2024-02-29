@@ -62,7 +62,7 @@ class UserRepository extends DoctrineRepository
         $queryBuilder->addSelect('concat_ws(",", ua.agency) as agencyList');
         $queryBuilder->from($this->table, $this->alias);
         $queryBuilder->leftJoin($this->alias, 'user_agency', 'ua', 'u.id = ua.target');
-        $queryBuilder->addGroupBy('ua.target');
+        $queryBuilder->addGroupBy('u.id');
         $queryBuilder->addOrderBy('u.lastName', 'ASC');
         $queryBuilder->addOrderBy('u.firstName', 'ASC');
         $result = $this->connection->executeQuery($queryBuilder->getSQL());
