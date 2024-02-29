@@ -1,0 +1,37 @@
+{% from 'macros.html.twig' import tag %}
+{% for r in roles %}
+	<div class="list-group-item d-flex justify-content-between align-items-center gap-2">
+		<div class="d-flex align-items-center gap-2">
+			<input class="form-check-input me-1" type="checkbox" value="1" id="role-checkbox-{{r.getId}}" />
+			<span>
+				<strong><a href="{{url_for('role.view',{'agency':agency.getId,'role':r.getId})}}">{{r.getName}}</a></strong>
+				{{ r.isActive ? '' : tag('disabled') }}<br>
+				{{r.getUsers}} Members
+			</span>
+		</div>
+		<div class="dropdown">
+			<a href="#" class="dropdown-toggle no-caret text-dark fs-5" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+				<i class="fa-solid fa-ellipsis"></i>
+			</a>
+			<ul class="dropdown-menu">
+				<li>
+					<button class="dropdown-item" data-bs-toggle="modal" data-bs-target="#manageUserModal" data-role="{{r.getId}}" data-role-name="{{r.getName}}" {{r.isActive ?: 'disabled'}}>
+						<i class="fa-solid fa-user-gear"></i> Manage Users
+					</button>
+				</li>
+				<li><hr class="dropdown-divider"></li>
+				<li>
+					<button class="dropdown-item {{r.isActive ? 'text-bg-danger' : 'text-bg-primary'}}" data-bs-toggle="modal" data-bs-target="#disableRoleModal" data-role="{{r.getId}}" data-role-name="{{r.getName}}" data-role-active="{{r.isActive ? true : false}}">
+						{% if r.isActive %}
+							<i class="fa-solid fa-circle-xmark"></i>
+							Disable Role
+						{% else %}
+							<i class="fa-solid fa-circle-check"></i>
+							Enable Role
+						{% endif %}
+					</button>
+				</li>
+			</ul>
+		</div>
+    </div>
+	{% endfor %}

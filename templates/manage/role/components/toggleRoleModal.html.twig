@@ -1,0 +1,43 @@
+<div class="modal fade" id="disableRoleModal" tabindex="-1" aria-labelledby="disableRoleModalLabel" aria-hidden="true">
+	<div class="modal-dialog">
+		<div class="modal-content">
+			<div class="modal-header text-bg-danger">
+				<h1 class="modal-title fs-5" id="disableRoleModalLabel">Disable Role?</h1>
+				<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+			</div>
+			<div class="modal-body">
+				<form action="{{url_for('role.update',{'action':'disable','agency':agency.getId})}}" method="post" name="updateRole" id="updateRole">
+					<input type="hidden" name="role" value="">
+				</form>
+				<span id="disableText">
+					<p>Disabling this role will:</p>
+					<ul>
+						<li>Disallow users from performing actions as this role</li>
+						<li>Prevent users from being added to or removed from this role</li>
+						<li>
+							<strong>Not</strong>
+							affect data created under this role</li>
+					</ul>
+					<p>Are you sure you want to disable this role?</p>
+				</span>
+				<span id="enableText" class="visually-hidden">
+					<p>Enabling this role will:</p>
+					<ul>
+						<li>Allow users to perform actions as this role</li>
+						<li>Enable users to be added to or removed from this role</li>
+						<li>
+							<strong>Not</strong>
+							affect data created under this role</li>
+					</ul>
+					<p>Are you sure you want to enable this role?</p>
+				</span>
+			</div>
+			<div class="modal-footer">
+				<button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+				<button type="submit" class="btn btn-danger" form="updateRole">Disable Role</button>
+			</div>
+		</div>
+	</div>
+</div>
+
+{{ webpack_entry_script_tags('toggleRoleModal') }}

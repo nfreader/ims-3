@@ -1,0 +1,64 @@
+{% extends 'manage/base.html.twig' %}
+
+{% block body %}
+	{% include 'manage/agency/components/agencyHeader.html.twig' %}
+	{# <h5 class="text-muted"><a href="{{url_for('roles.view',{'agency':agency.getId})}}" class="icon-link"><i class="fa-solid fa-circle-chevron-left"></i> Roles</a></h5> #}
+	<div class="d-flex justify-content-end mb-3">
+		<button class="btn btn-success" data-bs-toggle="modal" data-bs-target="#addUserModal" data-role="{{role.getId}}" {{role.isActive ?: 'disabled'}}>Add Users</button>
+	</div>
+	<div class="card">
+		<h4 class="card-header d-flex justify-content-between align-items-center">
+			<div>
+				<small class="text-secondary">Users with the</small>
+				{{role.getName}}
+				<small class="text-secondary">role</small>
+			</div>
+			<div>
+				<input class="form-control form-control-sm" type="search" placeholder="Filter"/>
+			</div>
+		</h4>
+		<table class="table">
+			<thead>
+				<tr>
+					<th class="text-center"><input class="form-check-input me-1" type="checkbox" id="checkbox-{{u.id}}"/></th>
+					<th>Last Name</th>
+					<th>First Name</th>
+					<th>Email</th>
+					<th></th>
+				</tr>
+				<tr></tr>
+			</thead>
+			<tbody>
+				{% for u in users %}
+					<tr id="user-row-{{u.getId}}">
+						<td class="text-center">
+							<input class="form-check-input me-1" type="checkbox" id="checkbox-{{u.getId}}"/>
+						</td>
+						<td class="align-middle">{{u.getLastName}}</td>
+						<td class="align-middle">{{u.getFirstName}}</td>
+						<td class="align-middle">{{u.getEmail}}</td>
+						<td class="align-middle text-end">
+							<a href="#" class="dropdown-toggle no-caret text-dark fs-5" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+								<i class="fa-solid fa-ellipsis"></i>
+							</a>
+							<ul class="dropdown-menu">
+								<li>
+									<button class="dropdown-item" type="submit" data-bs-toggle="modal" data-bs-target="#removeUserModal"
+									data-target="{{u.getId}}"
+									data-target-name="{{u.getName}}"
+									data-role="{{role.getId}}"
+									data-role-name="{{role.getName}}">
+										<i class="fa-solid fa-user-minus"></i>
+										Remove User
+									</button>
+								</li>
+							</ul>
+						</td>
+					</tr>
+				{% endfor %}
+			</tbody>
+		</table>
+	</div>
+	{% include 'manage/role/components/manageUserModal.html.twig' %}
+
+{% endblock %}

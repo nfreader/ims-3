@@ -24,7 +24,10 @@ Encore
     .addEntry('mdeditor', './assets/mdeditor.js')
     .addEntry('globalNav', './assets/globalNav.js')
     
-    .addEntry("addMemberToAgency", "./assets/Vue/agencyMembers.js")
+    .addEntry("toggleRoleModal", "./assets/components/toggleRoleModal.js")
+
+    .addEntry("manageRoleUsers", "./assets/components/manageRoleUsers.js")
+
 
     // enables the Symfony UX Stimulus bridge (used in assets/bootstrap.js)
     .enableStimulusBridge('./assets/controllers.json')

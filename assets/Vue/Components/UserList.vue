@@ -10,21 +10,23 @@
         </thead>
         <tbody>
             <tr v-for="u in users" :data-user-id="u.id">
-                <td class="text-center position-relative"><a href="#" class="stretched-link" @click="addUser(u.id)"><i class="fa-solid fa-circle-plus text-success"></i></a></td>
-                <td>{{ u.firstName }}</td>
-                <td>{{ u.lastName }}</td>
-                <td>{{ u.email }}</td>
+                <td class="align-middle"><a href="#" class="btn btn-outline-success btn-sm d-block" @click="addUser(u)"><i class="fa-solid fa-circle-plus"></i> Add User</a></td>
+                <td class="align-middle">{{ u.firstName }}</td>
+                <td class="align-middle">{{ u.lastName }}</td>
+                <td class="align-middle">{{ u.email }}</td>
             </tr>
         </tbody>
     </table>
+    <div v-if="error" class="fw-bold text-danger p-2">{{ error }}</div>
 </template>
 
 <script>
 export default {
     data() {
         return {
-            currentAgency: undefined,
-            users: []
+            users: [],
+            currentRole: null,
+            error: null
         }
     },
     methods: {
@@ -36,20 +38,16 @@ export default {
             }).then((res) => res.json())
             .then((res) => {
                 res.users.forEach(u => {
-                    console.log(u)
-                    if(!u.agencyList.includes(this.currentAgency)){
                     this.users.push(u)
-                }
                 });
 
             })
         },
-        addUser(id) {
-            console.log(id)
+        addUser(u) {
             const data = new FormData;
-            data.append('target', id)
-            data.append('agency', this.currentAgency)
-            fetch(`/manage/users/${id}/agencies`, {
+            data.append('target', u.id)
+            data.append('role', this.currentRole)
+            fetch(`/manage/role/${u.id}/user`, {
                 body: data,
                 method: 'POST',
                 headers: {
@@ -57,14 +55,16 @@ export default {
                 },
             }).then((res) => res.json())
             .then((res) => {
-                console.log(res)
+                if(res.error){
+                    this.error = res.error.message
+                } 
             })
         }
     },
     mounted() {
         this.getUserList()
-        this.currentAgency = document.getElementById('addMemberToAgency').dataset.currentAgency
-        console.log(this.currentAgency)
+        this.currentRole = document.querySelector("#addUserModal").dataset.role
+        console.log(this.currentRole)
     }
 }
 </script>

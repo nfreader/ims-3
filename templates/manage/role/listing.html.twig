@@ -1,0 +1,20 @@
+{% extends 'manage/base.html.twig' %}
+
+{% block body %}
+	{% include 'manage/agency/components/agencyHeader.html.twig' %}
+	<div class="card">
+		<div class="card-header d-flex justify-content-between align-items-center">
+			<span><input class="form-check-input me-1" type="checkbox" value="" id="roles-select-all"/>
+				<label class="form-check-label" for="roles-select-all">{{roles|length}}
+					roles in
+					<strong>{{agency.getFullname}}</strong>
+				</span>
+			</label>
+			{% include 'manage/role/addNewRoleForm.html.twig' %}
+		</div>
+		<div class="list-group list-group-flush">
+			{% include 'manage/role/components/roleList.html.twig' %}
+		</div>
+	</div>
+	{% include 'manage/role/components/toggleRoleModal.html.twig' %}
+{% endblock %}

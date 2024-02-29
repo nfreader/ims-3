@@ -43,7 +43,26 @@ return function (App $app) {
             $app->post('/new', \App\Action\Agency\NewAgencyAction::class)->setName('agency.new');
             $app->get('/{agency:[0-9]+}', \App\Action\Agency\ViewAgencyAction::class)->setName('agency.view');
             $app->map(['GET','POST'], '/{agency:[0-9]+}/edit', \App\Action\Agency\EditAgencyAction::class)->setName('agency.edit');
+
+            //Agency Roles
+            $app->group('/{agency:[0-9]+}/roles', function (RouteCollectorProxy $app) {
+                $app->get('', \App\Action\Role\ViewAgencyRolesAction::class)->setName('roles.view');
+
+                $app->post('/new', \App\Action\Role\CreateRoleAction::class)->setName('role.new');
+
+                $app->post('/update/{action:[a-z0-9]+}', \App\Action\Role\UpdateRoleAction::class)->setName('role.update');
+            });
+
+            //Single role
+            $app->group('/{agency:[0-9]+}/role/{role:[0-9]+}', function (RouteCollectorProxy $app) {
+                $app->get('', \App\Action\Role\ViewRoleUsersAction::class)
+                ->setName('role.view');
+            });
         });
+
+        $app->post('/role/{role:[0-9]+}/user', \App\Action\Role\UpdateUserRoleAction::class)
+        ->setName('role.user');
+
         $app->group('/users', function (RouteCollectorProxy $app) {
             $app->get('', \App\Action\User\ListUsersAction::class)->setName('users.home');
             $app->get('/{user:[0-9]+}', \App\Action\User\ViewUserAction::class)->setName('user.view');

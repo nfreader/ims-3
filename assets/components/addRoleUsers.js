@@ -1,13 +1,13 @@
 import { createApp } from "vue";
-import AgencyMembers from "./Components/AgencyMembers.vue";
+import UserList from "../Vue/Components/UserList.vue";
 
-const buildApp = () => createApp(AgencyMembers);
+const buildApp = () => createApp(UserList);
 
-const modal = document.querySelector("#addMemberModal");
+const modal = document.querySelector("#addUserModal");
 
 modal.addEventListener("show.bs.modal", (e) => {
   const app = buildApp();
-  app.mount("#addMemberToAgency");
+  app.mount("#addUserToRole");
   e.target.app = app;
 });
 modal.addEventListener("hide.bs.modal", (e) => {

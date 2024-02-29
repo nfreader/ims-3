@@ -1,0 +1,22 @@
+{% from 'macros/formInputs.twig' import textInput %}
+<button type="button" class="btn btn-success btn-sm" data-bs-toggle="modal" data-bs-target="#addNewRoleModal">
+	Add New Role
+</button>
+
+<div class="modal fade" id="addNewRoleModal" tabindex="-1" aria-labelledby="addNewRoleModalLabel" aria-hidden="true">
+	<div class="modal-dialog modal-xl modal-dialog-centered">
+		<div class="modal-content">
+			<div class="modal-header">
+				<strong id="addNewRoleModalLabel">Add New Role</strong>
+				<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+			</div>
+			<form class="modal-body" action="{{url_for('role.new',{'agency':agency.getId})}}" method="post" id="newRoleForm" name="newRoleForm" autocomplete="off">
+				{{textInput('text','name',"Role Name")}}
+			</form>
+			<div class="modal-footer">
+				<button type="reset" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+				<button type="submit" class="btn btn-primary" form="newRoleForm">Create Role</button>
+			</div>
+		</div>
+	</div>
+</div>
