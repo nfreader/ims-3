@@ -18,7 +18,8 @@ class ViewAgencyAction extends Action
         $agency = $this->agencyService->getAgency($this->getArg('agency'));
         return $this->render('manage/agency/agency.html.twig', [
             'agency' => $agency,
-            'members' => $this->agencyService->getUsersForAgency($agency->getId())
+            'members' => $this->agencyService->getUsersForAgency($agency->getId()),
+            'activetab' => 'agency'
         ]);
     }
 }

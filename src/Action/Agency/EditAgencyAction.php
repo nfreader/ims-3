@@ -31,7 +31,8 @@ class EditAgencyAction extends Action
             return $this->redirectFor('agency.view', ['agency' => $agency->getId()]);
         }
         return $this->render('manage/agency/edit.html.twig', [
-            'agency' => $agency
+            'agency' => $agency,
+            'activetab' => 'agency'
         ]);
     }
 }
