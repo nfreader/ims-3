@@ -5,6 +5,7 @@ namespace App\Repository;
 use App\Domain\User\Data\User;
 use Doctrine\DBAL\Connection;
 use Doctrine\DBAL\Query\QueryBuilder;
+use Exception;
 use ReflectionClass;
 
 class DoctrineRepository
@@ -41,7 +42,9 @@ class DoctrineRepository
     public function mapRow(array $row): mixed
     {
         array_walk($row, function (&$value, $key) {
-            if($this->entityMetadata[$key]->getType()->isbuiltin()) {
+            if(!in_array($key, array_keys($this->entityMetadata))) {
+                throw new Exception("Trying to map column to entity property that was not expected! Key: {$key} Value: {$value}");
+            } elseif(isset($this->entityMetadata[$key]) && $this->entityMetadata[$key]->getType()->isbuiltin()) {
                 return;
             } else {
                 $class = new ReflectionClass($this->entityMetadata[$key]->getType()->getName());
