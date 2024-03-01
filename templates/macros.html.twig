@@ -100,3 +100,13 @@
 		</div>
 	</div>
 {% endmacro %}
+
+{% macro roleBadge(role, container = false) %}
+	<div class="role-badge d-flex align-items-center gap-1 lh-1" style="font-size: .9rem" data-agency-id="{{role.getAgencyId}}" data-role-id="{{role.getRoleId}}">
+		<img class="pe-none" src="/uploads/{{role.getAgencyLogo}}" width="32" height="32"/>
+		<div class="pe-none">
+			<strong>{{role.getRoleName}}</strong><br>
+			{{role.getAgencyName}}
+		</div>
+	</div>
+{% endmacro %}

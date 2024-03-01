@@ -5,10 +5,10 @@ async function getGlobalNav() {
   return await response.json();
 }
 
-async function setActiveAgency(agency){
-  const response = await fetch("/user/pickAgency",{
+async function setActiveRole(role){
+  const response = await fetch("/user/pickRole",{
     method: 'POST',
-    body: JSON.stringify({'agency': agency}),
+    body: JSON.stringify({'role': role}),
     headers: {
       "Content-Type": "application/json",
     },
@@ -67,21 +67,21 @@ await getGlobalNav().then((data) => {
 const agencyTargets = document.querySelectorAll('.agencyTarget')
 const agencyChoosers = document.querySelectorAll('.agencyChooser')
 const foundAgencyChoosers = [...agencyChoosers].map((chooser) => {
-  const agencyOptions = chooser.querySelectorAll('.agency-badge')
+  const agencyOptions = chooser.querySelectorAll('.role-badge')
   const optionList = [...agencyOptions].map((agency) => {
     agency.addEventListener('click', (e) => {
-      const agencyId = agency.dataset.agencyId ?? -1
+      const roleId = agency.dataset.roleId ?? -1
       e.preventDefault()
       for(const target of agencyTargets){
         const newElement = agency.cloneNode(true)
-        newElement.classList.remove('agency-badge')
+        newElement.classList.remove('role-badge')
         target.replaceChildren(newElement)
       }
       const update = async () => {
-        await setActiveAgency(agencyId).then((data) => {
+        await setActiveRole(roleId).then((data) => {
           const myToastEl = document.getElementById('notification') 
           const myToast = new bootstrap.Toast(myToastEl)
-          myToastEl.querySelector('.toast-body').textContent = "Your active agency has been updated"
+          myToastEl.querySelector('.toast-body').textContent = "Your active role has been updated"
           myToastEl.classList.add("text-bg-success")
           myToast.show()
         })

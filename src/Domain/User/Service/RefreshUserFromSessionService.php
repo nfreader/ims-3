@@ -3,6 +3,7 @@
 namespace App\Domain\User\Service;
 
 use App\Domain\Agency\Repository\AgencyMembershipRepository;
+use App\Domain\Role\Repository\RoleRepository;
 use App\Domain\User\Data\User;
 use App\Domain\User\Repository\UserRepository;
 use Doctrine\DBAL\Connection;
@@ -16,10 +17,13 @@ class RefreshUserFromSessionService
 
     private AgencyMembershipRepository $membershipRepository;
 
+    private RoleRepository $roleRepository;
+
     public function __construct(private ContainerInterface $container)
     {
         $this->userRepository = new UserRepository($container->get(Connection::class));
         $this->membershipRepository = new AgencyMembershipRepository($container->get(Connection::class));
+        $this->roleRepository = new RoleRepository($container->get(Connection::class));
     }
 
     public function refreshUser(): ?User
@@ -30,9 +34,10 @@ class RefreshUserFromSessionService
             $user = $this->userRepository->getUser($session->get('user'));
             $agencies = $this->membershipRepository->getAgenciesForUser($user->getId());
             $user->setAgencies($agencies);
-            foreach($agencies as $a) {
-                if($a->getId() == $session->get('activeAgency', null)) {
-                    $user->setActiveAgency($a);
+            $user->setRoles($this->roleRepository->getRolesForUser($user->getId()));
+            foreach($user->getRoles() as $r) {
+                if($r->getRoleId() == (int) $session->get('activeRole', null)) {
+                    $user->setActiveRole($r);
                 }
             }
             return $user;

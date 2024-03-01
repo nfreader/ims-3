@@ -6,6 +6,7 @@ use App\Domain\Agency\Data\Agency;
 use App\Domain\Agency\Service\FetchAgencyService;
 use App\Domain\Role\Data\Role;
 use App\Domain\Role\Repository\RoleRepository;
+use App\Domain\User\Data\User;
 use DI\Attribute\Inject;
 
 class FetchAgencyRolesService

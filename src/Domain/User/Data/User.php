@@ -3,6 +3,7 @@
 namespace App\Domain\User\Data;
 
 use App\Domain\Agency\Data\Agency;
+use App\Domain\Role\Data\UserRole;
 use DateTimeImmutable;
 use JsonSerializable;
 
@@ -18,7 +19,9 @@ class User implements JsonSerializable
         private int $createdIp,
         private bool $status = false,
         private array $agencies = [],
+        private array $roles = [],
         private ?Agency $activeAgency = null,
+        private ?UserRole $activeRole = null,
         private ?string $agencyTitle = null,
         private ?string $agencyList = null
     ) {
@@ -132,11 +135,28 @@ class User implements JsonSerializable
         return $this;
     }
 
+    public function setActiveRole(?UserRole $activeRole): self
+    {
+        $this->activeRole = $activeRole;
+        return $this;
+    }
+
     public function isUserInAgency(int $agency): bool
     {
         $list = $this->getAgencyList();
         if($list) {
             if(in_array($agency, array_column($list, 'id'))) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    public function isUserInRole(int $role): bool
+    {
+        $list = $this->getRoles();
+        if($list) {
+            if(in_array($role, array_column($list, 'roleId'))) {
                 return true;
             }
         }
@@ -157,5 +177,22 @@ class User implements JsonSerializable
     public function getLastName(): string
     {
         return $this->lastName;
+    }
+
+    public function setRoles(array $roles): self
+    {
+        $this->roles = $roles;
+
+        return $this;
+    }
+
+    public function getRoles(): array
+    {
+        return $this->roles;
+    }
+
+    public function getActiveRole(): ?UserRole
+    {
+        return $this->activeRole;
     }
 }

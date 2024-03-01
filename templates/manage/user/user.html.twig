@@ -1,8 +1,7 @@
 {% extends 'manage/base.html.twig' %}
 
 {% block body %}
-	{% from 'macros/formInputs.twig' import textInput %}
-
+	{% from 'macros.html.twig' import roleBadge %}
 	<h2 class="mb-0">
 		<i class="fa-solid fa-user"></i>
 		{{user.getName}}</h2>
@@ -13,81 +12,15 @@
 	<hr>
 	<div class="row">
 		<div class="col">
-			<h4>Select Agencies for this user</h4>
-			<form class="form" name="agencyForm" id="agencyForm" action="{{url_for('user.agencies.edit',{'user':user.getId})}}" method="post">
-				<div class="list-group list-group-checkable d-grid border-0" autocomplete="off">
-					{% set agencyList = user.getAgencyList %}
-					{% for a in agencies %}
-						{% set title = false %}
-						{% if a.getId in agencyList|column('id') %}
-							{% for l in agencyList %}
-								{% if l.id is same as a.getId %}
-									{% set title = l.title %}
-								{% endif %}
-							{% endfor %}
-						{% endif %}
-						<input class="list-group-item-check pe-none agency-toggle " type="checkbox" name="agency[]" id="agency-{{a.getId}}" value="{{a.getId}}" {{a.getId in agencyList|column('id') ? 'checked="checked"'}}>
-						<label class="list-group-item rounded-3 py-3 d-flex align-items-center gap-2 {{title ?: 'mb-2'}}" for="agency-{{a.getId}}" id="agency-{{a.getId}}-label">
-							<img src="/uploads/{{a.getLogo}}" width="48" height="48">
-							<div>
-								{{a.getName}}
-								<span class="d-block small opacity-50">{{a.getFullname}}</span>
-							</div>
-						</label>
-						<div class="card border-top-0 rounded-0 rounded-bottom mx-4 mb-2 {{title ?: 'visually-hidden'}} border-primary bg-primary-subtle" id="agency-{{a.getId}}-title-form">
-							<div class="card-body">
-								<label for="agency-{{a.getId}}-title" class="fw-bold">Title
-									<i class="fa-solid fa-asterisk text-danger" data-bs-toggle="tooltip" data-bs-title="Required Field"></i>
-								</label>
-								<input type="text" class="form-control form-control-sm" name="{{a.getId}}-title" {% if title %} value="{{title}}" {% endif %}/>
-							</div>
-						</div>
-					{% endfor %}
-				</div>
-				<div class="d-flex justify-content-end mt-3">
-					<a href="#" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#saveModal">Update Agency Affiliations</a>
-				</div>
-			</form>
+			<h4>User Roles</h4>
+			{% for r in user.roles %}
+			<div class="p-3 border border-subtle rounded-2 d-flex align-items-center mb-3 gap-3">
+				{{roleBadge(r)}}
+			</div>
+			{% endfor %}
 		</div>
 		<div class="col"></div>
 	</div>
-	<div class="modal fade" id="saveModal" tabindex="-1" aria-labelledby="saveModalLabel" aria-hidden="true">
-		<div class="modal-dialog" style="width: 400px">
-			<div class="modal-content rounded-4">
-				<div class="modal-header border-bottom-0">
-					<h1 class="modal-title fs-5 mb-0 fw-bold">Save Changes?</h1>
-					<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-				</div>
-				<div class="modal-body fs-5">
-					You are making changes to this users agency affiliations. This may have wide-reaching implications.
-				</div>
-				<div class="modal-footer flex-column align-items-stretch gap-1 border-top-0">
-					<button type="submit" class="btn btn-lg btn-primary" form="agencyForm">Save changes</button>
-					<button type="button" class="btn btn-lg btn-secondary" data-bs-dismiss="modal">Cancel</button>
-				</div>
-			</div>
-		</div>
-	</div>
 
-	<script>
-		const agencyToggleList = document.querySelectorAll('.agency-toggle')
-const agencyToggles = [... agencyToggleList].map((t) => {
-t.addEventListener('change', (e) => {
-const agency = t.value
-const status = t.checked
-const agencyLabel = document.querySelector (`#agency-${agency}-label`)
-const titleEditor = document.querySelector (`#agency-${agency}-title-form`)
-const titleInput = titleEditor.querySelector('.form-control')
-if (status) {
-titleEditor.classList.remove('visually-hidden')
-agencyLabel.classList.remove('mb-2')
-titleInput.setAttribute('required', '')
-} else {
-titleEditor.classList.add('visually-hidden')
-agencyLabel.classList.add('mb-2')
-titleInput.removeAttribute('required')
-}
-})
-})
-	</script>
+
 {% endblock %}

@@ -11,7 +11,7 @@ return function (App $app) {
         $app->post('/register', \App\Action\User\RegisterUserAction::class)->setName('user.register');
         $app->post('/login', \App\Action\User\LoginUserAction::class)->setName('user.login');
         $app->post('/logout', \App\Action\User\LogoutUserAction::class)->setName('user.logout');
-        $app->post('/pickAgency', \App\Action\User\SetActiveAgencyAction::class);
+        $app->post('/pickRole', \App\Action\User\SetActiveRoleAction::class);
     });
 
     $app->group('/incident', function (RouteCollectorProxy $app) {
