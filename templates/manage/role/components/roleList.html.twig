@@ -15,9 +15,9 @@
 			</a>
 			<ul class="dropdown-menu">
 				<li>
-					<button class="dropdown-item" data-bs-toggle="modal" data-bs-target="#manageUserModal" data-role="{{r.getId}}" data-role-name="{{r.getName}}" {{r.isActive ?: 'disabled'}}>
+					<a href="{{url_for('role.view',{'agency':agency.getId,'role':r.getId})}}" class="dropdown-item" {{r.isActive ?: 'disabled'}}>
 						<i class="fa-solid fa-user-gear"></i> Manage Users
-					</button>
+					</a>
 				</li>
 				<li><hr class="dropdown-divider"></li>
 				<li>

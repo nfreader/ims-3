@@ -1,6 +1,7 @@
 {% extends 'manage/base.html.twig' %}
 
 {% block body %}
+	{% from 'macros.html.twig' import empty %}
 	{% include 'manage/agency/components/agencyHeader.html.twig' %}
 	{# <h5 class="text-muted"><a href="{{url_for('roles.view',{'agency':agency.getId})}}" class="icon-link"><i class="fa-solid fa-circle-chevron-left"></i> Roles</a></h5> #}
 	<div class="d-flex justify-content-end mb-3">
@@ -55,6 +56,10 @@
 							</ul>
 						</td>
 					</tr>
+				{% else %}
+				<tr>
+					<td colspan="5">{{empty("No users with this role")}}</td>
+				</tr>
 				{% endfor %}
 			</tbody>
 		</table>

@@ -15,6 +15,8 @@ class Agency
         private ?string $fullname = null,
         private ?string $location = null,
         private ?string $title = null,
+        private ?int $roleCount = 0,
+        private ?int $userCount = 0
     ) {
 
     }

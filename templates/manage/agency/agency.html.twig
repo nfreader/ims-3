@@ -10,41 +10,5 @@
 				<label for="memberFilter">Find a Member</label>
 			</div>
 		</form> #}
-        <div>
-        {% include 'manage/agency/components/addMemberModal.html.twig' %}
-        </div>
-	</div>
-	<div class="card">
-		<div class="card-header fw-bold">{{members|length}}
-			members in
-			{{agency.getName}}</div>
-		<div class="list-group list-group-flush">
-			{% for u in members %}
-				<div class="list-group-item d-flex justify-content-between">
-					<div>
-						<span class="fs-5">{{u.getName}}</span><br>
-						<span class="fs-6">{{u.getAgencyTitle}}</span>
-					</div>
-					<div>
-						<div class="dropdown">
-							<a href="#" class="dropdown-toggle no-caret text-dark fs-5" type="button" data-bs-toggle="dropdown" aria-expanded="false">
-								<i class="fa-solid fa-ellipsis"></i>
-							</a>
-							<ul class="dropdown-menu">
-								<li>
-									<a class="dropdown-item" href="#">
-										<i class="fa-solid fa-pen"></i>
-										Edit Membership</a>
-								</li>
-							</ul>
-						</div>
-					</div>
-				</div>
-			{% else %}
-				<div class="list-group-item">
-					{{empty("No users assigned to this agency")}}
-				</div>
-			{% endfor %}
-		</div>
 	</div>
 {% endblock %}
