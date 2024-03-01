@@ -9,7 +9,6 @@ class SetActiveRoleAction extends Action
 {
     public function action(): Response
     {
-        $user = $this->getUser();
         $data = $this->request->getParsedBody();
         if(-1 === $data['role']) {
             $this->getSession()->set('activeRole', null);
