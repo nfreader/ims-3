@@ -7,6 +7,7 @@ use App\Renderer\JsonRenderer;
 use App\Renderer\RedirectRenderer;
 use App\Renderer\TwigRenderer;
 use DI\Attribute\Inject;
+use Exception;
 use Psr\Container\ContainerInterface;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
@@ -65,6 +66,7 @@ abstract class Action
     {
         $this->setResponse($response);
         $this->setRequest($request);
+        $this->permissionCheck();
         $this->setQuery();
         $this->setArgs($args);
         $this->setRoute();
@@ -275,6 +277,30 @@ abstract class Action
     public function getSession(): Session
     {
         return $this->session;
+    }
+
+    /**
+     * Verify that the current logged in user has the permission required
+     * by the request attribute. Throws an exception if this check fails, or
+     * if the user is not logged in.
+     *
+     * @return void
+     */
+    private function permissionCheck(): void
+    {
+        $user = $this->getUser();
+        $requireUser = $this->getRequest()->getAttribute('user');
+        if($requireUser && !$user) {
+            throw new Exception("You must be logged in to access this", 403);
+        }
+        $adminOnly = $this->getRequest()->getAttribute('adminOnly');
+        if($adminOnly && !$user) {
+            throw new Exception("You must be logged in to access this", 403);
+        } elseif ($adminOnly && !$user->isAdmin()) {
+            throw new Exception("You do not have permission to access this", 403);
+        }
+
+
     }
 
     abstract public function action(): ResponseInterface;

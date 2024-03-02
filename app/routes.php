@@ -2,6 +2,8 @@
 
 // Define app routes
 
+use Psr\Http\Message\ServerRequestInterface;
+use Psr\Http\Server\RequestHandlerInterface;
 use Slim\App;
 use Slim\Routing\RouteCollectorProxy;
 
@@ -30,10 +32,18 @@ return function (App $app) {
 
 
         $app->post('/{incident:[0-9]+}/event/{event:[0-9]+}/comment', \App\Action\Comment\NewCommentAction::class)->setName('comment.new');
+    })->add(function (ServerRequestInterface $request, RequestHandlerInterface $handler) {
+        $request = $request->withAttribute('user', true);
+        $response = $handler->handle($request);
+        return $response;
     });
 
     $app->group('/comment', function (RouteCollectorProxy $app) {
         $app->post('/{comment:[0-9]+}/edit', \App\Action\Comment\EditCommentAction::class)->setName('comment.edit');
+    })->add(function (ServerRequestInterface $request, RequestHandlerInterface $handler) {
+        $request = $request->withAttribute('user', true);
+        $response = $handler->handle($request);
+        return $response;
     });
 
     $app->group('/manage', function (RouteCollectorProxy $app) {
@@ -76,5 +86,9 @@ return function (App $app) {
             $app->get('', \App\Action\Log\ViewLogsAction::class)->setName('logs');
             $app->map(['GET','POST'], '/db', \App\Action\Log\ViewDBLog::class)->setName('log.db');
         });
+    })->add(function (ServerRequestInterface $request, RequestHandlerInterface $handler) {
+        $request = $request->withAttribute('adminOnly', true);
+        $response = $handler->handle($request);
+        return $response;
     });
 };

@@ -23,7 +23,8 @@ class UserRepository extends DoctrineRepository
         'u.password',
         'u.created',
         'u.created_ip as createdIp',
-        'u.status'
+        'u.status',
+        'u.is_admin as isAdmin'
     ];
 
     public array $entityMetadata = [];

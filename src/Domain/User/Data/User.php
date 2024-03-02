@@ -17,6 +17,7 @@ class User implements JsonSerializable
         private string $password,
         private DateTimeImmutable $created,
         private int $createdIp,
+        private bool $isAdmin,
         private bool $status = false,
         private array $agencies = [],
         private array $roles = [],
@@ -194,5 +195,10 @@ class User implements JsonSerializable
     public function getActiveRole(): ?UserRole
     {
         return $this->activeRole;
+    }
+
+    public function isAdmin(): bool
+    {
+        return $this->isAdmin;
     }
 }

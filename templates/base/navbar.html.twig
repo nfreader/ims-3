@@ -26,8 +26,10 @@
 			{% endif %}
 		</div>
 	</nav>
+	{% if app.user.isAdmin %}
 	<div class="container">
 		<a href="{{url_for('manage.home')}}" class="bg-danger-subtle border border-secondary-subtle border-top-0 py-1 px-3 link-underline link-underline-opacity-0 rounded-bottom">Manage application
 			<i class="fa-solid fa-angles-right"></i>
 		</a>
 	</div>
+	{% endif %}
