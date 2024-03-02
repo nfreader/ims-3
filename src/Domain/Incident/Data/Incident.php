@@ -15,8 +15,11 @@ class Incident implements JsonSerializable
         private DateTimeImmutable $created,
         private string $creatorName,
         private string $creatorEmail,
+        private ?string $agencyName = null,
         private ?int $agencyId = null,
-        private ?Agency $agency = null
+        private ?string $agencyLogo = null,
+        private ?string $roleName = null,
+        private ?int $roleId = null
     ) {
     }
 
@@ -63,20 +66,13 @@ class Incident implements JsonSerializable
         ];
     }
 
-    public function setAgency(Agency $agency): static
-    {
-        $this->agency = $agency;
-        return $this;
-    }
-
-    public function getAgency(): ?Agency
-    {
-        return $this->agency;
-    }
-
     public function getAgencyId(): ?int
     {
         return $this->agencyId;
     }
 
+    public function getAgencyLogo(): ?string
+    {
+        return $this->agencyLogo;
+    }
 }

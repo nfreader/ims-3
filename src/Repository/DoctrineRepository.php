@@ -5,6 +5,7 @@ namespace App\Repository;
 use App\Domain\User\Data\User;
 use Doctrine\DBAL\Connection;
 use Doctrine\DBAL\Query\QueryBuilder;
+use Doctrine\DBAL\Result;
 use Exception;
 use ReflectionClass;
 
@@ -56,6 +57,30 @@ class DoctrineRepository
             }
         });
         return $row;
+    }
+
+    public function getResults(Result $result, ?string $class = null): array
+    {
+        $results = $result->fetchAllAssociative();
+        if($class) {
+            $this->overrideMetadata($class);
+        } else {
+            $class = $this->entityClass;
+        }
+        foreach ($results as &$r) {
+            $r = new $class(...$this->mapRow($r));
+        }
+        return $results;
+    }
+
+    public function getResult(Result $result, ?string $class = null): mixed
+    {
+        if($class) {
+            $this->overrideMetadata($class);
+        } else {
+            $class = $this->entityClass;
+        }
+        return new $class(...$this->mapRow($result->fetchAssociative()));
     }
 
 }

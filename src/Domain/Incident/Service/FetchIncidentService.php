@@ -17,11 +17,7 @@ class FetchIncidentService
 
     public function getIncident(int $id): Incident
     {
-        $incident = $this->incidentRepository->getIncident($id);
-        if($incident->getAgencyId()) {
-            $incident->setAgency($this->agencyRepository->getAgency($incident->getAgencyId()));
-        }
-        return $incident;
+        return $this->incidentRepository->getIncident($id);
     }
 
 }
