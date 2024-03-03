@@ -6,10 +6,10 @@ use App\Domain\Incident\Data\Incident;
 use App\Domain\Permissions\Data\PermissionTypeEnum;
 use App\Domain\Incident\Repository\IncidentPermissionsRepository;
 use App\Domain\User\Data\User;
+use App\Service\FlashMessageService;
 use DI\Attribute\Inject;
 use Exception;
 use JustSteveKing\StatusCode\Http;
-use stdClass;
 
 class IncidentSettingsService
 {
@@ -18,6 +18,9 @@ class IncidentSettingsService
 
     #[Inject()]
     private IncidentPermissionsRepository $permissionsRepository;
+
+    #[Inject()]
+    private FlashMessageService $flash;
 
     private Incident $incident;
 
@@ -57,6 +60,7 @@ class IncidentSettingsService
         foreach($updates['roles'] as $role => &$r) {
             $this->updatePermissionsForRole($role, array_sum($r));
         }
+        $this->flash->addSuccessMessage("Permissions for this incident have been updated");
     }
 
     private function updatePermissionsForAgency(int $agency, int $flags)

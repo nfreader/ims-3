@@ -28,6 +28,6 @@ final class UpdateIncidentSettingsAction extends Action
                 $this->getUser()
             );
         }
-        return $this->json($this->getRequest()->getParsedBody());
+        return $this->redirectFor('incident.settings', ['incident' => $this->getArg('incident')]);
     }
 }
