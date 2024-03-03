@@ -84,6 +84,10 @@ const foundAgencyChoosers = [...agencyChoosers].map((chooser) => {
           myToastEl.querySelector('.toast-body').textContent = "Your active role has been updated"
           myToastEl.classList.add("text-bg-success")
           myToast.show()
+          const errorCheck = document.querySelector('#appErrorCode')
+          if(errorCheck){
+            window.location.reload()
+          }
         })
       }
       update()
