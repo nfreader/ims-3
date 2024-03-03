@@ -12,12 +12,9 @@ use DI\Attribute\Inject;
 class FetchUserRolesService
 {
     #[Inject()]
-    private FetchAgencyService $agencyService;
-
-    #[Inject()]
     private RoleRepository $roleRepository;
 
-    public function getRolesForUser(User $user)
+    public function getRolesForUser(User $user): array
     {
         return $this->roleRepository->getRolesForUser($user->getId());
     }

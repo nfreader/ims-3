@@ -3,6 +3,8 @@
 namespace App\Domain\User\Data;
 
 use App\Domain\Agency\Data\Agency;
+use App\Domain\Incident\Data\Incident;
+use App\Domain\Permissions\Data\PermissionsEnum;
 use App\Domain\Role\Data\UserRole;
 use DateTimeImmutable;
 use JsonSerializable;
@@ -200,5 +202,34 @@ class User implements JsonSerializable
     public function isAdmin(): bool
     {
         return $this->isAdmin;
+    }
+
+    public function can(PermissionsEnum $permission, mixed $target): bool
+    {
+        switch(get_class($target)) {
+            case Incident::class:
+                return $this->checkPermissionsAgainstIncident(
+                    $permission,
+                    $target
+                );
+                break;
+        }
+        return false;
+    }
+
+    private function checkPermissionsAgainstIncident(PermissionsEnum $permission, Incident $incident): bool
+    {
+        if(!$this->getActiveRole()) {
+            //TODO: Handle "public" incidents
+            return false;
+        }
+        foreach($incident->getPermissions()['role'] as $p) {
+            if($permission->value & $p->getFlags()) {
+                if($permission->value & $this->getActiveRole()->getFlags()) {
+                    return true;
+                }
+            }
+        }
+        return false;
     }
 }

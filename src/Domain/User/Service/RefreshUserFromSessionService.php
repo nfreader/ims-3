@@ -7,7 +7,6 @@ use App\Domain\Role\Repository\RoleRepository;
 use App\Domain\User\Data\User;
 use App\Domain\User\Repository\UserRepository;
 use Doctrine\DBAL\Connection;
-use Exception;
 use Psr\Container\ContainerInterface;
 use Symfony\Component\HttpFoundation\Session\Session;
 
@@ -36,10 +35,11 @@ class RefreshUserFromSessionService
             $user->setAgencies($agencies);
             $user->setRoles($this->roleRepository->getRolesForUser($user->getId()));
             foreach($user->getRoles() as $r) {
-                if($r->getRoleId() == (int) $session->get('activeRole', null)) {
+                if($r->getRoleId() === (int) $session->get('activeRole', null)) {
                     $user->setActiveRole($r);
                 }
             }
+
             return $user;
         }
         return null;

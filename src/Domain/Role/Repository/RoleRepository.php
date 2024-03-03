@@ -2,10 +2,8 @@
 
 namespace App\Domain\Role\Repository;
 
-use App\Domain\Agency\Data\Agency;
-use App\Domain\Agency\Repository\AgencyRepository;
+use App\Domain\Permissions\Data\PermissionTypeEnum;
 use App\Domain\Role\Data\Role;
-use App\Domain\Role\Data\RoleUser;
 use App\Domain\Role\Data\UserRole;
 use App\Domain\User\Data\User;
 use App\Domain\User\Repository\UserRepository;
@@ -178,20 +176,19 @@ class RoleRepository extends DoctrineRepository
             'r.name as roleName',
             'a.id as agencyId',
             'a.name as agencyName',
-            'a.logo as agencyLogo'
+            'a.logo as agencyLogo',
+            'f.flags',
+            'f.incident'
         ]);
         $queryBuilder->from('user_role', 'ur');
-        $queryBuilder->join('ur', 'role', 'r', 'ur.role = r.id');
-        $queryBuilder->join('r', 'agency', 'a', 'r.agency = a.id');
+        $queryBuilder->leftjoin('ur', 'role', 'r', 'ur.role = r.id');
+        $queryBuilder->leftjoin('r', 'agency', 'a', 'r.agency = a.id');
+        $queryBuilder->leftjoin('r', 'incident_permission_flags', 'f', "r.id = f.target AND f.type = '".PermissionTypeEnum::ROLE->value."'");
         $queryBuilder->where('ur.user = '.$queryBuilder->createPositionalParameter($user));
         $queryBuilder->andWhere('ur.active = 1');
+        $queryBuilder->addGroupBy('r.id');
         $result = $queryBuilder->executeQuery($queryBuilder->getSQL(), [$user]);
-        $this->overrideMetadata(UserRole::class);
-        $return = [];
-        foreach($result->fetchAllAssociative() as $r) {
-            $return[] = new UserRole(...$this->mapRow($r));
-        }
-        return $return;
+        return $this->getResults($result, UserRole::class);
 
     }
 

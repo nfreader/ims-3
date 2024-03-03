@@ -4,9 +4,11 @@ namespace App\Action\Incident;
 
 use App\Action\Action;
 use App\Domain\Event\Repository\EventRepository;
-use App\Domain\Incident\Repository\IncidentRepository;
 use App\Domain\Incident\Service\FetchIncidentService;
+use App\Domain\Permissions\Data\PermissionsEnum;
 use DI\Attribute\Inject;
+use Exception;
+use JustSteveKing\StatusCode\Http;
 use Nyholm\Psr7\Response;
 
 final class ViewIncidentAction extends Action
@@ -21,6 +23,9 @@ final class ViewIncidentAction extends Action
     {
         $incident = $this->getArg('incident');
         $incident = $this->incidentService->getIncident($incident);
+        if(!$this->getUser()->can(PermissionsEnum::VIEW_INCIDENT, $incident)) {
+            throw new Exception("Your active role does not have permission to view this", Http::UNAUTHORIZED->value);
+        }
         $events = $this->eventRepository->getEventsForIncident($incident->getId());
         return $this->render('incident/incident.html.twig', [
             'incident' => $incident,

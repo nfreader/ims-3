@@ -9,7 +9,9 @@ class UserRole
         private string $roleName,
         private int $agencyId,
         private string $agencyName,
-        private ?string $agencyLogo = null
+        private ?string $agencyLogo = null,
+        private ?int $flags = 0,
+        private ?int $incident = 0
     ) {
 
     }
@@ -37,5 +39,10 @@ class UserRole
     public function getAgencyLogo(): ?string
     {
         return $this->agencyLogo;
+    }
+
+    public function getFlags(): ?int
+    {
+        return $this->flags;
     }
 }
