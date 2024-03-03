@@ -3,11 +3,13 @@
 namespace App\Domain\Incident\Service;
 
 use App\Domain\Incident\Data\Incident;
-use App\Domain\Incident\Repository\IncidentAgencyRepository;
+use App\Domain\Permissions\Data\PermissionTypeEnum;
+use App\Domain\Incident\Repository\IncidentPermissionsRepository;
 use App\Domain\User\Data\User;
 use DI\Attribute\Inject;
 use Exception;
 use JustSteveKing\StatusCode\Http;
+use stdClass;
 
 class IncidentSettingsService
 {
@@ -15,7 +17,7 @@ class IncidentSettingsService
     private FetchIncidentService $incidentService;
 
     #[Inject()]
-    private IncidentAgencyRepository $incidentAgencyRepository;
+    private IncidentPermissionsRepository $permissionsRepository;
 
     private Incident $incident;
 
@@ -29,18 +31,42 @@ class IncidentSettingsService
                 throw new Exception("Invalid data", (int) Http::BAD_REQUEST);
                 break;
 
-            case 'agencies':
-                $this->updateAgencies($data);
+            case 'permissions':
+                $this->updatePermissions($data);
                 break;
         }
     }
 
-    private function updateAgencies(array $data)
+    private function updatePermissions(array $data)
     {
-        foreach($data as $agency => $status) {
-            $this->incidentAgencyRepository->updateIncidentAgencies($this->incident->getId(), $agency, $status);
+        $updates['agencies'] = [];
+        $updates['roles'] = [];
+        foreach($data as $k => $d) {
+            $k = explode('-', $k);
+            if('agency' === $k[1]) {
+                $updates['agencies'][$k[2]][] = $d;
+            } elseif('role' === $k[1]) {
+                $updates['roles'][$k[2]][] = $d;
+            } else {
+                throw new Exception('Invalid data provided', (int) Http::BAD_REQUEST);
+            }
         }
+        foreach($updates['agencies'] as $agency => &$a) {
+            $this->updatePermissionsForAgency($agency, array_sum($a));
+        }
+        foreach($updates['roles'] as $role => &$r) {
+            $this->updatePermissionsForRole($role, array_sum($r));
+        }
+    }
 
+    private function updatePermissionsForAgency(int $agency, int $flags)
+    {
+        $this->permissionsRepository->insertPermissions(PermissionTypeEnum::AGENCY, $agency, $flags, $this->incident->getId());
+    }
+
+    private function updatePermissionsForRole(int $role, int $flags)
+    {
+        $this->permissionsRepository->insertPermissions(PermissionTypeEnum::ROLE, $role, $flags, $this->incident->getId());
     }
 
 }

@@ -2,6 +2,7 @@
 
 namespace App\Domain\Agency\Data;
 
+use App\Domain\Role\Data\Role;
 use DateTimeImmutable;
 
 class Agency
@@ -16,7 +17,8 @@ class Agency
         private ?string $location = null,
         private ?string $title = null,
         private ?int $roleCount = 0,
-        private ?int $userCount = 0
+        private ?int $userCount = 0,
+        private ?array $roles = []
     ) {
 
     }
@@ -59,5 +61,16 @@ class Agency
     public function isActive(): bool
     {
         return $this->active;
+    }
+
+    public function getRoles(): ?array
+    {
+        return $this->roles;
+    }
+
+    public function addRole(Role $role): static
+    {
+        $this->roles[] = $role;
+        return $this;
     }
 }

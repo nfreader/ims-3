@@ -6,28 +6,29 @@
 		<div class="col-md-2">
 			<ul class="nav flex-column bg-body-tertiary border border-subtle rounded-2">
 				<li class="nav-item">
-					<a class="nav-link" aria-current="page" href="#">Manage Agencies</a>
+					<a class="nav-link" aria-current="page" href="#">Manage Roles</a>
 				</li>
 			</ul>
 		</div>
 		<div class="col">
-            <form action="{{url_for('incident.settings.update',{'incident':incident.getId,'setting':'agencies'})}}" method="post" class="card form-async" id="updateAgencies" data-autosubmit="true">
-			<div class="card-header fw-bold">Manage Agencies <i class="indicator fas fa-check text-success visually-hidden"></i></div>
-            <div class="card-body">
-			<p>Click on an agecy below to allow or disallow members of that agency to access this incident</p>
-			{% for a in agencies %}
-            {{a.getId == incident.getAgencyId ? '<span data-bs-toggle="tooltip" title="You can\'t remove this agency">'}}
-				<input type="hidden" name="{{a.getId}}" value="false" />
-                <input type="checkbox" class="btn-check" id="agency-{{a.getId}}" autocomplete="off" name="{{a.getId}}" value="true" {{a.getId == incident.getAgencyId ? 'disabled checked="checked"'}} />
-                <label class="btn btn-outline-primary" for="agency-{{a.getId}}" {{a.getId == incident.getAgencyId ? 'data-bs-toggle="tooltip" title="You can\'t remove this agency"'}}>{{agencyBadge(a)}}
-				</label>
-                {{a.getId == incident.getAgencyId ? '</span>'}}
-			{% endfor %}
-            <hr>
-            <div class="d-flex justify-content-end align-items-center gap-2">
-            <div class="form-text">Any data created by agencies that are removed will not be removed.</div><button type="submit" class="btn btn-primary">Save Changes</button></div>
-            </div>
-            </form>
+			<form action="{{url_for('incident.settings.update',{'incident':incident.getId,'setting':'permissions'})}}" method="post" name="incidentPermissions">
+				<table class="table table-sm" autocomplete="off">
+					<thead>
+						<tr>
+							<th>Role</th>
+							{% for p in enum('\\App\\Domain\\Permissions\\Data\\PermissionsEnum').cases %}
+								<th class="text-center">{{p.getName}}</th>
+							{% endfor %}
+						</tr>
+					</thead>
+					<tbody>
+						{% include 'incident/components/permissionMatrix.html.twig' %}
+					</tbody>
+				</table>
+				<div class="d-flex justify-content-end">
+					<button class="btn btn-success" type="submit">Update Permissions</button>
+				</div>
+			</form>
 		</div>
 	</div>
 {% endblock %}

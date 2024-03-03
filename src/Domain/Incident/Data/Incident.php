@@ -3,6 +3,7 @@
 namespace App\Domain\Incident\Data;
 
 use App\Domain\Agency\Data\Agency;
+use App\Domain\Permissions\Data\PermissionTypeEnum;
 use DateTimeImmutable;
 use JsonSerializable;
 
@@ -19,7 +20,8 @@ class Incident implements JsonSerializable
         private ?int $agencyId = null,
         private ?string $agencyLogo = null,
         private ?string $roleName = null,
-        private ?int $roleId = null
+        private ?int $roleId = null,
+        private array $permissions = []
     ) {
     }
 
@@ -74,5 +76,21 @@ class Incident implements JsonSerializable
     public function getAgencyLogo(): ?string
     {
         return $this->agencyLogo;
+    }
+
+    public function getPermissions(): array
+    {
+        return $this->permissions;
+    }
+
+    public function setPermissions(array $permissions): self
+    {
+        $this->permissions = array_fill_keys(array_column(PermissionTypeEnum::cases(), 'value'), []);
+        foreach($permissions as $p) {
+            $this->permissions[$p->getType()->value][] = $p;
+        }
+        // $this->permissions = $permissions;
+
+        return $this;
     }
 }

@@ -4,6 +4,7 @@ namespace App\Action\Incident;
 
 use App\Action\Action;
 use App\Domain\Agency\Repository\AgencyRepository;
+use App\Domain\Agency\Service\FetchAgencyService;
 use App\Domain\Event\Repository\EventRepository;
 use App\Domain\Incident\Repository\IncidentRepository;
 use App\Domain\Incident\Service\FetchIncidentService;
@@ -16,7 +17,7 @@ final class ViewIncidentSettingsAction extends Action
     private FetchIncidentService $incidentService;
 
     #[Inject]
-    private AgencyRepository $agencyRepository;
+    private FetchAgencyService $agencyService;
 
     public function action(): Response
     {
@@ -24,7 +25,7 @@ final class ViewIncidentSettingsAction extends Action
         $incident = $this->incidentService->getIncident($incident);
         return $this->render('incident/settings.html.twig', [
             'incident' => $incident,
-            'agencies' => $this->agencyRepository->getAgencies()
+            'agencies' => $this->agencyService->getAgenciesWithRoles()
         ]);
     }
 }

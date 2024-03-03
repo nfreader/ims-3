@@ -1,0 +1,50 @@
+{% set enum = enum('\\App\\Domain\\Permissions\\Data\\PermissionsEnum') %}
+{% from 'macros.html.twig' import empty %}
+{% for a in agencies %}
+	{% set flags = 0 %}
+	<tr class="table-light">
+		<td class="align-middle fw-bold">
+			<img src="/uploads/{{a.getLogo}}" width="32" height="32" class="me-2"/>{{a.getName}}
+		</td>
+		{% for p in enum.cases %}
+			{% for e in incident.getPermissions.agency %}
+				{% if e.getTarget == a.getId %}
+					{% set flags = e.getFlags %}
+				{% endif %}
+			{% endfor %}
+			<fieldset name="agency-{{a.getId}}-checkboxes">
+				<td class="position-relative text-center align-middle">
+					<label for="checkbox-agency-{{a.getId}}-{{p.value}}" class="position-absolute d-block top-0 end-0 start-0 bottom-0"></label>
+					{# <input type="hidden" value="-{{p.value}}" name="checkbox-agency-{{r.getId}}-{{p.value}}"> #}
+					<input type="checkbox" name="checkbox-agency-{{a.getId}}-{{p.value}}" id="checkbox-agency-{{a.getId}}-{{p.value}}" value="{{p.value}}" class="form-check-input pe-none" {{p.value b-and flags ? 'checked' : ''}}>
+				</td>
+			</fieldset>
+		{% endfor %}
+		{% set flags = 0 %}
+		{% for r in a.getRoles %}
+			{% for e in incident.getPermissions.role %}
+				{% if e.getTarget == r.getId %}
+					{% set flags = e.getFlags %}
+				{% endif %}
+			{% endfor %}
+			<tr>
+				<td>{{r.getName}}</td>
+				<fieldset name="role-{{r.getId}}-checkboxes">
+					{% for p in enum.cases %}
+						<td class="position-relative text-center">
+							<label for="checkbox-role-{{r.getId}}-{{p.value}}" class="position-absolute d-block top-0 end-0 start-0 bottom-0"></label>
+							{# <input type="hidden" value="-{{p.value}}" name="checkbox-role-{{r.getId}}-{{p.value}}"> #}
+							<input type="checkbox" name="checkbox-role-{{r.getId}}-{{p.value}}" id="checkbox-role-{{r.getId}}-{{p.value}}" value="{{p.value}}" class="form-check-input pe-none" {{p.value b-and flags ? 'checked' : ''}}>
+						</td>
+					{% endfor %}
+				</fieldset>
+			</tr>
+		{% else %}
+			<tr>
+				<td colspan="{{enum.cases|length + 1}}" class="align-middle">
+					{{empty("No Roles in this Agency")}}
+				</td>
+			</tr>
+		{% endfor %}
+	</tr>
+{% endfor %}

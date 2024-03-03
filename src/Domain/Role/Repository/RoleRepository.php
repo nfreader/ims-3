@@ -13,6 +13,12 @@ use App\Repository\DoctrineRepository;
 use Doctrine\DBAL\ParameterType;
 use Exception;
 
+/**
+ * RoleRepository
+ *
+ * Methods for interacting with the `role` table and making changes to the `user_role` table. Note that user roles are SOFT DELETED.
+ *
+ */
 class RoleRepository extends DoctrineRepository
 {
     private string $table = 'role';
@@ -74,21 +80,14 @@ class RoleRepository extends DoctrineRepository
         );
     }
 
-    public function getUsersForRole(int $role): array
+    public function getAllRoles(): array
     {
         $queryBuilder = $this->qb();
-        $queryBuilder->select(...UserRepository::COLUMNS);
-        $queryBuilder->from('user_role', 'ur');
-        $queryBuilder->join('ur', 'user', 'u', 'ur.user = u.id');
-        $queryBuilder->where('ur.role = '. $queryBuilder->createPositionalParameter($role));
-        $queryBuilder->andWhere('ur.active = 1');
-        $result = $queryBuilder->executeQuery($queryBuilder->getSQL(), [$role]);
-        $this->overrideMetadata(User::class);
-        $return = [];
-        foreach($result->fetchAllAssociative() as $r) {
-            $return[] = new User(...$this->mapRow($r));
-        }
-        return $return;
+        $queryBuilder->select(...self::COLUMNS);
+        $queryBuilder->from($this->table, $this->alias);
+        $queryBuilder->where('r.active = 1');
+        $result = $queryBuilder->executeQuery($queryBuilder->getSQL());
+        return $this->getResults($result);
     }
 
     public function updateRole(int $role, array $data)
@@ -138,6 +137,39 @@ class RoleRepository extends DoctrineRepository
         return $this->connection->lastInsertId();
     }
 
+    /**
+     * getUsersForRole
+     *
+     * Returns an array of User objects of users that are currently assigned to the given $role
+     *
+     * @param integer $role
+     * @return array
+     */
+    public function getUsersForRole(int $role): array
+    {
+        $queryBuilder = $this->qb();
+        $queryBuilder->select(...UserRepository::COLUMNS);
+        $queryBuilder->from('user_role', 'ur');
+        $queryBuilder->join('ur', 'user', 'u', 'ur.user = u.id');
+        $queryBuilder->where('ur.role = '. $queryBuilder->createPositionalParameter($role));
+        $queryBuilder->andWhere('ur.active = 1');
+        $result = $queryBuilder->executeQuery($queryBuilder->getSQL(), [$role]);
+        $this->overrideMetadata(User::class);
+        $return = [];
+        foreach($result->fetchAllAssociative() as $r) {
+            $return[] = new User(...$this->mapRow($r));
+        }
+        return $return;
+    }
+
+    /**
+     * getRolesForUser
+     *
+     * Returns and array of UserRole objects of roles that are currently assigned to the given $user
+     *
+     * @param integer $user
+     * @return void
+     */
     public function getRolesForUser(int $user)
     {
         $queryBuilder = $this->qb();
