@@ -219,14 +219,17 @@ class User implements JsonSerializable
 
     private function checkPermissionsAgainstIncident(PermissionsEnum $permission, Incident $incident): bool
     {
-        if(!$this->getActiveRole()) {
-            //TODO: Handle "public" incidents
+        if(!$incident->getAgencyId() && $permission === PermissionsEnum::VIEW_INCIDENT) {
+            //This is a "public" incident, which are always visible to all users
+            return true;
+        } elseif(!$this->getActiveRole()) {
             return false;
-        }
-        foreach($incident->getPermissions()['role'] as $p) {
-            if($permission->value & $p->getFlags()) {
-                if($permission->value & $this->getActiveRole()->getFlags()) {
-                    return true;
+        } else {
+            foreach($incident->getPermissions()['role'] as $p) {
+                if($permission->value & $p->getFlags()) {
+                    if($permission->value & $this->getActiveRole()->getFlags()) {
+                        return true;
+                    }
                 }
             }
         }
