@@ -47,6 +47,8 @@ class DoctrineRepository
                 throw new Exception("Trying to map column to entity property that was not expected! Key: {$key} Value: {$value}");
             } elseif(isset($this->entityMetadata[$key]) && $this->entityMetadata[$key]->getType()->isbuiltin()) {
                 return;
+            } elseif (is_null($value) && $this->entityMetadata[$key]->getType()->allowsNull()) {
+                return;
             } else {
                 $class = new ReflectionClass($this->entityMetadata[$key]->getType()->getName());
                 if($class->isEnum()) {
