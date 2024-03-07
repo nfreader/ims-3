@@ -21,4 +21,10 @@ enum PermissionsEnum: int
         };
     }
 
+    public static function fromName(string $name)
+    {
+
+        return constant("self::$name");
+    }
+
 }

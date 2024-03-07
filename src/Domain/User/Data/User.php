@@ -204,8 +204,11 @@ class User implements JsonSerializable
         return $this->isAdmin;
     }
 
-    public function can(PermissionsEnum $permission, mixed $target): bool
+    public function can(string|PermissionsEnum $permission, mixed $target): bool
     {
+        if(is_string($permission)) {
+            $permission = PermissionsEnum::fromName($permission);
+        }
         switch(get_class($target)) {
             case Incident::class:
                 return $this->checkPermissionsAgainstIncident(
