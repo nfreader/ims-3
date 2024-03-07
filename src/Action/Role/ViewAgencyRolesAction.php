@@ -3,11 +3,12 @@
 namespace App\Action\Role;
 
 use App\Action\Action;
+use App\Action\ActionInterface;
 use App\Domain\Role\Service\FetchAgencyRolesService;
 use DI\Attribute\Inject;
 use Nyholm\Psr7\Response;
 
-class ViewAgencyRolesAction extends Action
+class ViewAgencyRolesAction extends Action implements ActionInterface
 {
     #[Inject()]
     private FetchAgencyRolesService $rolesService;

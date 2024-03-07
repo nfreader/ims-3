@@ -3,6 +3,7 @@
 namespace App\Action\Incident;
 
 use App\Action\Action;
+use App\Action\ActionInterface;
 use App\Domain\Event\Repository\EventRepository;
 use App\Domain\Incident\Service\FetchIncidentService;
 use App\Domain\Permissions\Data\PermissionsEnum;
@@ -12,7 +13,7 @@ use JustSteveKing\StatusCode\Http;
 use Nyholm\Psr7\Response;
 use Slim\Exception\HttpException;
 
-final class ViewIncidentAction extends Action
+final class ViewIncidentAction extends Action implements ActionInterface
 {
     #[Inject]
     private FetchIncidentService $incidentService;

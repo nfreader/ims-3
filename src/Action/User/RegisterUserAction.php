@@ -3,11 +3,12 @@
 namespace App\Action\User;
 
 use App\Action\Action;
+use App\Action\ActionInterface;
 use App\Domain\User\Service\UserCreationService;
 use DI\Attribute\Inject;
 use Nyholm\Psr7\Response;
 
-final class RegisterUserAction extends Action
+final class RegisterUserAction extends Action implements ActionInterface
 {
     #[Inject]
     private UserCreationService $userCreationService;

@@ -3,6 +3,7 @@
 namespace App\Action\Incident;
 
 use App\Action\Action;
+use App\Action\ActionInterface;
 use App\Domain\Agency\Repository\AgencyRepository;
 use App\Domain\Incident\Service\FetchIncidentService;
 use App\Domain\Incident\Service\IncidentSettingsService;
@@ -10,7 +11,7 @@ use DI\Attribute\Inject;
 use Exception;
 use Nyholm\Psr7\Response;
 
-final class UpdateIncidentSettingsAction extends Action
+final class UpdateIncidentSettingsAction extends Action implements ActionInterface
 {
     #[Inject]
     private IncidentSettingsService $incidentSetting;

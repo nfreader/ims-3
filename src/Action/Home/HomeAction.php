@@ -3,11 +3,12 @@
 namespace App\Action\Home;
 
 use App\Action\Action;
+use App\Action\ActionInterface;
 use App\Domain\Incident\Repository\IncidentRepository;
 use DI\Attribute\Inject;
 use Nyholm\Psr7\Response;
 
-final class HomeAction extends Action
+final class HomeAction extends Action implements ActionInterface
 {
     #[Inject]
     private IncidentRepository $incidentRepository;

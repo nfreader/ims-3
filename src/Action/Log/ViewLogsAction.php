@@ -3,9 +3,10 @@
 namespace App\Action\Log;
 
 use App\Action\Action;
+use App\Action\ActionInterface;
 use Nyholm\Psr7\Response;
 
-final class ViewLogsAction extends Action
+final class ViewLogsAction extends Action implements ActionInterface
 {
     public function action(): Response
     {

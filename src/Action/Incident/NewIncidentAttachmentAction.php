@@ -3,13 +3,14 @@
 namespace App\Action\Incident;
 
 use App\Action\Action;
+use App\Action\ActionInterface;
 use App\Domain\Attachment\Service\AttachmentFileService;
 use App\Domain\Event\Repository\EventRepository;
 use App\Domain\Incident\Repository\IncidentRepository;
 use DI\Attribute\Inject;
 use Nyholm\Psr7\Response;
 
-class NewIncidentAttachmentAction extends Action
+class NewIncidentAttachmentAction extends Action implements ActionInterface
 {
     #[Inject]
     private AttachmentFileService $attachmentFileService;

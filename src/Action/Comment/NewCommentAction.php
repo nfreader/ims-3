@@ -3,13 +3,14 @@
 namespace App\Action\Comment;
 
 use App\Action\Action;
+use App\Action\ActionInterface;
 use App\Domain\Comment\Service\NewCommentService;
 use App\Domain\Event\Repository\EventRepository;
 use App\Domain\Incident\Repository\IncidentRepository;
 use DI\Attribute\Inject;
 use Nyholm\Psr7\Response;
 
-class NewCommentAction extends Action
+class NewCommentAction extends Action implements ActionInterface
 {
     #[Inject]
     private NewCommentService $commentService;

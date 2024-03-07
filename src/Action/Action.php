@@ -299,10 +299,6 @@ abstract class Action
         } elseif ($adminOnly && !$user->isAdmin()) {
             throw new Exception("You do not have permission to access this", 403);
         }
-
-
     }
-
-    abstract public function action(): ResponseInterface;
 
 }

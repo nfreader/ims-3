@@ -3,13 +3,14 @@
 namespace App\Action\Event;
 
 use App\Action\Action;
+use App\Action\ActionInterface;
 use App\Domain\Comment\Repository\CommentRepository;
 use App\Domain\Event\Repository\EventRepository;
 use App\Domain\Incident\Repository\IncidentRepository;
 use DI\Attribute\Inject;
 use Nyholm\Psr7\Response;
 
-class ViewEventAction extends Action
+class ViewEventAction extends Action implements ActionInterface
 {
     #[Inject]
     private IncidentRepository $incidentRepository;

@@ -3,12 +3,13 @@
 namespace App\Action\Agency;
 
 use App\Action\Action;
+use App\Action\ActionInterface;
 use App\Domain\Agency\Service\AgencyCreationService;
 use App\Domain\Agency\Service\AgencyLogoUploadService;
 use DI\Attribute\Inject;
 use Nyholm\Psr7\Response;
 
-class NewAgencyAction extends Action
+class NewAgencyAction extends Action implements ActionInterface
 {
     #[Inject()]
     private AgencyLogoUploadService $logoUploader;

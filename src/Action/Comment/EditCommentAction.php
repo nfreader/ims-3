@@ -3,13 +3,14 @@
 namespace App\Action\Comment;
 
 use App\Action\Action;
+use App\Action\ActionInterface;
 use App\Domain\Comment\Service\EditCommentService;
 use App\Exception\RedirectToSafetyException;
 use DI\Attribute\Inject;
 use Exception;
 use Nyholm\Psr7\Response;
 
-class EditCommentAction extends Action
+class EditCommentAction extends Action implements ActionInterface
 {
     #[Inject]
     private EditCommentService $commentService;

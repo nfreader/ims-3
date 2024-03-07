@@ -3,11 +3,12 @@
 namespace App\Action\User;
 
 use App\Action\Action;
+use App\Action\ActionInterface;
 use App\Domain\User\Repository\UserRepository;
 use DI\Attribute\Inject;
 use Nyholm\Psr7\Response;
 
-class ListUsersAction extends Action
+class ListUsersAction extends Action implements ActionInterface
 {
     #[Inject()]
     private UserRepository $userRepository;

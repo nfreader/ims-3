@@ -3,12 +3,13 @@
 namespace App\Action\Event;
 
 use App\Action\Action;
+use App\Action\ActionInterface;
 use App\Domain\Event\Service\NewEventService;
 use App\Domain\Incident\Repository\IncidentRepository;
 use DI\Attribute\Inject;
 use Nyholm\Psr7\Response;
 
-class NewEventAction extends Action
+class NewEventAction extends Action implements ActionInterface
 {
     #[Inject]
     private NewEventService $NewEventService;

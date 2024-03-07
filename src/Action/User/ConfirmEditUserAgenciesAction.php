@@ -3,11 +3,12 @@
 namespace App\Action\User;
 
 use App\Action\Action;
+use App\Action\ActionInterface;
 use App\Domain\Agency\Service\AgencyMembershipService;
 use DI\Attribute\Inject;
 use Nyholm\Psr7\Response;
 
-class ConfirmEditUserAgenciesAction extends Action
+class ConfirmEditUserAgenciesAction extends Action implements ActionInterface
 {
     #[Inject()]
     private AgencyMembershipService $agencyMembership;
