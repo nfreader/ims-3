@@ -2,27 +2,28 @@
 
 namespace App\Action\Event;
 
-use App\Action\Action;
 use App\Action\ActionInterface;
+use App\Action\Incident\IncidentAction;
 use App\Domain\Event\Service\NewEventService;
-use App\Domain\Incident\Repository\IncidentRepository;
 use DI\Attribute\Inject;
 use Nyholm\Psr7\Response;
 
-class NewEventAction extends Action implements ActionInterface
+class NewEventAction extends IncidentAction implements ActionInterface
 {
     #[Inject]
     private NewEventService $NewEventService;
 
-    #[Inject]
-    private IncidentRepository $incidentRepository;
-
     public function action(): Response
     {
-        $user = $this->getUser();
-        $incident = $this->incidentRepository->getIncident($this->getArg('incident'));
-        $this->NewEventService->createEvent($this->getRequest()->getParsedBody(), $incident, $user);
+        $this->NewEventService->createEvent(
+            $this->getRequest()->getParsedBody(),
+            $this->incident,
+            $this->getUser()
+        );
         $this->addSuccessMessage("Your event has been added to this incident");
-        return $this->redirectFor('incident.view', ['incident' => $incident->getId()]);
+        return $this->redirectFor(
+            'incident.view',
+            ['incident' => $this->incident->getId()]
+        );
     }
 }
