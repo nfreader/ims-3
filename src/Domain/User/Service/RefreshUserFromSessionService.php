@@ -31,8 +31,6 @@ class RefreshUserFromSessionService
         $user = $session->get('user', null);
         if($user) {
             $user = $this->userRepository->getUser($session->get('user'));
-            $agencies = $this->membershipRepository->getAgenciesForUser($user->getId());
-            $user->setAgencies($agencies);
             $user->setRoles($this->roleRepository->getRolesForUser($user->getId()));
             foreach($user->getRoles() as $r) {
                 if($r->getRoleId() === (int) $session->get('activeRole', null)) {
