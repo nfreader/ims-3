@@ -166,9 +166,9 @@ class RoleRepository extends DoctrineRepository
      * Returns and array of UserRole objects of roles that are currently assigned to the given $user
      *
      * @param integer $user
-     * @return void
+     * @return array
      */
-    public function getRolesForUser(int $user)
+    public function getRolesForUser(int $user): array
     {
         $queryBuilder = $this->qb();
         $queryBuilder->select(...[
@@ -189,7 +189,6 @@ class RoleRepository extends DoctrineRepository
         $queryBuilder->addGroupBy('r.id');
         $result = $queryBuilder->executeQuery($queryBuilder->getSQL(), [$user]);
         return $this->getResults($result, UserRole::class);
-
     }
 
 }
