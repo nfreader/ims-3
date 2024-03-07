@@ -24,10 +24,10 @@ class IncidentSettingsService
 
     private Incident $incident;
 
-    public function updateSetting(string $setting, array $data, int $incident, User $user)
+    public function updateSetting(string $setting, array $data, Incident $incident, User $user)
     {
 
-        $this->incident = $this->incidentService->getIncident($incident);
+        $this->incident = $incident;
 
         switch ($setting) {
             default:
