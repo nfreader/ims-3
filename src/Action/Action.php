@@ -70,15 +70,14 @@ abstract class Action
         $this->setQuery();
         $this->setArgs($args);
         $this->setRoute();
-        // $this->permissionCheck();
-        // $this->method = $this->request->getMethod();
         $this->request->withAttribute('request_id', $this->container->get('request_id'));
-        if(method_exists($this, 'getEntities') && is_callable([$this, 'getEntities'])) {
-            call_user_func([$this,'getEntities']);
+        if($this instanceof GetEntitiesInterface) {
+            $this->getEntities();
         }
-        if(method_exists($this, 'action') && is_callable([$this, 'action'])) {
-            return call_user_func([$this,'action']);
+        if($this instanceof ActionInterface) {
+            return $this->action();
         }
+
     }
 
     private function setRequest(ServerRequestInterface $request): self
