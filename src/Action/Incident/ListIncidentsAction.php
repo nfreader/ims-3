@@ -20,7 +20,11 @@ final class ListIncidentsAction extends Action implements ActionInterface
     public function action(): Response
     {
         $role = $this->getUser()->getActiveRole()?->getRoleId();
-        $incidents = $this->incidentRepository->listIncidentsForActiveRole($role);
+        if(!$this->getUser()->isSudoMode()) {
+            $incidents = $this->incidentRepository->listIncidentsForActiveRole($role);
+        } else {
+            $incidents = $this->incidentRepository->listIncidents();
+        }
         $events = $this->eventRepository->listEvents();
         return $this->json([
             'incidents' => $incidents,

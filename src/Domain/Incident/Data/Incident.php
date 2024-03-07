@@ -98,9 +98,9 @@ class Incident implements JsonSerializable, CheckPermissionsInterface
 
     public function checkUserPermissions(PermissionsEnum $permission, User $user): bool
     {
-        // if($user->isAdmin()) {
-        //     return true;
-        // }
+        if($user->isSudoMode()) {
+            return true;
+        }
         if(!$this->getAgencyId() && $permission === PermissionsEnum::VIEW_INCIDENT) {
             //This is a "public" incident, which are always visible to all users
             return true;

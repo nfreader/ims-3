@@ -4,6 +4,16 @@
 		{{app.user.getName}}
 	</a>
 	<ul class="dropdown-menu">
+		{% if app.user.isAdmin %}
+			<li class="d-grid px-2">
+				{% if app.user.isSudoMode %}
+					<button type="submit" class="btn btn-success btn-sm" form="sudoMode">Exit Sudo Mode</button>
+				{% else %}
+					<button class="btn btn-danger btn-sm" data-bs-toggle="modal" data-bs-target="#sudoModal">Enter Sudo Mode</button>
+				{% endif %}
+			</li>
+			<li><hr class="dropdown-divider"></li>
+		{% endif %}
 		<li>
 			<form class="form px-2 d-grid" action="{{url_for('user.logout')}}" method="post">
 				<button type="submit" class="btn btn-danger btn-sm">Log Out</button>

@@ -27,7 +27,8 @@ class User implements JsonSerializable
         private ?Agency $activeAgency = null,
         private ?UserRole $activeRole = null,
         private ?string $agencyTitle = null,
-        private ?string $agencyList = null
+        private ?string $agencyList = null,
+        private bool $sudoMode = false
     ) {
     }
 
@@ -229,4 +230,16 @@ class User implements JsonSerializable
         return false;
     }
 
+
+    public function isSudoMode(): bool
+    {
+        return $this->sudoMode;
+    }
+
+    public function setSudoMode(bool $sudoMode): self
+    {
+        $this->sudoMode = $sudoMode;
+
+        return $this;
+    }
 }

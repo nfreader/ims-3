@@ -14,5 +14,8 @@
 			{{ webpack_entry_script_tags('mdeditor') }}
 		{% endblock %}
 	</head>
-	<body>
-    {% include 'base/alerts.html.twig' %}
+	<body class="{{html_classes({ 'sudo' : app.user.isSudoMode } )}}">
+		{% include 'base/alerts.html.twig' %}
+		{% if app.user.isAdmin %}
+		{% include 'base/sudoModeModal.html.twig' %}
+		{% endif %}

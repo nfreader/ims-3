@@ -18,7 +18,11 @@ final class HomeAction extends Action implements ActionInterface
         $incidents = null;
         if($this->getUser()) {
             $role = $this->getUser()->getActiveRole()?->getRoleId();
-            $incidents = $this->incidentRepository->listIncidentsForActiveRole($role);
+            if(!$this->getUser()->isSudoMode()) {
+                $incidents = $this->incidentRepository->listIncidentsForActiveRole($role);
+            } else {
+                $incidents = $this->incidentRepository->listIncidents();
+            }
         }
         return $this->render('home/home.html.twig', [
             'incidents' => $incidents

@@ -1,0 +1,24 @@
+<div class="modal fade" id="sudoModal" tabindex="-1" aria-labelledby="sudoModalLabel" aria-hidden="true">
+	<div class="modal-dialog modal-dialog-centered modal-dialog-scrollable">
+		<div class="modal-content">
+			<div class="modal-header">
+				<h1 class="modal-title fs-5" id="sudoModalLabel">Activate Sudo Mode?</h1>
+				<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+			</div>
+			<div class="modal-body">
+				<p>
+					<strong>Sudo Mode</strong>
+					is a superadmin view of
+					{{app.name}}. While in sudo mode:</p>
+				<ul class="mb-3">
+					<li>Permission checks are disabled; you will be able to perform any action on any piece of data without restriction</li>
+				</ul>
+				<p>Understanding these risks, do you wish to continue?</p>
+			</div>
+			<form class="modal-footer" action="{{url_for('user.sudo')}}" method="post" name="sudoMode" id="sudoMode">
+				<button type="button" class="btn btn-secondary" data-bs-dismiss="modal">No</button>
+				<button type="submit" class="btn btn-danger">Yes, Enter Sudo Mode</button>
+			</form>
+		</div>
+	</div>
+</div>

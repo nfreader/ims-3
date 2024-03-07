@@ -37,7 +37,9 @@ class RefreshUserFromSessionService
                     $user->setActiveRole($r);
                 }
             }
-
+            if($user->isAdmin()) {
+                $user->setSudoMode($session->get('sudo_mode', false));
+            }
             return $user;
         }
         return null;
