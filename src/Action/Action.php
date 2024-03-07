@@ -80,7 +80,7 @@ abstract class Action
 
     }
 
-    private function setRequest(ServerRequestInterface $request): self
+    private function setRequest(ServerRequestInterface $request): static
     {
         $this->request = $request;
         return $this;
@@ -91,7 +91,7 @@ abstract class Action
         return $this->request;
     }
 
-    private function setQuery(): self
+    private function setQuery(): static
     {
         $this->query = $this->getRequest()->getQueryParams();
         return $this;
@@ -111,7 +111,7 @@ abstract class Action
         return null;
     }
 
-    private function setArgs(array $args): self
+    private function setArgs(array $args): static
     {
         $this->args = $args;
         return $this;
@@ -140,7 +140,7 @@ abstract class Action
         return null;
     }
 
-    private function setRoute(): self
+    private function setRoute(): static
     {
         $this->route = RouteContext::fromRequest($this->getRequest());
         return $this;
@@ -206,7 +206,7 @@ abstract class Action
      * @param string $message
      * @return self
      */
-    public function addSuccessMessage(string $message): self
+    public function addSuccessMessage(string $message): static
     {
         $this->session->getFlashbag()->add('success', $message."\nDEPRECATED\n");
 
@@ -223,7 +223,7 @@ abstract class Action
      * @param string $message
      * @return self
      */
-    public function addMessage(string $message): self
+    public function addMessage(string $message): static
     {
         $this->session->getFlashbag()->add('info', $message."\nDEPRECATED\n");
 
@@ -240,7 +240,7 @@ abstract class Action
      * @param string $message
      * @return self
      */
-    public function addErrorMessage(string $message): self
+    public function addErrorMessage(string $message): static
     {
         $this->session->getFlashbag()->add('danger', $message."\nDEPRECATED\n");
         return $this;

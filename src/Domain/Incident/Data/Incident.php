@@ -85,7 +85,7 @@ class Incident implements JsonSerializable, CheckPermissionsInterface
         return $this->permissions;
     }
 
-    public function setPermissions(array $permissions): self
+    public function setPermissions(array $permissions): static
     {
         $this->permissions = array_fill_keys(array_column(PermissionTypeEnum::cases(), 'value'), []);
         foreach($permissions as $p) {
@@ -98,6 +98,9 @@ class Incident implements JsonSerializable, CheckPermissionsInterface
 
     public function checkUserPermissions(PermissionsEnum $permission, User $user): bool
     {
+        // if($user->isAdmin()) {
+        //     return true;
+        // }
         if(!$this->getAgencyId() && $permission === PermissionsEnum::VIEW_INCIDENT) {
             //This is a "public" incident, which are always visible to all users
             return true;

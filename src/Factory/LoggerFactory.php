@@ -75,7 +75,7 @@ final class LoggerFactory
      *
      * @return self The logger factory
      */
-    public function addHandler(HandlerInterface $handler): self
+    public function addHandler(HandlerInterface $handler): static
     {
         $this->handler[] = $handler;
 
@@ -90,7 +90,7 @@ final class LoggerFactory
      *
      * @return self The logger factory
      */
-    public function addFileHandler(string $filename, int $level = null): self
+    public function addFileHandler(string $filename, int $level = null): static
     {
         $filename = sprintf('%s/%s', $this->path, $filename);
         $fileHandler = new StreamHandler($filename);
@@ -112,7 +112,7 @@ final class LoggerFactory
      *
      * @return self The logger factory
      */
-    public function addConsoleHandler(int $level = null): self
+    public function addConsoleHandler(int $level = null): static
     {
         /** @phpstan-ignore-next-line */
         $streamHandler = new StreamHandler('php://output', $level ?? $this->level);

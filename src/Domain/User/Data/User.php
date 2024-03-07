@@ -133,13 +133,13 @@ class User implements JsonSerializable
      * @param integer|null $activeAgency
      * @return self
      */
-    public function setActiveAgency(?Agency $activeAgency): self
+    public function setActiveAgency(?Agency $activeAgency): static
     {
         $this->activeAgency = $activeAgency;
         return $this;
     }
 
-    public function setActiveRole(?UserRole $activeRole): self
+    public function setActiveRole(?UserRole $activeRole): static
     {
         $this->activeRole = $activeRole;
         return $this;
@@ -183,7 +183,7 @@ class User implements JsonSerializable
         return $this->lastName;
     }
 
-    public function setRoles(array $roles): self
+    public function setRoles(array $roles): static
     {
         $this->roles = $roles;
 

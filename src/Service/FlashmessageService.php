@@ -20,7 +20,7 @@ class FlashMessageService
      * @param string $message
      * @return self
      */
-    public function addSuccessMessage(string $message): self
+    public function addSuccessMessage(string $message): static
     {
         $this->session->getFlashbag()->add('success', $message);
 
@@ -37,7 +37,7 @@ class FlashMessageService
      * @param string $message
      * @return self
      */
-    public function addMessage(string $message): self
+    public function addMessage(string $message): static
     {
         $this->session->getFlashbag()->add('info', $message);
 
@@ -54,7 +54,7 @@ class FlashMessageService
      * @param string $message
      * @return self
      */
-    public function addErrorMessage(string $message): self
+    public function addErrorMessage(string $message): static
     {
         $this->session->getFlashbag()->add('danger', $message);
         return $this;
