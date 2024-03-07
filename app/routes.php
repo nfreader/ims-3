@@ -19,8 +19,7 @@ return function (App $app) {
     $app->group('/incident', function (RouteCollectorProxy $app) {
         $app->get('/{incident:[0-9]+}', \App\Action\Incident\ViewIncidentAction::class)->setName('incident.view');
 
-        $app->get('/{incident:[0-9]+}/settings', \App\Action\Incident\ViewIncidentSettingsAction::class)->setName('incident.settings');
-        $app->post('/{incident:[0-9]+}/settings[/{setting}]', \App\Action\Incident\UpdateIncidentSettingsAction::class)->setName('incident.settings.update');
+        $app->get('/{incident:[0-9]+}/settings[/{setting:[a-z]+}]', \App\Action\Incident\UpdateIncidentSettingsAction::class)->setName('incident.settings');
 
         $app->post('/new', \App\Action\Incident\NewIncidentAction::class)->setName('incident.new');
         $app->post('/{incident:[0-9]+}/attach', \App\Action\Incident\NewIncidentAttachmentAction::class)->setName('incident.attachment.new');
@@ -30,8 +29,8 @@ return function (App $app) {
         $app->post('/{incident:[0-9]+}/event/{event:[0-9]+}/attach', \App\Action\Event\NewEventAttachmentAction::class)->setName('event.attachment.new');
         $app->post('/{incident:[0-9]+}/event/new', \App\Action\Event\NewEventAction::class)->setName('event.new');
 
-
         $app->post('/{incident:[0-9]+}/event/{event:[0-9]+}/comment', \App\Action\Comment\NewCommentAction::class)->setName('comment.new');
+
     })->add(function (ServerRequestInterface $request, RequestHandlerInterface $handler) {
         $request = $request->withAttribute('user', true);
         $response = $handler->handle($request);

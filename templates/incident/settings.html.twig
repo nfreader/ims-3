@@ -11,7 +11,7 @@
 			</ul>
 		</div>
 		<div class="col">
-			<form action="{{url_for('incident.settings.update',{'incident':incident.getId,'setting':'permissions'})}}" method="post" name="incidentPermissions">
+			<form action="{{url_for('incident.settings',{'incident':incident.getId,'setting':'permissions'})}}" method="post" name="incidentPermissions">
 				<table class="table table-sm" autocomplete="off">
 					<thead>
 						<tr>
