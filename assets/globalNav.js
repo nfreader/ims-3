@@ -94,6 +94,9 @@ const foundAgencyChoosers = [...agencyChoosers].map((chooser) => {
           if(errorCheck){
             window.location.reload()
           }
+          if(!currentIncident && !currentEvent){
+            window.location.reload()
+          }
         })
       }
       update()
