@@ -81,6 +81,13 @@ const asyncFormList = [...asyncForms].map((form) => {
   });
 });
 
+const form = document.querySelector('#sudoMode')
+form.addEventListener('submit', function(e){
+  e.preventDefault();
+  fetch("/user/sudo",{method:"POST"})
+  setTimeout(() => {window.location.reload()}, 100);
+})
+
 const setBG = () => {
   const body = document.querySelector('body')
   if(body.classList.contains('sudo')) {
