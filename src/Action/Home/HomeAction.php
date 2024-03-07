@@ -16,7 +16,8 @@ final class HomeAction extends Action
     {
         $incidents = null;
         if($this->getUser()) {
-            $incidents = $this->incidentRepository->listIncidents();
+            $role = $this->getUser()->getActiveRole()->getRoleId();
+            $incidents = $this->incidentRepository->listIncidentsForActiveRole($role);
         }
         return $this->render('home/home.html.twig', [
             'incidents' => $incidents

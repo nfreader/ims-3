@@ -3,6 +3,9 @@
 namespace App\Domain\Incident\Repository;
 
 use App\Domain\Incident\Data\Incident;
+use App\Domain\Permissions\Data\Permissions;
+use App\Domain\Permissions\Data\PermissionsEnum;
+use App\Domain\Permissions\Data\PermissionTypeEnum;
 use App\Repository\DoctrineRepository;
 use App\Repository\QueryBuilder;
 use App\Repository\Repository;
@@ -69,6 +72,26 @@ class IncidentRepository extends DoctrineRepository
         $queryBuilder->leftJoin($this->alias, 'role', 'r', 'i.role = r.id');
         $queryBuilder->leftJoin($this->alias, 'agency', 'a', 'r.agency = a.id');
         $result = $queryBuilder->executeQuery($queryBuilder->getSQL());
+        return $this->getResults($result);
+    }
+
+    public function listIncidentsForActiveRole(int $role): array
+    {
+        $queryBuilder = $this->qb();
+        $queryBuilder->select(...self::COLUMNS);
+        $queryBuilder->from($this->table, $this->alias);
+        $queryBuilder->addSelect(...[
+            'a.name as agencyName',
+            'a.id as agencyId',
+            'a.logo as agencyLogo'
+        ]);
+        $queryBuilder->leftJoin($this->alias, 'user', 'u', 'i.creator = u.id');
+        $queryBuilder->leftJoin($this->alias, 'role', 'r', 'i.role = r.id');
+        $queryBuilder->leftJoin($this->alias, 'agency', 'a', 'r.agency = a.id');
+        $queryBuilder->leftJoin($this->alias, 'incident_permission_flags', 'f', 'f.incident = i.id AND f.type = "'.PermissionTypeEnum::ROLE->value.'"');
+        $queryBuilder->where('f.target = '.$queryBuilder->createPositionalParameter($role).' and ('.PermissionsEnum::VIEW_INCIDENT->value.' & f.flags)');
+        $queryBuilder->orWhere('f.target IS NULL');
+        $result = $queryBuilder->executeQuery($queryBuilder->getSQL(), [$role]);
         return $this->getResults($result);
     }
 

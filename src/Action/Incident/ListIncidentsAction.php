@@ -18,8 +18,8 @@ final class ListIncidentsAction extends Action
 
     public function action(): Response
     {
-        $incident = $this->getArg('incident');
-        $incidents = $this->incidentRepository->listIncidents($incident);
+        $role = $this->getUser()->getActiveRole()->getRoleId();
+        $incidents = $this->incidentRepository->listIncidentsForActiveRole($role);
         $events = $this->eventRepository->listEvents();
         return $this->json([
             'incidents' => $incidents,
