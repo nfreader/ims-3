@@ -7,6 +7,7 @@ use App\Domain\Incident\Data\Incident;
 use App\Domain\Permissions\Data\PermissionsEnum;
 use App\Domain\Role\Data\UserRole;
 use DateTimeImmutable;
+use Exception;
 use JsonSerializable;
 
 class User implements JsonSerializable
@@ -203,7 +204,15 @@ class User implements JsonSerializable
     {
         return $this->isAdmin;
     }
-
+    /**
+     * can
+     *
+     * Based on the permissions and target, return whether or not this user can perform the requested action
+     *
+     * @param string|PermissionsEnum $permission
+     * @param mixed $target
+     * @return boolean
+     */
     public function can(string|PermissionsEnum $permission, mixed $target): bool
     {
         if(is_string($permission)) {
@@ -211,31 +220,13 @@ class User implements JsonSerializable
         }
         switch(get_class($target)) {
             case Incident::class:
-                return $this->checkPermissionsAgainstIncident(
+                return $target->checkUserPermissions(
                     $permission,
-                    $target
+                    $this
                 );
                 break;
         }
         return false;
     }
 
-    private function checkPermissionsAgainstIncident(PermissionsEnum $permission, Incident $incident): bool
-    {
-        if(!$incident->getAgencyId() && $permission === PermissionsEnum::VIEW_INCIDENT) {
-            //This is a "public" incident, which are always visible to all users
-            return true;
-        } elseif(!$this->getActiveRole()) {
-            return false;
-        } else {
-            foreach($incident->getPermissions()['role'] as $p) {
-                if($permission->value & $p->getFlags()) {
-                    if($permission->value & $this->getActiveRole()->getFlags()) {
-                        return true;
-                    }
-                }
-            }
-        }
-        return false;
-    }
 }

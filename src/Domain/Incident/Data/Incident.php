@@ -2,12 +2,14 @@
 
 namespace App\Domain\Incident\Data;
 
-use App\Domain\Agency\Data\Agency;
+use App\Data\CheckPermissionsInterface;
+use App\Domain\Permissions\Data\PermissionsEnum;
 use App\Domain\Permissions\Data\PermissionTypeEnum;
+use App\Domain\User\Data\User;
 use DateTimeImmutable;
 use JsonSerializable;
 
-class Incident implements JsonSerializable
+class Incident implements JsonSerializable, CheckPermissionsInterface
 {
     public function __construct(
         private int $id,
@@ -92,5 +94,24 @@ class Incident implements JsonSerializable
         // $this->permissions = $permissions;
 
         return $this;
+    }
+
+    public function checkUserPermissions(PermissionsEnum $permission, User $user): bool
+    {
+        if(!$this->getAgencyId() && $permission === PermissionsEnum::VIEW_INCIDENT) {
+            //This is a "public" incident, which are always visible to all users
+            return true;
+        } elseif(!$user->getActiveRole()) {
+            return false;
+        } else {
+            foreach($this->getPermissions()['role'] as $p) {
+                if($permission->value & $p->getFlags()) {
+                    if($permission->value & $user->getActiveRole()->getFlags()) {
+                        return true;
+                    }
+                }
+            }
+        }
+        return false;
     }
 }
