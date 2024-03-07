@@ -3,6 +3,7 @@
 namespace App\Action\Incident;
 
 use App\Action\Action;
+use App\Action\GetEntitiesInterface;
 use App\Domain\Incident\Data\Incident;
 use App\Domain\Incident\Service\FetchIncidentService;
 use App\Domain\Permissions\Data\PermissionsEnum;
@@ -10,7 +11,7 @@ use JustSteveKing\StatusCode\Http;
 use Psr\Container\ContainerInterface;
 use Slim\Exception\HttpException;
 
-class IncidentAction extends Action
+class IncidentAction extends Action implements GetEntitiesInterface
 {
     protected Incident $incident;
 
