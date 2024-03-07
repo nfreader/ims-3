@@ -85,6 +85,7 @@ return function (App $app) {
         $app->group('/log', function (RouteCollectorProxy $app) {
             $app->get('', \App\Action\Log\ViewLogsAction::class)->setName('logs');
             $app->map(['GET','POST'], '/db', \App\Action\Log\ViewDBLog::class)->setName('log.db');
+            $app->map(['GET','POST'], '/doctrine', \App\Action\Log\ViewDoctrineLog::class)->setName('log.doctrine');
         });
     })->add(function (ServerRequestInterface $request, RequestHandlerInterface $handler) {
         $request = $request->withAttribute('adminOnly', true);

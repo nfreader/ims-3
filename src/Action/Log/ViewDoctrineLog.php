@@ -5,18 +5,18 @@ namespace App\Action\Log;
 use App\Action\Action;
 use Nyholm\Psr7\Response;
 
-final class ViewDBLog extends Action
+final class ViewDoctrineLog extends Action
 {
     public function action(): Response
     {
         if('POST' === $this->request->getMethod()) {
-            unlink("../logs/db.log");
+            unlink("../logs/doctrine_db.log");
             $this->addSuccessMessage("Log file has been cleared");
-            return $this->redirectFor('log.db');
+            return $this->redirectFor('log.doctrine');
         }
         $search = $_GET['search'] ?? false;
         $lines = [];
-        foreach(file("../logs/db.log") as $line) {
+        foreach(file("../logs/doctrine_db.log") as $line) {
             if($search) {
                 if(str_contains($line, $search)) {
                     $lines[] = json_decode($line);

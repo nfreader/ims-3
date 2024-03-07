@@ -29,7 +29,8 @@
         "juststeveking/http-status-code": "^3.0",
         "doctrine/dbal": "^4.0",
         "firehed/dbal-logger": "^2.0",
-        "twig/html-extra": "^3.8"
+        "twig/html-extra": "^3.8",
+        "doctrine/sql-formatter": "^1.2"
     },
     "autoload": {
         "psr-4": {
