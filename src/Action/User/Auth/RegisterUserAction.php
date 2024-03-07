@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Action\User;
+namespace App\Action\User\Auth;
 
 use App\Action\Action;
 use App\Action\ActionInterface;

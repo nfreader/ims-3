@@ -10,9 +10,9 @@ use Slim\Routing\RouteCollectorProxy;
 return function (App $app) {
     $app->get('/', \App\Action\Home\HomeAction::class)->setName('home');
     $app->group('/user', function (RouteCollectorProxy $app) {
-        $app->post('/register', \App\Action\User\RegisterUserAction::class)->setName('user.register');
-        $app->post('/login', \App\Action\User\LoginUserAction::class)->setName('user.login');
-        $app->post('/logout', \App\Action\User\LogoutUserAction::class)->setName('user.logout');
+        $app->post('/register', \App\Action\User\Auth\RegisterUserAction::class)->setName('user.register');
+        $app->post('/login', \App\Action\User\Auth\LoginUserAction::class)->setName('user.login');
+        $app->post('/logout', \App\Action\User\Auth\LogoutUserAction::class)->setName('user.logout');
         $app->post('/pickRole', \App\Action\User\SetActiveRoleAction::class);
     });
 
