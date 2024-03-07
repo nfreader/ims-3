@@ -62,6 +62,12 @@ await getGlobalNav().then((data) => {
       eventSelector.appendChild(opt);
     }
   });
+  const globalEventControl = document.querySelector('#globalEventControl')
+  if (1 >= eventSelector.children.length){
+    globalEventControl.classList.add('visually-hidden')
+  } else {
+    globalEventControl.classList.remove('visually-hidden')
+  }
 });
 
 const agencyTargets = document.querySelectorAll('.agencyTarget')
