@@ -10,6 +10,7 @@ use DI\Attribute\Inject;
 use Exception;
 use JustSteveKing\StatusCode\Http;
 use Nyholm\Psr7\Response;
+use Slim\Exception\HttpException;
 
 final class ViewIncidentAction extends Action
 {
@@ -24,7 +25,7 @@ final class ViewIncidentAction extends Action
         $incident = $this->getArg('incident');
         $incident = $this->incidentService->getIncident($incident);
         if(!$this->getUser()->can(PermissionsEnum::VIEW_INCIDENT, $incident)) {
-            throw new Exception("Your active role does not have permission to view this", Http::UNAUTHORIZED->value);
+            throw new HttpException($this->getRequest(), "Your active role does not have permission to view this", Http::UNAUTHORIZED->value);
         }
         $events = $this->eventRepository->getEventsForIncident($incident->getId());
         return $this->render('incident/incident.html.twig', [
