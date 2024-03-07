@@ -15,13 +15,12 @@ class NewIncidentService
 
     public function createNewIncident(array $data, User $creator): Incident
     {
-        try {
-            $id = $this->incidentRepository->insertNewIncident($data['name'], $creator->getId(), $creator->getActiveAgency()?->getId());
-            return $this->incidentRepository->findOneBy([$id], 'i.id = ?');
-        } catch (Exception $e) {
-            throw $e;
-        }
-
+        $id = $this->incidentRepository->insertNewIncident(
+            $data['name'],
+            $creator->getId(),
+            $creator->getActiveRole()?->getRoleId()
+        );
+        return $this->incidentRepository->getIncident($id);
     }
 
 }
