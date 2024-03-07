@@ -19,7 +19,8 @@ class NewEventService
             $data['desc'],
             $data['severity'],
             $incident->getId(),
-            $user->getId()
+            $user->getId(),
+            $user->getActiveRole()?->getRoleId()
         );
 
     }

@@ -29,6 +29,10 @@
 			</div>
 		</div>
 		<div class="row">
+		<div class="col d-flex align-items-center gap-2">
+				<span>Posting as:</span>
+				{% include 'base/roleChooser.html.twig' %}
+			</div>
 			<div class="col d-flex justify-content-end gap-3">
 				<button type="reset" class="btn btn-secondary btn-lg">Cancel</button>
 				<button type="submit" class="btn btn-primary btn-lg">Add Event</button>

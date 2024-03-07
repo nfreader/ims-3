@@ -4,18 +4,18 @@ namespace App\Domain\Event\Repository;
 
 use App\Domain\Event\Data\Event;
 use App\Domain\Event\Exception\EventNotFoundException;
-use App\Domain\Incident\Data\Incident;
+use App\Repository\DoctrineRepository;
 use App\Repository\QueryBuilder;
 use App\Repository\Repository;
-use Exception;
 
-class EventRepository extends Repository
+class EventRepository extends DoctrineRepository
 {
-    public string $table = 'event e';
+    public string $table = 'event';
+    public string $alias = 'e';
 
     public ?string $entityClass = Event::class;
 
-    public array $columns = [
+    public const COLUMNS = [
         'e.id',
         'e.title',
         'e.desc',
@@ -40,56 +40,60 @@ class EventRepository extends Repository
         string $desc,
         string $severity,
         int $incident,
-        int $creator
+        int $creator,
+        int $role
     ): int {
-        $this->insert('event', [
-            'title' => $title,
-            'desc' => $desc,
-            'severity' => $severity,
-            'incident' => $incident,
-            'creator' => $creator
+        $queryBuilder = $this->qb();
+        $queryBuilder->insert($this->table);
+        $queryBuilder->values([
+            'title' => $queryBuilder->createNamedParameter($title),
+            '`desc`' => $queryBuilder->createNamedParameter($desc),
+            'severity' => $queryBuilder->createNamedParameter($severity),
+            'incident' => $queryBuilder->createNamedParameter($incident),
+            'creator' => $queryBuilder->createNamedParameter($creator),
+            'role' => $queryBuilder->createNamedParameter($role)
         ]);
-        $pdo = $this->getPdo();
-        return $pdo->lastInsertId();
+        $queryBuilder->executeStatement($queryBuilder->getSQL());
+        return $this->connection->lastInsertId();
     }
 
-    public function getEvent(int $id): Event
+    public function getEvent(int $event): Event
     {
-        $sql = QueryBuilder::select($this->table, $this->columns, ["e.id = ?"], $this->joins);
-        if(!$event = $this->row($sql, [$id])->getResult()) {
-            throw new EventNotFoundException();
-        }
-        return $event;
+        $queryBuilder = $this->qb();
+        $queryBuilder->from($this->table, $this->alias);
+        $queryBuilder->select(...self::COLUMNS);
+        $queryBuilder->addSelect('count(c.id) as comments');
+        $queryBuilder->leftJoin($this->alias, 'user', 'u', 'e.creator = u.id');
+        $queryBuilder->leftJoin($this->alias, 'user', 'edit', 'e.editor = edit.id');
+        $queryBuilder->leftJoin($this->alias, 'comment', 'c', 'c.event = e.id');
+        $queryBuilder->where('e.id = '.$queryBuilder->createNamedParameter($event));
+        $result = $queryBuilder->executeQuery($queryBuilder->getSQL());
+        return $this->getResult($result);
     }
 
     public function getEventsForIncident(int $incident): array
     {
-        $this->columns[] = 'count(c.id) as comments';
-        $this->joins[] = 'comment c ON c.event = e.id';
-        $sql = QueryBuilder::select(
-            $this->table,
-            $this->columns,
-            ['e.incident = ?'],
-            $this->joins,
-            orderBy: ['e.created' => 'DESC'],
-            group: ['e.id']
-        );
-        return $this->run($sql, [$incident])->getResults();
+        $queryBuilder = $this->qb();
+        $queryBuilder->from($this->table, $this->alias);
+        $queryBuilder->select(...self::COLUMNS);
+        $queryBuilder->addSelect('count(c.id) as comments');
+        $queryBuilder->leftJoin($this->alias, 'user', 'u', 'e.creator = u.id');
+        $queryBuilder->leftJoin($this->alias, 'user', 'edit', 'e.editor = edit.id');
+        $queryBuilder->leftJoin($this->alias, 'comment', 'c', 'c.event = e.id');
+        $queryBuilder->where('e.incident = '.$queryBuilder->createNamedParameter($incident));
+        $queryBuilder->addGroupBy('e.id');
+        $queryBuilder->addOrderBy('e.created DESC');
+        $result = $queryBuilder->executeQuery($queryBuilder->getSQL());
+        return $this->getResults($result);
     }
 
     public function listEvents(): array
     {
-        $sql = QueryBuilder::select(
-            $this->table,
-            [
-            'e.id',
-            'e.title',
-            'e.incident'
-        ],
-            [],
-            orderBy: ['e.created' => 'DESC']
-        );
-        return $this->run($sql, [], true)->getResults();
+        $queryBuilder = $this->qb();
+        $queryBuilder->from($this->table, $this->alias);
+        $queryBuilder->select(...['e.id','e.title', 'e.incident']);
+        $queryBuilder->addOrderBy('e.created DESC');
+        $result = $queryBuilder->executeQuery($queryBuilder->getSQL());
+        return $result->fetchAllAssociative();
     }
-
 }
