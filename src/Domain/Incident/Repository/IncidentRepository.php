@@ -75,7 +75,7 @@ class IncidentRepository extends DoctrineRepository
         return $this->getResults($result);
     }
 
-    public function listIncidentsForActiveRole(int $role): array
+    public function listIncidentsForActiveRole(?int $role): array
     {
         $queryBuilder = $this->qb();
         $queryBuilder->select(...self::COLUMNS);
