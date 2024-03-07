@@ -73,7 +73,12 @@ abstract class Action
         // $this->permissionCheck();
         // $this->method = $this->request->getMethod();
         $this->request->withAttribute('request_id', $this->container->get('request_id'));
-        return $this->action();
+        if(method_exists($this, 'getEntities') && is_callable([$this, 'getEntities'])) {
+            call_user_func([$this,'getEntities']);
+        }
+        if(method_exists($this, 'action') && is_callable([$this, 'action'])) {
+            return call_user_func([$this,'action']);
+        }
     }
 
     private function setRequest(ServerRequestInterface $request): self
