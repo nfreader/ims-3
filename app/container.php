@@ -247,10 +247,12 @@ return [
             'charset' => 'utf8mb4',
             'driver' => "pdo_mysql"
         ];
-
-        $logger = $container->get(RepositoryQueryLogger::class);
         $configuration = new Configuration();
-        $configuration->setMiddlewares([new Middleware($logger)]);
+
+        if($settings['log_queries']) {
+            $logger = $container->get(RepositoryQueryLogger::class);
+            $configuration->setMiddlewares([new Middleware($logger)]);
+        }
         $connection = DriverManager::getConnection($params, $configuration);
 
         return $connection;
