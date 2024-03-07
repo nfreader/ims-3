@@ -30,7 +30,8 @@
         "doctrine/dbal": "^4.0",
         "firehed/dbal-logger": "^2.0",
         "twig/html-extra": "^3.8",
-        "doctrine/sql-formatter": "^1.2"
+        "doctrine/sql-formatter": "^1.2",
+        "doctrine/migrations": "^3.7"
     },
     "autoload": {
         "psr-4": {
