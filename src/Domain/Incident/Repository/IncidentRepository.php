@@ -7,8 +7,8 @@ use App\Domain\Permissions\Data\Permissions;
 use App\Domain\Permissions\Data\PermissionsEnum;
 use App\Domain\Permissions\Data\PermissionTypeEnum;
 use App\Repository\DoctrineRepository;
-use App\Repository\QueryBuilder;
 use App\Repository\Repository;
+use Doctrine\DBAL\Query\QueryBuilder;
 
 class IncidentRepository extends DoctrineRepository
 {
@@ -44,21 +44,7 @@ class IncidentRepository extends DoctrineRepository
         return $this->connection->lastInsertId();
     }
 
-    // public function insertNewIncident(
-    //     string $name,
-    //     int $creator,
-    //     ?int $agency
-    // ): int {
-    //     $this->insert('incident', [
-    //         'name' => $name,
-    //         'creator' => $creator,
-    //         'agency' => $agency
-    //     ]);
-    //     $pdo = $this->getPdo();
-    //     return $pdo->lastInsertId();
-    // }
-
-    public function listIncidents(): array
+    private function getBaseQuery(): QueryBuilder
     {
         $queryBuilder = $this->qb();
         $queryBuilder->select(...self::COLUMNS);
@@ -71,66 +57,34 @@ class IncidentRepository extends DoctrineRepository
         $queryBuilder->leftJoin($this->alias, 'user', 'u', 'i.creator = u.id');
         $queryBuilder->leftJoin($this->alias, 'role', 'r', 'i.role = r.id');
         $queryBuilder->leftJoin($this->alias, 'agency', 'a', 'r.agency = a.id');
+        $queryBuilder->orderBy('i.id asc');
+        return $queryBuilder;
+    }
+
+    public function listIncidents(): array
+    {
+        $queryBuilder = $this->getBaseQuery();
         $result = $queryBuilder->executeQuery($queryBuilder->getSQL());
         return $this->getResults($result);
     }
 
     public function listIncidentsForActiveRole(?int $role): array
     {
-        $queryBuilder = $this->qb();
-        $queryBuilder->select(...self::COLUMNS);
-        $queryBuilder->from($this->table, $this->alias);
-        $queryBuilder->addSelect(...[
-            'a.name as agencyName',
-            'a.id as agencyId',
-            'a.logo as agencyLogo'
-        ]);
-        $queryBuilder->leftJoin($this->alias, 'user', 'u', 'i.creator = u.id');
-        $queryBuilder->leftJoin($this->alias, 'role', 'r', 'i.role = r.id');
-        $queryBuilder->leftJoin($this->alias, 'agency', 'a', 'r.agency = a.id');
+        $queryBuilder = $this->getBaseQuery();
         $queryBuilder->leftJoin($this->alias, 'incident_permission_flags', 'f', 'f.incident = i.id AND f.type = "'.PermissionTypeEnum::ROLE->value.'"');
         $queryBuilder->where('f.target = '.$queryBuilder->createPositionalParameter($role).' and ('.PermissionsEnum::VIEW_INCIDENT->value.' & f.flags)');
         $queryBuilder->orWhere('f.target IS NULL');
+        $queryBuilder->orderBy('i.id asc');
         $result = $queryBuilder->executeQuery($queryBuilder->getSQL(), [$role]);
         return $this->getResults($result);
     }
 
-    // public function listIncidents(): array
-    // {
-    //     $sql = QueryBuilder::select($this->table, $this->columns, [], $this->joins);
-    //     return $this->run($sql)->getResults();
-    // }
     public function getIncident(int $incident): Incident
     {
-        $queryBuilder = $this->qb();
-        $queryBuilder->select(...self::COLUMNS);
-        $queryBuilder->from($this->table, $this->alias);
-        $queryBuilder->addSelect(...[
-            'a.name as agencyName',
-            'a.id as agencyId',
-            'a.logo as agencyLogo'
-        ]);
-        $queryBuilder->leftJoin($this->alias, 'user', 'u', 'i.creator = u.id');
-        $queryBuilder->leftJoin($this->alias, 'role', 'r', 'i.role = r.id');
-        $queryBuilder->leftJoin($this->alias, 'agency', 'a', 'r.agency = a.id');
+        $queryBuilder = $this->getBaseQuery();
         $queryBuilder->where('i.id = ' . $queryBuilder->createPositionalParameter($incident));
         $result = $queryBuilder->executeQuery($queryBuilder->getSQL(), [$incident]);
         return $this->getResult($result);
     }
-
-    // public function insertNewUser(
-    //     string $firstName,
-    //     string $lastName,
-    //     string $email,
-    //     string $password
-    // ) {
-    //     $this->insert('user', [
-    //         'firstName' => $firstName,
-    //         'lastName' => $lastName,
-    //         'email' => $email,
-    //         'password' => $password,
-    //         'created_ip' => ip2long($_SERVER['REMOTE_ADDR']),
-    //     ]);
-    // }
 
 }
