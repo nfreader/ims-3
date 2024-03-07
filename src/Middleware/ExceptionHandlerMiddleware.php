@@ -82,9 +82,6 @@ class ExceptionHandlerMiddleware implements MiddlewareInterface
         if ($exception instanceof DomainException || $exception instanceof InvalidArgumentException) {
             $statusCode = StatusCodeInterface::STATUS_BAD_REQUEST;
         }
-        if(0 !== $exception->getCode()) {
-            return $exception->getCode();
-        }
         return $statusCode;
     }
 
