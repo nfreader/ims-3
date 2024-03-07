@@ -6,14 +6,18 @@
 		</button>
 		<div class="collapse navbar-collapse justify-content-between" id="navbarSupportedContent">
 			<form class="d-flex" role="search" id="globalNav">
-				<span class="navbar-text me-2">Incident:</span>
-				<select name="incident" class="form-select" id="incidentGlobal">
-					<option value="" selected disabled>Select an Incident</option>
-				</select>
-				<span class="navbar-text mx-2">Event:</span>
-				<select name="event" class="form-select" id="eventGlobal">
-					<option value="" selected disabled>Select an Event</option>
-				</select>
+				<div id="globalIncidentControl" class="d-flex">
+					<span class="navbar-text me-2">Incident:</span>
+					<select name="incident" class="form-select" id="incidentGlobal">
+						<option value="" selected disabled>Select an Incident</option>
+					</select>
+				</div>
+				<div id="globalEventControl" class="d-flex">
+					<span class="navbar-text mx-2">Event:</span>
+					<select name="event" class="form-select" id="eventGlobal">
+						<option value="" selected disabled>Select an Event</option>
+					</select>
+				</div>
 			</form>
 			{% if app.user %}
 				<ul class="navbar-nav d-flex align-items-center">
@@ -27,9 +31,9 @@
 		</div>
 	</nav>
 	{% if app.user.isAdmin %}
-	<div class="container">
-		<a href="{{url_for('manage.home')}}" class="bg-danger-subtle border border-secondary-subtle border-top-0 py-1 px-3 link-underline link-underline-opacity-0 rounded-bottom">Manage application
-			<i class="fa-solid fa-angles-right"></i>
-		</a>
-	</div>
+		<div class="container">
+			<a href="{{url_for('manage.home')}}" class="bg-danger-subtle border border-secondary-subtle border-top-0 py-1 px-3 link-underline link-underline-opacity-0 rounded-bottom">Manage application
+				<i class="fa-solid fa-angles-right"></i>
+			</a>
+		</div>
 	{% endif %}
