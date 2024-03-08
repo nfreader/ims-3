@@ -3,20 +3,22 @@
 namespace App\Domain\Comment\Repository;
 
 use App\Domain\Comment\Data\Comment;
-use App\Repository\QueryBuilder;
+use App\Repository\DoctrineRepository;
 use App\Repository\Repository;
+use Doctrine\DBAL\Query\QueryBuilder;
 use GuzzleHttp\Psr7\Query;
 use SebastianBergmann\Diff\Differ;
 use SebastianBergmann\Diff\Output\StrictUnifiedDiffOutputBuilder;
 use SebastianBergmann\Diff\Output\UnifiedDiffOutputBuilder;
 
-class CommentRepository extends Repository
+class CommentRepository extends DoctrineRepository
 {
-    public string $table = 'comment c';
+    public string $table = 'comment';
+    public string $alias = 'c';
 
     public ?string $entityClass = Comment::class;
 
-    public array $columns = [
+    public const COLUMNS = [
         'c.id',
         'c.text',
         'c.author',
@@ -31,11 +33,6 @@ class CommentRepository extends Repository
         'e.email as editorEmail'
     ];
 
-    public array $joins = [
-        'user u ON c.author = u.id',
-        'user e ON c.editor = u.id'
-    ];
-
     public function insertNewComment(
         string $text,
         int $author,
@@ -43,47 +40,70 @@ class CommentRepository extends Repository
         int $event,
         string $action
     ): int {
-        $this->insert('comment', [
-            'text' => $text,
-            'author' => $author,
-            'incident' => $incident,
-            'event' => $event,
-            'action' => $action
+        $queryBuilder = $this->qb();
+        $queryBuilder->insert($this->table);
+        $queryBuilder->values([
+            'text' => $queryBuilder->createNamedParameter($text),
+            'author' => $queryBuilder->createNamedParameter($author),
+            'incident' => $queryBuilder->createNamedParameter($incident),
+            'event' => $queryBuilder->createNamedParameter($event),
+            'action' => $queryBuilder->createNamedParameter($action)
         ]);
-        $pdo = $this->getPdo();
-        return $pdo->lastInsertId();
+        $queryBuilder->executeStatement($queryBuilder->getSQL());
+        return $this->connection->lastInsertId();
+    }
+
+    private function getBaseQuery(): QueryBuilder
+    {
+        $queryBuilder = $this->qb();
+        $queryBuilder->select(...self::COLUMNS);
+        $queryBuilder->from($this->table, $this->alias);
+        $queryBuilder->leftJoin($this->alias, 'user', 'u', 'c.author = u.id');
+        $queryBuilder->leftJoin($this->alias, 'user', 'e', 'c.editor = e.id');
+        return $queryBuilder;
     }
 
     public function getCommentsForEvent(int $event): array
     {
-        $sql = QueryBuilder::select(
-            table: $this->table,
-            columns: $this->columns,
-            where: ['c.event = ?'],
-            joins: $this->joins,
-            orderBy: ['c.created' => 'ASC']
+        $queryBuilder = $this->getBaseQuery();
+        $queryBuilder->where('c.event = '.$queryBuilder->createNamedParameter($event));
+        $result = $queryBuilder->executeQuery($queryBuilder->getSQL());
+        return $this->getResults($result);
+    }
+
+    public function getCommentById(int $id): Comment
+    {
+        $queryBuilder = $this->getBaseQuery();
+        $queryBuilder->where('c.id = '.$queryBuilder->createNamedParameter($id));
+        $result = $queryBuilder->executeQuery($queryBuilder->getSQL());
+        return $this->getResult($result);
+    }
+
+    public function updateCommentRow(
+        int $id,
+        string $newText,
+        int $editor
+    ): void {
+        $queryBuilder = $this->qb();
+        $queryBuilder->update($this->table);
+        $queryBuilder->set(
+            'text',
+            $queryBuilder->createNamedParameter($newText)
         );
-        return $this->run($sql, [$event])->getResults();
+        $queryBuilder->set(
+            'editor',
+            $queryBuilder->createNamedParameter($editor)
+        );
+        $queryBuilder->where('id = '. $queryBuilder->createNamedParameter($id));
+        $queryBuilder->executeStatement($queryBuilder->getSQL());
     }
 
-    public function getById(int $id): Comment
-    {
-        $sql = QueryBuilder::select($this->table, $this->columns, ['c.id = ?'], $this->joins, limit: '0,1');
-        return $this->row($sql, [$id])->getResult();
-    }
-
-    public function updateCommentRow(int $id, string $newText, int $editor): void
-    {
-        $this->update('comment', [
-            'text' => $newText,
-            'editor' => $editor
-        ], [
-            'id' => $id
-        ]);
-    }
-
-    public function insertCommentEdit(int $id, string $previous, string $current, int $editor): int
-    {
+    public function insertCommentEdit(
+        int $id,
+        string $previous,
+        string $current,
+        int $editor
+    ): int {
         $builder = new StrictUnifiedDiffOutputBuilder([
             'collapseRanges'      => true,
             'commonLineThreshold' => 6,
@@ -94,14 +114,41 @@ class CommentRepository extends Repository
             'toFileDate'          => null,
         ]);
         $differ = new Differ($builder);
-        $this->insert('comment_edit', [
-            'comment' => $id,
-            'previous' => $previous,
-            'current' => $current,
-            'editor' => $editor,
-            'diff' => $differ->diff($previous, $current)
+        $diff = $differ->diff($previous, $current);
+        $queryBuilder = $this->qb();
+        $queryBuilder->insert('comment_edit');
+        $queryBuilder->values([
+            'comment' => $queryBuilder->createNamedParameter($id),
+            'previous' => $queryBuilder->createNamedParameter($previous),
+            'current' => $queryBuilder->createNamedParameter($current),
+            'editor' => $queryBuilder->createNamedParameter($editor),
+            'diff' => $queryBuilder->createNamedParameter($diff)
         ]);
-        $pdo = $this->getPdo();
-        return $pdo->lastInsertId();
+        $queryBuilder->executeStatement($queryBuilder->getSQL());
+        return $this->connection->lastInsertId();
     }
+
+    // public function updateCommentRow(int $id, string $newText, int $editor): void
+    // {
+    //     $this->update('comment', [
+    //         'text' => $newText,
+    //         'editor' => $editor
+    //     ], [
+    //         'id' => $id
+    //     ]);
+    // }
+
+    // public function insertCommentEdit(int $id, string $previous, string $current, int $editor): int
+    // {
+
+    //     $this->insert('comment_edit', [
+    //         'comment' => $id,
+    //         'previous' => $previous,
+    //         'current' => $current,
+    //         'editor' => $editor,
+    //         'diff' => $differ->diff($previous, $current)
+    //     ]);
+    //     $pdo = $this->getPdo();
+    //     return $pdo->lastInsertId();
+    // }
 }

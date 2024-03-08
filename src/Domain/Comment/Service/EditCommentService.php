@@ -15,7 +15,7 @@ class EditCommentService
 
     public function editComment(int $id, array $data, User $user): Comment|string
     {
-        $comment = $this->commentRepository->getById($id);
+        $comment = $this->commentRepository->getCommentById($id);
         //Check permissions here
         //
         //
