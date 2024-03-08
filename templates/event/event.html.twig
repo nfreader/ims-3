@@ -4,7 +4,7 @@
 	{% include 'incident/components/incidentHeader.html.twig' %}
 
 	<div class="card">
-		<h2 class="card-header d-flex justify-content-between align-items-center text-bg-{{event.getSeverity.getClass}}">
+		<h2 class="card-header d-flex justify-content-between align-items-center border-5 border-{{event.getSeverity.getClass}}">
 			<div>
 				<i class="fa-solid fa-message"></i>
 				<span class="font-monospace">{{event.getId}}</span>
@@ -13,15 +13,6 @@
 			</div>
 			<div style="font-size: 1rem" class="text-end">
 				{% if not event.getEdited %}
-					{% if event.getRoleBadge %}
-						<div class="mb-1" style="font-size: .9rem">{{event.getCreated|date}}
-							by</div>
-						{{roleBadge(event.getRoleBadge, true)}}
-					{% else %}
-						{{event.getCreated|date}}
-						by
-						{{event.getCreatorName}}
-					{% endif %}
 				{% else %}
 					edited
 					{{event.getEdited|date}}
@@ -30,6 +21,13 @@
 				{% endif %}
 			</div>
 		</h2>
+		<div>
+			{% if event.getRoleBadge %}
+				<div class="mb-1 px-3 py-1 d-flex align-items-center gap-2 border-bottom" style="font-size: .9rem">{{roleBadge(event.getRoleBadge, true)}} Created {{event.getCreated|date}}
+					</div>
+				
+			{% endif %}
+		</div>
 		<div class="card-body markdown-content">
 			{{event.getDesc|markdown_to_html}}
 		</div>
