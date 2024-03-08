@@ -37,7 +37,8 @@ final class UpdateIncidentSettingsAction extends IncidentAction implements Actio
         } else {
             return $this->render('incident/settings.html.twig', [
                 'incident' => $this->incident,
-                'agencies' => $this->agencyService->getAgenciesWithRoles()
+                'agencies' => $this->agencyService->getAgenciesWithRoles(),
+                'activetab' => 'settings'
             ]);
         }
     }

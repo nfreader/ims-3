@@ -26,7 +26,8 @@ class ViewEventAction extends IncidentAction implements ActionInterface
         return $this->render('event/event.html.twig', [
             'incident' => $this->incident,
             'event' => $event,
-            'comments' => $comments
+            'comments' => $comments,
+            'activetab' => 'incident'
         ]);
     }
 }

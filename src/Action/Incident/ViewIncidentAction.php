@@ -17,7 +17,8 @@ final class ViewIncidentAction extends IncidentAction implements ActionInterface
         $events = $this->eventRepository->getEventsForIncident($this->incident->getId());
         return $this->render('incident/incident.html.twig', [
             'incident' => $this->incident,
-            'events' => $events
+            'events' => $events,
+            'activetab' => 'incident'
         ]);
     }
 }
