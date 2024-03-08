@@ -7,7 +7,7 @@ use App\Domain\Role\Data\Role;
 use App\Domain\Role\Data\UserRole;
 use App\Domain\User\Data\User;
 use App\Domain\User\Repository\UserRepository;
-use App\Repository\DoctrineRepository;
+use App\Repository\Repository;
 use Doctrine\DBAL\ParameterType;
 use Exception;
 
@@ -17,7 +17,7 @@ use Exception;
  * Methods for interacting with the `role` table and making changes to the `user_role` table. Note that user roles are SOFT DELETED.
  *
  */
-class RoleRepository extends DoctrineRepository
+class RoleRepository extends Repository
 {
     private string $table = 'role';
     private string $alias = 'r';

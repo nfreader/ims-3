@@ -4,9 +4,7 @@ namespace App\Action\User;
 
 use App\Action\Action;
 use App\Action\ActionInterface;
-use App\Domain\Agency\Repository\AgencyMembershipRepository;
 use App\Domain\Agency\Repository\AgencyRepository;
-use App\Domain\User\Repository\UserRepository;
 use App\Domain\User\Service\FetchUserService;
 use DI\Attribute\Inject;
 use Nyholm\Psr7\Response;

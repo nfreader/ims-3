@@ -3,12 +3,10 @@
 namespace App\Domain\Event\Repository;
 
 use App\Domain\Event\Data\Event;
-use App\Domain\Event\Exception\EventNotFoundException;
-use App\Repository\DoctrineRepository;
 use App\Repository\Repository;
 use Doctrine\DBAL\Query\QueryBuilder;
 
-class EventRepository extends DoctrineRepository
+class EventRepository extends Repository
 {
     public string $table = 'event';
     public string $alias = 'e';

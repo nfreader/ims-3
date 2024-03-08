@@ -6,11 +6,10 @@ use App\Domain\Incident\Data\Incident;
 use App\Domain\Permissions\Data\Permissions;
 use App\Domain\Permissions\Data\PermissionsEnum;
 use App\Domain\Permissions\Data\PermissionTypeEnum;
-use App\Repository\DoctrineRepository;
 use App\Repository\Repository;
 use Doctrine\DBAL\Query\QueryBuilder;
 
-class IncidentRepository extends DoctrineRepository
+class IncidentRepository extends Repository
 {
     public string $table = 'incident';
 

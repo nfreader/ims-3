@@ -5,9 +5,9 @@ namespace App\Domain\Incident\Repository;
 use App\Domain\Incident\Data\Incident;
 use App\Domain\Permissions\Data\PermissionTypeEnum;
 use App\Domain\Permissions\Data\Permissions;
-use App\Repository\DoctrineRepository;
+use App\Repository\Repository;
 
-class IncidentPermissionsRepository extends DoctrineRepository
+class IncidentPermissionsRepository extends Repository
 {
     public string $table = 'incident_permission_flags';
 

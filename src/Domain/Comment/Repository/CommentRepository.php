@@ -3,7 +3,6 @@
 namespace App\Domain\Comment\Repository;
 
 use App\Domain\Comment\Data\Comment;
-use App\Repository\DoctrineRepository;
 use App\Repository\Repository;
 use Doctrine\DBAL\Query\QueryBuilder;
 use GuzzleHttp\Psr7\Query;
@@ -11,7 +10,7 @@ use SebastianBergmann\Diff\Differ;
 use SebastianBergmann\Diff\Output\StrictUnifiedDiffOutputBuilder;
 use SebastianBergmann\Diff\Output\UnifiedDiffOutputBuilder;
 
-class CommentRepository extends DoctrineRepository
+class CommentRepository extends Repository
 {
     public string $table = 'comment';
     public string $alias = 'c';

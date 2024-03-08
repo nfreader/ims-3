@@ -2,9 +2,9 @@
 
 namespace App\Domain\Attachment\Repository;
 
-use App\Repository\DoctrineRepository;
+use App\Repository\Repository;
 
-class AttachmentRepository extends DoctrineRepository
+class AttachmentRepository extends Repository
 {
     public string $table = 'attachment';
 

@@ -5,11 +5,9 @@ namespace App\Domain\Agency\Repository;
 use App\Domain\Agency\Data\Agency;
 use App\Domain\User\Data\User;
 use App\Domain\User\Repository\UserRepository;
-use App\Repository\DoctrineRepository;
-use App\Repository\QueryBuilder;
 use App\Repository\Repository;
 
-class AgencyRepository extends DoctrineRepository
+class AgencyRepository extends Repository
 {
     public ?string $entityClass = Agency::class;
 

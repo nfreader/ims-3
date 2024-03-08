@@ -2,7 +2,6 @@
 
 namespace App\Domain\User\Service;
 
-use App\Domain\Agency\Repository\AgencyMembershipRepository;
 use App\Domain\Role\Repository\RoleRepository;
 use App\Domain\User\Data\User;
 use App\Domain\User\Repository\UserRepository;
@@ -14,14 +13,11 @@ class RefreshUserFromSessionService
 {
     private UserRepository $userRepository;
 
-    private AgencyMembershipRepository $membershipRepository;
-
     private RoleRepository $roleRepository;
 
     public function __construct(private ContainerInterface $container)
     {
         $this->userRepository = new UserRepository($container->get(Connection::class));
-        $this->membershipRepository = new AgencyMembershipRepository($container->get(Connection::class));
         $this->roleRepository = new RoleRepository($container->get(Connection::class));
     }
 

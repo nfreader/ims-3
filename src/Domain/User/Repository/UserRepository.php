@@ -3,12 +3,12 @@
 namespace App\Domain\User\Repository;
 
 use App\Domain\User\Data\User;
-use App\Repository\DoctrineRepository;
+use App\Repository\Repository;
 use App\Repository\QueryBuilder;
 use Doctrine\DBAL\ParameterType;
 use ReflectionClass;
 
-class UserRepository extends DoctrineRepository
+class UserRepository extends Repository
 {
     public string $table = 'user';
     public string $alias = 'u';
