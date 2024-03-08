@@ -2,11 +2,11 @@
 
 namespace App\Domain\Attachment\Repository;
 
-use App\Repository\Repository;
+use App\Repository\DoctrineRepository;
 
-class AttachmentRepository extends Repository
+class AttachmentRepository extends DoctrineRepository
 {
-    public string $table = 'attachment a';
+    public string $table = 'attachment';
 
     public function insertNewAttachment(
         string $fileName,
@@ -15,17 +15,19 @@ class AttachmentRepository extends Repository
         int $incident,
         ?int $event,
         ?int $comment
-    ) {
-        $this->insert('attachment', [
-            'fileName' => $fileName,
-            'mimeType' => $mimeType,
-            'uploader' => $uploader,
-            'incident' => $incident,
-            'event' => $event,
-            'comment' => $comment
+    ): int {
+        $queryBuilder = $this->qb();
+        $queryBuilder->insert($this->table);
+        $queryBuilder->values([
+            'fileName' => $queryBuilder->createNamedParameter($fileName),
+            'mimeType' => $queryBuilder->createNamedParameter($mimeType),
+            'uploader' => $queryBuilder->createNamedParameter($uploader),
+            'incident' => $queryBuilder->createNamedParameter($incident),
+            'event' => $queryBuilder->createNamedParameter($event),
+            'comment' => $queryBuilder->createNamedParameter($comment)
         ]);
-        $pdo = $this->getPdo();
-        return $pdo->lastInsertId();
+        $queryBuilder->executeStatement($queryBuilder->getSQL());
+        return $this->connection->lastInsertId();
     }
 
 }
