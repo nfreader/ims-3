@@ -1,7 +1,7 @@
 {% extends 'base.html.twig' %}
 {% block body %}
-	{% from 'macros.html.twig' import empty, tag %}
-    {% include 'incident/components/incidentHeader.html.twig' %}
+	{% from 'macros.html.twig' import empty, tag, roleBadge %}
+	{% include 'incident/components/incidentHeader.html.twig' %}
 
 	<div class="card">
 		<h2 class="card-header d-flex justify-content-between align-items-center text-bg-{{event.getSeverity.getClass}}">
@@ -13,15 +13,20 @@
 			</div>
 			<div style="font-size: 1rem" class="text-end">
 				{% if not event.getEdited %}
-				created 
-				{{event.created|date}}
-				by
-				{{event.getCreatorName}}
+					{% if event.getRoleBadge %}
+						<div class="mb-1" style="font-size: .9rem">{{event.getCreated|date}}
+							by</div>
+						{{roleBadge(event.getRoleBadge, true)}}
+					{% else %}
+						{{event.getCreated|date}}
+						by
+						{{event.getCreatorName}}
+					{% endif %}
 				{% else %}
-				edited
-				{{event.getEdited|date}}
-				by
-				{{event.getEditorName}}
+					edited
+					{{event.getEdited|date}}
+					by
+					{{event.getEditorName}}
 				{% endif %}
 			</div>
 		</h2>

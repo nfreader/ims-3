@@ -4,9 +4,12 @@ namespace App\Domain\Event\Data;
 
 use DateTimeImmutable;
 use App\Domain\Event\Data\Severity;
+use App\Domain\Role\Data\RoleBadge;
 
 class Event
 {
+    private ?RoleBadge $roleBadge = null;
+
     public function __construct(
         private int $id,
         private string $title,
@@ -21,8 +24,15 @@ class Event
         private ?string $editorName = null,
         private ?string $editorEmail = null,
         private ?int $comments = null,
+        private ?string $agencyName = null,
+        private ?int $agencyId = null,
+        private ?string $agencyLogo = null,
+        private ?string $roleName = null,
+        private ?int $roleId = null
     ) {
-
+        if($this->roleId) {
+            $this->setRoleBadge();
+        }
     }
 
     public function getTitle(): string
@@ -73,5 +83,24 @@ class Event
     public function getEditorName(): ?string
     {
         return $this->editorName;
+    }
+
+    public function setRoleBadge(): static
+    {
+        $this->roleBadge = new RoleBadge(
+            $this->agencyId,
+            $this->agencyName,
+            $this->roleId,
+            $this->roleName,
+            $this->agencyLogo,
+            $this->getCreatorName()
+        );
+        return $this;
+    }
+
+
+    public function getRoleBadge(): ?RoleBadge
+    {
+        return $this->roleBadge;
     }
 }

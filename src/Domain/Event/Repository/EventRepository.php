@@ -5,8 +5,8 @@ namespace App\Domain\Event\Repository;
 use App\Domain\Event\Data\Event;
 use App\Domain\Event\Exception\EventNotFoundException;
 use App\Repository\DoctrineRepository;
-use App\Repository\QueryBuilder;
 use App\Repository\Repository;
+use Doctrine\DBAL\Query\QueryBuilder;
 
 class EventRepository extends DoctrineRepository
 {
@@ -28,11 +28,11 @@ class EventRepository extends DoctrineRepository
         'e.edited',
         "concat_ws(' ', edit.firstName, edit.lastName) as editorName",
         'edit.email as editorEmail',
-    ];
-
-    public array $joins = [
-        'user u ON e.creator = u.id',
-        'user edit ON e.editor = edit.id',
+        'r.id as roleId',
+        'r.name as roleName',
+        'a.id as agencyId',
+        'a.name as agencyName',
+        'a.logo as agencyLogo'
     ];
 
     public function insertNewEvent(
@@ -57,7 +57,7 @@ class EventRepository extends DoctrineRepository
         return $this->connection->lastInsertId();
     }
 
-    public function getEvent(int $event): Event
+    private function getBaseQuery(): QueryBuilder
     {
         $queryBuilder = $this->qb();
         $queryBuilder->from($this->table, $this->alias);
@@ -66,6 +66,14 @@ class EventRepository extends DoctrineRepository
         $queryBuilder->leftJoin($this->alias, 'user', 'u', 'e.creator = u.id');
         $queryBuilder->leftJoin($this->alias, 'user', 'edit', 'e.editor = edit.id');
         $queryBuilder->leftJoin($this->alias, 'comment', 'c', 'c.event = e.id');
+        $queryBuilder->leftJoin($this->alias, 'role', 'r', 'e.role = r.id');
+        $queryBuilder->leftJoin('r', 'agency', 'a', 'r.agency = a.id');
+        return $queryBuilder;
+    }
+
+    public function getEvent(int $event): Event
+    {
+        $queryBuilder = $this->getBaseQuery();
         $queryBuilder->where('e.id = '.$queryBuilder->createNamedParameter($event));
         $result = $queryBuilder->executeQuery($queryBuilder->getSQL());
         return $this->getResult($result);
@@ -73,13 +81,7 @@ class EventRepository extends DoctrineRepository
 
     public function getEventsForIncident(int $incident): array
     {
-        $queryBuilder = $this->qb();
-        $queryBuilder->from($this->table, $this->alias);
-        $queryBuilder->select(...self::COLUMNS);
-        $queryBuilder->addSelect('count(c.id) as comments');
-        $queryBuilder->leftJoin($this->alias, 'user', 'u', 'e.creator = u.id');
-        $queryBuilder->leftJoin($this->alias, 'user', 'edit', 'e.editor = edit.id');
-        $queryBuilder->leftJoin($this->alias, 'comment', 'c', 'c.event = e.id');
+        $queryBuilder = $this->getBaseQuery();
         $queryBuilder->where('e.incident = '.$queryBuilder->createNamedParameter($incident));
         $queryBuilder->addGroupBy('e.id');
         $queryBuilder->addOrderBy('e.created DESC');
@@ -87,6 +89,13 @@ class EventRepository extends DoctrineRepository
         return $this->getResults($result);
     }
 
+    /**
+     * listEvents
+     *
+     * Returns an array of events intended to be consumed by an API.
+     *
+     * @return array
+     */
     public function listEvents(): array
     {
         $queryBuilder = $this->qb();
