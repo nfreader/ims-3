@@ -70,7 +70,6 @@ class User implements JsonSerializable
             'status' => $this->isStatus(),
             'firstName' => $this->firstName,
             'lastName' => $this->lastName,
-            'agencyList' => explode(',', $this->agencyList)
         ];
     }
 
