@@ -1,6 +1,8 @@
 {% extends 'base.html.twig' %}
 {% block body %}
-    {% include 'incident/components/incidentHeader.html.twig' %}
+	{% include 'incident/components/incidentHeader.html.twig' %}
 	{% include 'event/components/listing.html.twig' with {'events': events, 'incident': incident.getId} only %}
-	{% include 'event/form/eventForm.html.twig' with {'incident': incident.getId} %}
+	{% if app.user.can('POST_UPDATES', incident) %}
+		{% include 'event/form/eventForm.html.twig' with {'incident': incident.getId} %}
+	{% endif %}
 {% endblock %}
