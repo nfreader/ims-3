@@ -23,15 +23,23 @@ return function (App $app) {
         $app->map(['GET','POST'], '/{incident:[0-9]+}/settings[/{setting:[a-z]+}]', \App\Action\Incident\UpdateIncidentSettingsAction::class)->setName('incident.settings');
 
         $app->post('/new', \App\Action\Incident\NewIncidentAction::class)->setName('incident.new');
-        $app->post('/{incident:[0-9]+}/attach', \App\Action\Incident\NewIncidentAttachmentAction::class)->setName('incident.attachment.new');
+
         $app->get('/listing', \App\Action\Incident\ListIncidentsAction::class)->setName('incident.list');
 
         $app->get('/{incident:[0-9]+}/event/{event:[0-9]+}', \App\Action\Event\ViewEventAction::class)->setName('event.view');
-        $app->post('/{incident:[0-9]+}/event/{event:[0-9]+}/attach', \App\Action\Event\NewEventAttachmentAction::class)->setName('event.attachment.new');
+
         $app->post('/{incident:[0-9]+}/event/new', \App\Action\Event\NewEventAction::class)->setName('event.new');
 
         $app->post('/{incident:[0-9]+}/event/{event:[0-9]+}/comment', \App\Action\Comment\NewCommentAction::class)->setName('comment.new');
 
+    })->add(function (ServerRequestInterface $request, RequestHandlerInterface $handler) {
+        $request = $request->withAttribute('user', true);
+        $response = $handler->handle($request);
+        return $response;
+    });
+
+    $app->group('/attachment', function (RouteCollectorProxy $app) {
+        $app->post('/new', \App\Action\Attachment\NewAttachmentAction::class)->setName('attachment.new');
     })->add(function (ServerRequestInterface $request, RequestHandlerInterface $handler) {
         $request = $request->withAttribute('user', true);
         $response = $handler->handle($request);

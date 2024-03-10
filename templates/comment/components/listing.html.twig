@@ -32,10 +32,10 @@
 		</div>
 		<div class="card-body" id="comment-{{c.getId}}">
 			<div id="comment-{{c.getId}}-content">{{c.getText|markdown_to_html}}</div>
-			<form class="form visually-hidden commentEditor" action="{{url_for('comment.edit',{'comment':c.getId})}}" method="post" autocomplete="off" id="comment-{{c.getId}}-editor" data-comment-id="{{c.getId}}" data-upload-url="{{url_for('event.attachment.new',{'incident':c.getIncident, 'event':c.getEvent})}}">
+			<form class="form visually-hidden commentEditor" action="{{url_for('comment.edit',{'comment':c.getId})}}" method="post" autocomplete="off" id="comment-{{c.getId}}-editor" data-comment-id="{{c.getId}}">
 				<div class="row mb-3">
 					<div class="col">
-						{{markdownEditor('text','Edit Comment', c.getText)}}
+						{{markdownEditor('text','Edit Comment', c.getText, c.getIncident, c.getEvent, c.getId)}}
 					</div>
 				</div>
 				<div class="row">

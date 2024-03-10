@@ -5,15 +5,21 @@ namespace App\Domain\Attachment\Service;
 use App\Domain\Attachment\Data\UploadResult;
 use App\Domain\Attachment\Repository\AttachmentRepository;
 use App\Domain\Comment\Data\Comment;
+use App\Domain\Comment\Service\FetchCommentService;
 use App\Domain\Event\Data\Event;
+use App\Domain\Event\Service\FetchEventService;
 use App\Domain\Incident\Data\Incident;
+use App\Domain\Incident\Service\FetchIncidentService;
 use App\Domain\User\Data\User;
+use App\Exception\UnauthorizedException;
+use Exception;
 use League\Flysystem\Filesystem;
-use League\Flysystem\Local\LocalFilesystemAdapter;
-use League\Flysystem\UrlGeneration\PublicUrlGenerator;
 use Nyholm\Psr7\UploadedFile;
 use Psr\Container\ContainerInterface;
 use Ramsey\Uuid\Uuid;
+use Slim\Exception\HttpException;
+use Slim\Http\ServerRequest;
+use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Session\Session;
 
 class AttachmentFileService
@@ -23,7 +29,10 @@ class AttachmentFileService
 
     public function __construct(
         private ContainerInterface $container,
-        private AttachmentRepository $attachmentRepository
+        private AttachmentRepository $attachmentRepository,
+        private FetchIncidentService $incidentService,
+        private FetchEventService $eventService,
+        private FetchCommentService $commentService
     ) {
         $this->session = $this->container->get(Session::class);
         $this->filesystem = $container->get(Filesystem::class);
@@ -32,13 +41,23 @@ class AttachmentFileService
     public function uploadAttachments(
         array $files,
         User $user,
-        Incident $incident,
-        ?Event $event = null,
-        ?Comment $comment = null
+        array $data,
     ) {
+        $incident = $this->incidentService->getIncident($data['incident']);
+        if(!$user->can('POST_UPDATES', $incident)) {
+            throw new UnauthorizedException("You do not have permission to perform this action");
+        }
+        $event = $data['event'] ? $this->eventService->getEvent($data['event']) : null;
+        $comment = $data['comment'] ? $this->commentService->getComment($data['comment']) : null;
         $uploadedFiles = [];
-        foreach($files['files'] as $file) {
-            $uploadedFiles[] = $this->processAttachment($file, $user, $incident, $event, $comment);
+        foreach ($files['files'] as $file) {
+            $uploadedFiles[] = $this->processAttachment(
+                $file,
+                $user,
+                $incident,
+                $event,
+                $comment
+            );
         }
         return $uploadedFiles;
     }
@@ -53,7 +72,7 @@ class AttachmentFileService
         $moveResult = $this->moveAndRenameFile($file);
         $moveResult->originalName = $file->getClientFilename();
         $moveResult->mimeType = $this->filesystem->mimeType($moveResult->file);
-        if(!$moveResult->error) {
+        if (!$moveResult->error) {
             $moveResult->id =  $this->addAttachmentToDatabase(
                 $moveResult,
                 $user,
@@ -92,5 +111,4 @@ class AttachmentFileService
             $comment ? $comment->getId() : null
         );
     }
-
 }

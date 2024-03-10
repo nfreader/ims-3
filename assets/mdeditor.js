@@ -14,7 +14,6 @@
 
 const mdeditorTargets = document.querySelectorAll("#mdeditor");
 const mdeditors = [...mdeditorTargets].map((target) => {
-  const attachmentURL = target.form.dataset.uploadUrl;
   target.addEventListener("dragover", (e) => {
     e.preventDefault();
     e.stopPropagation();
@@ -26,12 +25,15 @@ const mdeditors = [...mdeditorTargets].map((target) => {
     target.classList.remove("targeted");
     const files = e.dataTransfer.files;
     var data = new FormData();
+    data.append('incident',target.dataset.incident)
+    data.append('event',target.dataset.event ?? null)
+    data.append('comment',target.dataset.comment ?? null)
     for (var i = 0; i < files.length; i++) {
       data.append("files[]", files[i], files[i].name);
       var uploadingString = `[Attaching ${files[i].name}...](Attaching ${files[i].name}...)`;
       target.value += uploadingString;
     }
-    uploadAttachments(data, attachmentURL, target);
+    uploadAttachments(data, target);
   });
 
   target.addEventListener("paste", function (event) {
@@ -46,14 +48,17 @@ const mdeditors = [...mdeditorTargets].map((target) => {
         target.value += uploadingString;
       }
     }
-    uploadAttachments(data, attachmentURL, target);
+    uploadAttachments(data, target);
   });
 });
 
-async function uploadAttachments(data, uploadURL, target) {
-  const response = await fetch(uploadURL, {
+async function uploadAttachments(data, target) {
+  const response = await fetch("/attachment/new", {
     method: "POST",
     body: data,
+    headers: {
+      "Accept": "application/json",
+    },
   });
   const attachments = await response.json();
   attachments.forEach((a) => {

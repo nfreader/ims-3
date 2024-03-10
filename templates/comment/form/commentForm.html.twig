@@ -1,13 +1,13 @@
 {% from 'macros/formInputs.twig' import markdownEditor %}
 
 <div class="card">
-	<form class="card-body form" action="{{url_for('comment.new',{'incident':incident, 'event':event})}}" method="post" data-upload-url="{{url_for('event.attachment.new',{'incident':incident, 'event':event})}}" autocomplete="off" id="addCommentForm">
+	<form class="card-body form" action="{{url_for('comment.new',{'incident':incident, 'event':event})}}" method="post" autocomplete="off" id="addCommentForm">
 		<h3>Add a New Comment</h3>
 		<hr>
 		<div class="row mb-3">
 			<div class="col">
 				<div class="mb-3">
-					{{markdownEditor('text','Comment')}}
+					{{markdownEditor('text','Comment', null, incident, event)}}
 				</div>
 			</div>
 		</div>
