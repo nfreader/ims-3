@@ -18,13 +18,14 @@ return function (App $app) {
     });
 
     $app->group('/incident', function (RouteCollectorProxy $app) {
-        $app->get('/{incident:[0-9]+}', \App\Action\Incident\ViewIncidentAction::class)->setName('incident.view');
 
-        $app->map(['GET','POST'], '/{incident:[0-9]+}/settings[/{setting:[a-z]+}]', \App\Action\Incident\UpdateIncidentSettingsAction::class)->setName('incident.settings');
+        $app->get('/listing', \App\Action\Incident\ListIncidentsAction::class)->setName('incident.list');
 
         $app->post('/new', \App\Action\Incident\NewIncidentAction::class)->setName('incident.new');
 
-        $app->get('/listing', \App\Action\Incident\ListIncidentsAction::class)->setName('incident.list');
+        $app->get('/{incident:[0-9]+}', \App\Action\Incident\ViewIncidentAction::class)->setName('incident.view');
+
+        $app->map(['GET','POST'], '/{incident:[0-9]+}/settings[/{setting:[a-z]+}]', \App\Action\Incident\UpdateIncidentSettingsAction::class)->setName('incident.settings');
 
         $app->get('/{incident:[0-9]+}/event/{event:[0-9]+}', \App\Action\Event\ViewEventAction::class)->setName('event.view');
 
