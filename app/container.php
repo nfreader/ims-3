@@ -8,7 +8,7 @@ use App\Factory\LoggerFactory;
 use App\Handler\DefaultErrorHandler;
 use App\Middleware\ExceptionHandlerMiddleware;
 use App\Renderer\JsonRenderer;
-use App\Repository\DoctrineRepository;
+use App\Repository\Repository;
 use App\Repository\QueryLogger as RepositoryQueryLogger;
 use Doctrine\DBAL\Configuration;
 use Doctrine\DBAL\Connection;
@@ -267,7 +267,7 @@ return [
         );
     },
 
-    DoctrineRepository::class => function (ContainerInterface $container) {
-        return new DoctrineRepository($container->get(Connection::class));
+    Repository::class => function (ContainerInterface $container) {
+        return new Repository($container->get(Connection::class));
     }
 ];
