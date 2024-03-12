@@ -1,0 +1,36 @@
+{% include 'base/header.html.twig' %}
+{% block scripts %}{% endblock %}
+<nav class="navbar sticky-top navbar-expand-lg bg-body-tertiary border-bottom">
+	<div class="container">
+		<a class="navbar-brand fw-bold" href="{{url_for('home')}}">{{app.name}}</a>
+		{% if app.user.isSudoMode %}
+			<a href="{{url_for('manage.home')}}" class="navbar-brand fw-bold text-danger animate__bounce animate__infinite d-block" data-bs-toggle="tooltip" data-bs-title="Sudo Mode is active. Click here to manage the application.">
+				<i class="fa-solid fa-microchip"></i>
+			</a>
+		{% endif %}
+		<button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+			<span class="navbar-toggler-icon"></span>
+		</button>
+		<div class="collapse navbar-collapse justify-content-between" id="navbarSupportedContent">
+			{% if app.user %}
+				<ul class="navbar-nav d-flex align-items-center">
+					<li class="navbar-item">
+						{% include 'base/roleChooser.html.twig' %}
+					</li>
+					{% include 'base/authMenu.html.twig' %}
+				</ul>
+			{% endif %}
+		</div>
+	</nav>
+	{% if app.user.isSudoMode %}
+		<div class="text-bg-danger fw-bold text-center">
+			<div class="container">***SUDO MODE ACTIVE***</div>
+		</div>
+	{% endif %}
+
+<div class="container mt-4">
+	<main>
+		{% block body %}{% endblock %}
+	</main>
+</div>
+{% include 'base/footer.html.twig' %}
