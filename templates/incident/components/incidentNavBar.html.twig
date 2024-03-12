@@ -4,14 +4,18 @@
 			<i class="fa-regular fa-circle-dot"></i>
 			Incident</a>
 	</li>
+	{% if app.user.can('ACTIVITY_LOG', incident) %}
 	<li class="nav-item">
 		<a class="nav-link disabled" href="#">
 			<i class="fa-solid fa-chart-line"></i>
 			Activity Log</a>
 	</li>
-	<li class="nav-item">
-		<a class="nav-link {{'settings' == activetab ? 'active'}}" href="{{url_for('incident.settings',{'incident':incident.getId})}}">
-			<i class="fa-solid fa-screwdriver-wrench"></i>
-			Settings</a>
-	</li>
+	{% endif %}
+	{% if app.user.can('EDIT_INCIDENT', incident) %}
+		<li class="nav-item">
+			<a class="nav-link {{'settings' == activetab ? 'active'}}" href="{{url_for('incident.settings',{'incident':incident.getId})}}">
+				<i class="fa-solid fa-screwdriver-wrench"></i>
+				Settings</a>
+		</li>
+	{% endif %}
 </ul>

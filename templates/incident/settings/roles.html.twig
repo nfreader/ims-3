@@ -1,6 +1,8 @@
 {% extends 'base.html.twig' %}
 {% from 'macros.html.twig' import agencyBadge %}
 {% block body %}
+	{% set activeSubnav = 'roles' %}
+	{% set activetab = 'settings' %}
 	{% include 'incident/components/incidentHeader.html.twig' %}
 	<div class="row">
         {% include 'incident/settings/settingsNav.html.twig' %}
