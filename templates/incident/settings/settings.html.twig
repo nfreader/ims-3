@@ -1,0 +1,21 @@
+{% extends 'base.html.twig' %}
+{% from 'macros.html.twig' import agencyBadge %}
+{% block body %}
+	{% include 'incident/components/incidentHeader.html.twig' %}
+	<div class="row">
+		{% include 'incident/settings/settingsNav.html.twig' %}
+		<div class="col">
+			<div class="card">
+				<div class="card-body d-flex align-items-center justify-content-between">
+					<div>
+						<strong class="d-block">Change Status</strong>
+						This incident is currently
+						{{incident.isActive ? 'enabled' : 'disabled'}}
+					</div>
+					<button class="btn btn-outline-danger" data-bs-toggle="modal" data-bs-target="#activeModal">Change Status</button>
+				</div>
+                {% include 'incident/settings/individual/active.html.twig' %}
+			</div>
+		</div>
+	</div>
+{% endblock %}

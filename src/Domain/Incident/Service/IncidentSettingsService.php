@@ -5,7 +5,10 @@ namespace App\Domain\Incident\Service;
 use App\Domain\Incident\Data\Incident;
 use App\Domain\Permissions\Data\PermissionTypeEnum;
 use App\Domain\Incident\Repository\IncidentPermissionsRepository;
+use App\Domain\Incident\Repository\IncidentRepository;
+use App\Domain\Permissions\Data\PermissionsEnum;
 use App\Domain\User\Data\User;
+use App\Exception\UnauthorizedException;
 use App\Service\FlashMessageService;
 use DI\Attribute\Inject;
 use Exception;
@@ -14,7 +17,7 @@ use JustSteveKing\StatusCode\Http;
 class IncidentSettingsService
 {
     #[Inject()]
-    private FetchIncidentService $incidentService;
+    private IncidentRepository $incidentRepository;
 
     #[Inject()]
     private IncidentPermissionsRepository $permissionsRepository;
@@ -31,13 +34,24 @@ class IncidentSettingsService
 
         switch ($setting) {
             default:
-                throw new Exception("Invalid data", (int) Http::BAD_REQUEST);
+                throw new Exception("Invalid setting", 401);
                 break;
 
             case 'permissions':
                 $this->updatePermissions($data);
                 break;
+
+            case 'active':
+                $this->toggleIncident();
+                break;
         }
+    }
+
+    private function toggleIncident(): void
+    {
+        $this->incidentRepository->toggleIncident($this->incident->getId(), $this->incident->isActive());
+        $verb = !$this->incident->isActive() ? 'Enabled' : 'Disabled';
+        $this->flash->addSuccessMessage("This incident has been $verb");
     }
 
     private function updatePermissions(array $data)

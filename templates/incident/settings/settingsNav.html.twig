@@ -1,0 +1,8 @@
+<div class="col-md-2">
+	<ul class="nav flex-column bg-body-tertiary border border-subtle rounded-2">
+		<li class="nav-item">
+			<a class="nav-link" aria-current="page" href="{{url_for('incident.settings',{'incident':incident.getId})}}">General Settings</a>
+			<a class="nav-link" aria-current="page" href="{{url_for('incident.settings',{'incident':incident.getId,'setting':'roles'})}}">Manage Roles</a>
+		</li>
+	</ul>
+</div>

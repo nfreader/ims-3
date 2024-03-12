@@ -24,9 +24,18 @@ class IncidentAction extends Action implements GetEntitiesInterface
 
     public function getEntities(): static
     {
-        $this->incident = $this->incidentService->getIncident($this->getArg('incident'));
-        if(!$this->getUser()->can(PermissionsEnum::VIEW_INCIDENT, $this->incident)) {
-            throw new HttpException($this->getRequest(), "Your active role does not have permission to view this", Http::UNAUTHORIZED->value);
+        $this->incident = $this->incidentService->getIncident(
+            $this->getArg('incident')
+        );
+        if(!$this->getUser()->can(
+            PermissionsEnum::VIEW_INCIDENT,
+            $this->incident
+        )) {
+            throw new HttpException(
+                $this->getRequest(),
+                "Your active role does not have permission to view this",
+                Http::UNAUTHORIZED->value
+            );
         }
         return $this;
     }

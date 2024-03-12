@@ -3,13 +3,7 @@
 {% block body %}
 	{% include 'incident/components/incidentHeader.html.twig' %}
 	<div class="row">
-		<div class="col-md-2">
-			<ul class="nav flex-column bg-body-tertiary border border-subtle rounded-2">
-				<li class="nav-item">
-					<a class="nav-link" aria-current="page" href="#">Manage Roles</a>
-				</li>
-			</ul>
-		</div>
+        {% include 'incident/settings/settingsNav.html.twig' %}
 		<div class="col">
 			<form action="{{url_for('incident.settings',{'incident':incident.getId,'setting':'permissions'})}}" method="post" name="incidentPermissions">
 				<table class="table table-sm" autocomplete="off">

@@ -11,6 +11,9 @@ use JsonSerializable;
 
 class Incident implements JsonSerializable, CheckPermissionsInterface
 {
+
+    private bool $public = false;
+
     public function __construct(
         private int $id,
         private string $name,
@@ -18,6 +21,7 @@ class Incident implements JsonSerializable, CheckPermissionsInterface
         private DateTimeImmutable $created,
         private string $creatorName,
         private string $creatorEmail,
+        private bool $active = true,
         private ?string $agencyName = null,
         private ?int $agencyId = null,
         private ?string $agencyLogo = null,
@@ -25,6 +29,18 @@ class Incident implements JsonSerializable, CheckPermissionsInterface
         private ?int $roleId = null,
         private array $permissions = []
     ) {
+        if(!$this->getAgencyId()){
+            $this->public = true;
+        }
+    }
+
+    public function isActive(): bool
+    {
+        return $this->active;
+    }
+
+    private function isPublic(): bool{
+        return $this->public;
     }
 
     public function getName(): string
@@ -57,19 +73,6 @@ class Incident implements JsonSerializable, CheckPermissionsInterface
         return $this->creatorEmail;
     }
 
-    public function jsonSerialize(): mixed
-    {
-        return [
-            'id' => $this->getId(),
-            'name' => $this->getName(),
-            'created' => $this->getCreated(),
-            'created_by' => [
-                'name' => $this->getCreatorName(),
-                'email' => $this->getCreatorEmail()
-            ]
-        ];
-    }
-
     public function getAgencyId(): ?int
     {
         return $this->agencyId;
@@ -88,7 +91,7 @@ class Incident implements JsonSerializable, CheckPermissionsInterface
     public function setPermissions(array $permissions): static
     {
         $this->permissions = array_fill_keys(array_column(PermissionTypeEnum::cases(), 'value'), []);
-        foreach($permissions as $p) {
+        foreach ($permissions as $p) {
             $this->permissions[$p->getType()->value][] = $p;
         }
         // $this->permissions = $permissions;
@@ -98,23 +101,47 @@ class Incident implements JsonSerializable, CheckPermissionsInterface
 
     public function checkUserPermissions(PermissionsEnum $permission, User $user): bool
     {
-        if($user->isSudoMode()) {
+        //Bypass for users in sudo mode
+        if ($user->isSudoMode()) {
             return true;
         }
-        if(!$this->getAgencyId() && $permission === PermissionsEnum::VIEW_INCIDENT) {
-            //This is a "public" incident, which are always visible to all users
-            return true;
-        } elseif(!$user->getActiveRole()) {
+
+        //Fail the check if the incident is not active
+        if (!$this->isActive()) {
             return false;
-        } else {
-            foreach($this->getPermissions()['role'] as $p) {
-                if($permission->value & $p->getFlags()) {
-                    if($permission->value & $user->getActiveRole()->getFlags()) {
-                        return true;
-                    }
+        }
+
+        //This is a "public" incident, which are always visible to all users
+        if ($this->isPublic() && $permission === PermissionsEnum::VIEW_INCIDENT) {
+            return true;
+        }
+
+        //The user doesn't have an active role
+        if (!$user->getActiveRole()) {
+            return false;
+        }
+        
+        //Check the user's active role permissions
+        foreach ($this->getPermissions()['role'] as $p) {
+            if ($permission->value & $p->getFlags()) {
+                if ($permission->value & $user->getActiveRole()->getFlags()) {
+                    return true;
                 }
             }
         }
         return false;
+    }
+
+    public function jsonSerialize(): mixed
+    {
+        return [
+            'id' => $this->getId(),
+            'name' => $this->getName(),
+            'created' => $this->getCreated(),
+            'created_by' => [
+                'name' => $this->getCreatorName(),
+                'email' => $this->getCreatorEmail()
+            ]
+        ];
     }
 }

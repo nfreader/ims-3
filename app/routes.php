@@ -25,13 +25,15 @@ return function (App $app) {
 
         $app->get('/{incident:[0-9]+}', \App\Action\Incident\ViewIncidentAction::class)->setName('incident.view');
 
-        $app->map(['GET','POST'], '/{incident:[0-9]+}/settings[/{setting:[a-z]+}]', \App\Action\Incident\UpdateIncidentSettingsAction::class)->setName('incident.settings');
+        $app->map(['GET', 'POST'], '/{incident:[0-9]+}/settings[/{setting:[a-z]+}]', \App\Action\Incident\UpdateIncidentSettingsAction::class)->setName('incident.settings');
 
-        $app->get('/{incident:[0-9]+}/event/{event:[0-9]+}', \App\Action\Event\ViewEventAction::class)->setName('event.view');
+        $app->group('/{incident:[0-9]+}/event', function (RouteCollectorProxy $app) {
+            $app->get('/{event:[0-9]+}', \App\Action\Event\ViewEventAction::class)->setName('event.view');
 
-        $app->post('/{incident:[0-9]+}/event/new', \App\Action\Event\NewEventAction::class)->setName('event.new');
+            $app->post('/new', \App\Action\Event\NewEventAction::class)->setName('event.new');
 
-        $app->post('/{incident:[0-9]+}/event/{event:[0-9]+}/comment', \App\Action\Comment\NewCommentAction::class)->setName('comment.new');
+            $app->post('/comment', \App\Action\Comment\NewCommentAction::class)->setName('comment.new');
+        });
 
     })->add(function (ServerRequestInterface $request, RequestHandlerInterface $handler) {
         $request = $request->withAttribute('user', true);
@@ -61,7 +63,7 @@ return function (App $app) {
             $app->get('', \App\Action\Agency\ListAgenciesAction::class)->setName('agencies.home');
             $app->post('/new', \App\Action\Agency\NewAgencyAction::class)->setName('agency.new');
             $app->get('/{agency:[0-9]+}', \App\Action\Agency\ViewAgencyAction::class)->setName('agency.view');
-            $app->map(['GET','POST'], '/{agency:[0-9]+}/edit', \App\Action\Agency\EditAgencyAction::class)->setName('agency.edit');
+            $app->map(['GET', 'POST'], '/{agency:[0-9]+}/edit', \App\Action\Agency\EditAgencyAction::class)->setName('agency.edit');
 
             //Agency Roles
             $app->group('/{agency:[0-9]+}/roles', function (RouteCollectorProxy $app) {
@@ -75,12 +77,12 @@ return function (App $app) {
             //Single role
             $app->group('/{agency:[0-9]+}/role/{role:[0-9]+}', function (RouteCollectorProxy $app) {
                 $app->get('', \App\Action\Role\ViewRoleUsersAction::class)
-                ->setName('role.view');
+                    ->setName('role.view');
             });
         });
 
         $app->post('/role/{role:[0-9]+}/user', \App\Action\Role\UpdateUserRoleAction::class)
-        ->setName('role.user');
+            ->setName('role.user');
 
         $app->group('/users', function (RouteCollectorProxy $app) {
             $app->get('', \App\Action\User\ListUsersAction::class)->setName('users.home');
@@ -93,8 +95,8 @@ return function (App $app) {
         });
         $app->group('/log', function (RouteCollectorProxy $app) {
             $app->get('', \App\Action\Log\ViewLogsAction::class)->setName('logs');
-            $app->map(['GET','POST'], '/db', \App\Action\Log\ViewDBLog::class)->setName('log.db');
-            $app->map(['GET','POST'], '/doctrine', \App\Action\Log\ViewDoctrineLog::class)->setName('log.doctrine');
+            $app->map(['GET', 'POST'], '/db', \App\Action\Log\ViewDBLog::class)->setName('log.db');
+            $app->map(['GET', 'POST'], '/doctrine', \App\Action\Log\ViewDoctrineLog::class)->setName('log.doctrine');
         });
     })->add(function (ServerRequestInterface $request, RequestHandlerInterface $handler) {
         $request = $request->withAttribute('adminOnly', true);

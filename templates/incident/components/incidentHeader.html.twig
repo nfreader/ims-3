@@ -7,7 +7,7 @@
 					<i class="fa-regular fa-circle-dot"></i>
 				{% endif %}
 				{{incident.getId}}</span>
-			{{incident.getName}}
+			{{incident.getName}} {% if not incident.isActive %}<span class="badge text-bg-danger">Disabled</span>{% endif %}
 		</div>
 		<div style="font-size: 1rem" class="text-muted">
 			created

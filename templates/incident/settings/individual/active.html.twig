@@ -1,0 +1,29 @@
+<div class="modal fade" id="activeModal" tabindex="-1" aria-labelledby="activeModalLabel" aria-hidden="true">
+	<div class="modal-dialog modal-dialog-centered modal-dialog-scrollable">
+		<div class="modal-content text-center">
+			<div class="modal-body">
+				<h5 id="activeModalLabel">{{incident.isActive ? 'Disable' : 'Enable'}}
+					this incident?</h5>
+				{% if incident.isActive %}
+					<p class="mb-0">This incident is currently
+						<strong>enabled</strong>. Disabling this incident will prevent anyone from being able to view, edit, or update this incident.</p>
+				{% else %}
+					<p class="mb-0">This incident is currently
+						<strong>disabled</strong>. Enabling this incident will allow anyone with the correct roles to view, edit, or update this incident.</p>
+				{% endif %}
+			</div>
+			<form class="modal-footer flex-nowrap p-0" action="{{url_for('incident.settings',{'incident':incident.getId,'setting':'active'})}}" method="post">
+				{% if incident.isActive %}
+					<button type="submit" class="btn btn-lg btn-danger fs-6 text-decoration-none col-6 py-3 m-0 rounded-0">
+						<strong>Disable Incident</strong>
+					</button>
+				{% else %}
+					<button type="submit" class="btn btn-lg btn-success fs-6 text-decoration-none col-6 py-3 m-0 rounded-0">
+						<strong>Enable Incident</strong>
+					</button>
+				{% endif %}
+				<button type="button" class="btn btn-lg btn-link fs-6 text-decoration-none col-6 py-3 m-0 rounded-0" data-bs-dismiss="modal">Cancel</button>
+			</form>
+		</div>
+	</div>
+</div>
