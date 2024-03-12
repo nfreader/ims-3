@@ -29,7 +29,7 @@ class QueryLogger implements DbalLoggerQueryLogger
             'params' => $params,
             'types' => $types,
             'request' => $this->requestId,
-            'trace' => array_slice(debug_backtrace(3, 7), 4)
+            'trace' => debug_backtrace(3, 7)
         ]);
     }
 
