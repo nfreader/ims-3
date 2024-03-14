@@ -18,23 +18,26 @@ final class ViewDoctrineLog extends Action implements ActionInterface
         $search = $_GET['search'] ?? false;
         $lines = [];
         foreach(file("../logs/doctrine_db.log") as $line) {
+            $l = null;
             if($search) {
                 if(str_contains($line, $search)) {
-                    $line = json_decode($line);
+                    $l = json_decode($line);
                 }
             } else {
-                $line = json_decode($line);
+                $l = json_decode($line);
             }
-            foreach($line->context->trace as &$t) {
-                if(str_starts_with($t->class, "App\\")) {
-                    $t->ignore = true;
-                } else {
-                    $t->ignore = false;
+            if($l) {
+                foreach($l->context->trace as &$t) {
+                    if(str_starts_with($t->class, "App\\")) {
+                        $t->ignore = true;
+                    } else {
+                        $t->ignore = false;
+                    }
                 }
+                $lines[] = $l;
             }
-            $lines[] = $line;
         }
-        $lines = array_reverse($lines);
+
         return $this->render('log/viewlog.html.twig', [
             'lines' => $lines,
             'url' => 'log.doctrine'
