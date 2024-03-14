@@ -15,17 +15,21 @@ final class HomeAction extends Action implements ActionInterface
 
     public function action(): Response
     {
-        $incidents = null;
         if($this->getUser()) {
-            $role = $this->getUser()->getActiveRole()?->getRoleId();
-            if(!$this->getUser()->isSudoMode()) {
-                $incidents = $this->incidentRepository->listIncidentsForActiveRole($role);
+            if($this->getUser()?->isSudoMode()) {
+                $this->addContext(
+                    'incidents',
+                    $this->incidentRepository->listIncidents()
+                );
             } else {
-                $incidents = $this->incidentRepository->listIncidents();
+                $this->addContext(
+                    'incidents',
+                    $this->incidentRepository->listIncidentsForActiveRole(
+                        $this->getUser()->getActiveRole()?->getRoleId()
+                    )
+                );
             }
         }
-        return $this->render('home/home.html.twig', [
-            'incidents' => $incidents
-        ]);
+        return $this->render('home/home.html.twig');
     }
 }
