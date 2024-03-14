@@ -1,9 +1,13 @@
 {% include 'base/header.html.twig' %}
 {% include 'manage/navbar.html.twig' %}
 {% block subnav %}{% endblock %}
-<div class="container mt-4">
-	<main>
-		{% block body %}{% endblock %}
+<main>
+	<div class="container">
+		<a href="{{url_for('home')}}" class="bg-secondary-subtle border border-secondary-subtle border-top-0 py-1 px-3 text-decoration-none rounded-bottom">
+			<i class="fa-solid fa-angles-left"></i>
+			Back to application</a>
+	</div>
+	<div class="container py-4"> {% block body %}{% endblock %}
+		</div>
 	</main>
-</div>
-{% include 'base/footer.html.twig' %}
+	{% include 'base/footer.html.twig' %}

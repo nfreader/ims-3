@@ -1,6 +1,6 @@
 {% include 'base/header.html.twig' %}
 {% block scripts %}{% endblock %}
-<nav class="navbar sticky-top navbar-expand-lg bg-body-tertiary border-bottom">
+<header class="navbar sticky-top navbar-expand-lg bg-body-tertiary border-bottom">
 	<div class="container">
 		<a class="navbar-brand fw-bold" href="{{url_for('home')}}">{{app.name}}</a>
 		{% if app.user.isSudoMode %}
@@ -21,16 +21,16 @@
 				</ul>
 			{% endif %}
 		</div>
-	</nav>
+	</header>
 	{% if app.user.isSudoMode %}
 		<div class="text-bg-danger fw-bold text-center">
 			<div class="container">***SUDO MODE ACTIVE***</div>
 		</div>
 	{% endif %}
 
-<div class="container mt-4">
 	<main>
+		<div class="container py-4">
 		{% block body %}{% endblock %}
+		</div>
 	</main>
-</div>
 {% include 'base/footer.html.twig' %}

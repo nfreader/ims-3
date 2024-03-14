@@ -1,7 +1,7 @@
 {% from 'macros.html.twig' import empty %}
 <div class="list-group list-group-flush mb-3 border-top border-bottom">
 	{% for i in incidents %}
-		<a class="list-group-item list-group-item-action d-grid gap-2 align-items-center {{incident.getId == i.getId ? 'active'}}" href="{{url_for('incident.view',{'incident': i.getId})}}">
+		<a class="list-group-item list-group-item-action d-grid gap-2 align-items-center {{incident.getId == i.getId ? 'active  bg-opacity-10'}}" href="{{url_for('incident.view',{'incident': i.getId})}}">
 			<h4 class="d-flex align-items-center gap-2 mb-0">
 				{% if i.getAgencyLogo %}
 					<img src="/uploads/{{i.getAgencyLogo}}" height="32" width="32"/>

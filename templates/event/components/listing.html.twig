@@ -2,7 +2,7 @@
 
 <div class="list-group list-group-flush border-top border-bottom">
 	{% for e in events %}
-		<a href="{{url_for('event.view',{'incident':incident, 'event':e.getId})}}" class="list-group-item list-group-item-action {{event.getId == e.getId ? 'active'}}">
+		<a href="{{url_for('event.view',{'incident':incident, 'event':e.getId})}}" class="list-group-item list-group-item-action {{event.getId == e.getId ? 'active bg-opacity-10'}}">
 			<div class="d-flex w-100">
 				<span class="badge event-severity text-bg-{{e.getSeverity.getclass}} bg-opacity-100">{{e.getSeverity.getShort}}</span>
 				<div class="flex-grow-1 ms-4">
