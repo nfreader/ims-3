@@ -1,5 +1,5 @@
-<nav class="navbar sticky-top navbar-expand-lg bg-body-tertiary border-bottom">
-	<div class="container">
+<header class="navbar sticky-top navbar-expand-lg bg-body-tertiary border-bottom py-2">
+	<div class="container-fluid">
 		<a class="navbar-brand fw-bold" href="{{url_for('home')}}">{{app.name}}</a>
 		{% if app.user.isSudoMode %}
 			<a href="{{url_for('manage.home')}}" class="navbar-brand fw-bold text-danger animate__bounce animate__infinite d-block" data-bs-toggle="tooltip" data-bs-title="Sudo Mode is active. Click here to manage the application.">
@@ -34,9 +34,9 @@
 
 			{% endif %}
 		</div>
-	</nav>
+	</header>
 	{% if app.user.isSudoMode %}
-		<div class="text-bg-danger fw-bold text-center">
+		<div class="text-bg-danger fw-bold text-center sticky-top" style="top: 59px;">
 			<div class="container">***SUDO MODE ACTIVE***</div>
 		</div>
 	{% endif %}

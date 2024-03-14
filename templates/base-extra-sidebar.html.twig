@@ -1,0 +1,27 @@
+{% include 'base/header.html.twig' %}
+{% include 'base/navbar.html.twig' %}
+{% block subnav %}{% endblock %}
+<main class="container-fluid">
+	<div class="row">
+		<aside class="sidebar border-end col-md-3 col-lg-2 p-0 bg-body-tertiary text-truncate">
+			{% block sidebar %}
+				<h6 class="px-2 mt-2 mb-1 text-body-secondary text-uppercase">
+					Incidents
+				</h6>
+				{% include 'incident/components/listing.html.twig' %}
+			{% endblock %}
+		</aside>
+        <aside class="sidebar border-end col-md-3 col-lg-2 p-0 bg-body-tertiary text-truncate">
+			{% block sidebar2 %}
+				<h6 class="px-2 mt-2 mb-1 text-body-secondary text-uppercase">
+					Events
+				</h6>
+					{% include 'event/components/listing.html.twig' with {'events': events, 'incident': incident.getId} only %}
+			{% endblock %}
+		</aside>
+		<section class="main-content col-md-6 ms-sm-auto col-lg-8 px-md-4 py-2 border-start border-4">
+		{% block body %}{% endblock %}
+		</section>
+	</div>
+</main>
+{% include 'base/footer.html.twig' %}

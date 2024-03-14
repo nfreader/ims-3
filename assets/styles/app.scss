@@ -21,6 +21,40 @@ $theme-colors-rgb: map-loop($theme-colors, to-rgb, "$value");
 @import "~@fortawesome/fontawesome-free/css/all.css";
 @import "~@fortawesome/fontawesome-free/css/v4-shims.css";
 @import "~@fortawesome/fontawesome-free/css/v5-font-face.css";
+#app {
+  height: 100vh;
+  max-height: 100%;
+  display: grid;
+  grid-template-columns: 1fr;
+  grid-template-rows: auto 1fr auto;
+  grid-template-areas: 
+    'header'
+    'main'
+    'footer';
+}
+
+#app > header {
+  grid-area: header;
+}
+
+#app > main {
+  overflow: auto;
+  grid-area: main;
+}
+
+#app > footer {
+  grid-area: footer;
+}
+
+main > .row {
+  height: 100%;
+}
+
+.sidebar, .main-content {
+  height: 100%;
+  max-height: 100%;
+  overflow-y: scroll;
+}
 
 input,
 textarea {

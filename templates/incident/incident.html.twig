@@ -1,4 +1,4 @@
-{% extends 'base.html.twig' %}
+{% extends 'base-extra-sidebar.html.twig' %}
 {% block body %}
 	{% include 'incident/components/incidentHeader.html.twig' %}
 	{% include 'event/components/listing.html.twig' with {'events': events, 'incident': incident.getId} only %}

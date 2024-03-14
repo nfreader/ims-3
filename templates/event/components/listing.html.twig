@@ -1,28 +1,21 @@
 {% from 'macros.html.twig' import empty %}
 
-<div class="list-group mb-3">
+<div class="list-group list-group-flush border-top border-bottom">
 	{% for e in events %}
-		<div class="list-group-item">
+		<a href="{{url_for('event.view',{'incident':incident, 'event':e.getId})}}" class="list-group-item list-group-item-action {{event.getId == e.getId ? 'active'}}">
 			<div class="d-flex w-100">
 				<span class="badge event-severity text-bg-{{e.getSeverity.getclass}} bg-opacity-100">{{e.getSeverity.getShort}}</span>
 				<div class="flex-grow-1 ms-4">
 					<div class="d-flex justify-content-between">
 						<div>
-							<h5><a href="{{url_for(
-								'event.view',{'incident':incident, 'event':e.getId})}}" class="icon-link"><i class="fa-solid fa-message"></i> <span class="font-monospace">{{e.getId}}</span> {{e.title}}</a></h5>
+							<h5><i class="fa-solid fa-message"></i> <span class="font-monospace">{{e.getId}}</span> {{e.title}}</h5>
 							<p class="mb-1">{{e.getDesc|striptags|u.truncate(240, '...', false)}}
 							</p>
 						</div>
-						<small class="text-end">Created
-							{{e.created|date}}<br>
-							by
-							<a href="mailto:{{e.getCreatorEmail}}">{{e.getCreatorName}} &lt;{{e.getCreatorEmail}}&gt;</a>
-							<br>
-							<i class="fa-solid fa-comment"></i> {{e.getCommentCount}}</small>
 					</div>
 				</div>
 			</div>
-		</div>
+		</a>
 	{% else %}
 		<div class="list-group-item">{{empty("No Events")}}</div>
 	{% endfor %}

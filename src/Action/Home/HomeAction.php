@@ -29,7 +29,8 @@ final class HomeAction extends Action implements ActionInterface
                     )
                 );
             }
+            return $this->render('home/home.html.twig');
         }
-        return $this->render('home/home.html.twig');
+        return $this->render('guest/guest.html.twig');
     }
 }
