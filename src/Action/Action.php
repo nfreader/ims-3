@@ -44,6 +44,8 @@ abstract class Action
 
     private ?User $user;
 
+    private array $context = [];
+
     public function __construct(
         protected ContainerInterface $container
     ) {
@@ -151,21 +153,63 @@ abstract class Action
         return $this->route;
     }
 
-    protected function json(mixed $data): ResponseInterface
+    /**
+     * json
+     *
+     * Returns a json_encoded response with the given $context
+     *
+     * @param mixed $context
+     * @return ResponseInterface
+     */
+    protected function json(mixed $context): ResponseInterface
     {
         $response = $this->response->withHeader("Content-Type", "application/json");
-        $response->getBody()->write(json_encode($data, JSON_PRETTY_PRINT));
+        $context = [...$context, ...$this->context];
+        $response->getBody()->write(json_encode($context, JSON_PRETTY_PRINT));
         return $response;
     }
 
-    protected function render(string $template = 'debug.html.twig', mixed $data = []): ResponseInterface
+    /**
+     * render
+     *
+     * Renders the given twig $template file with the given $context to a response. If the client indicates that they want a json response, we fall back to the json method
+     *
+     * @param string $template
+     * @param mixed $context
+     * @return ResponseInterface
+     */
+    protected function render(string $template = 'debug.html.twig', mixed $context = []): ResponseInterface
     {
         if('application/json' === $this->request->getHeaderLine('Accept')) {
-            return $this->json($data);
+            return $this->json($context);
         }
-        return $this->twigRenderer->render($this->getResponse(), $template, $data);
+        $context = [...$context, ...$this->context];
+        return $this->twigRenderer->render($this->getResponse(), $template, $context);
     }
 
+    /**
+     * addContext
+     * Add context to the renderer before the call to render() or json()
+     * @param string $key
+     * @param mixed $value
+     * @return static
+     */
+    public function addContext(string $key, mixed $value): static
+    {
+        $this->context[$key] = $value;
+        return $this;
+    }
+
+    /**
+     * redirectFor
+     *
+     * Returns a response object with a 302 header that redirects the user to the specified route with the specified parameters.
+     *
+     * @param string $route
+     * @param array $data
+     * @param array $queryParams
+     * @return ResponseInterface
+     */
     public function redirectFor(string $route, array $data = [], array $queryParams = []): ResponseInterface
     {
         return $this->redirect->redirectFor($this->getResponse(), $route, $data, $queryParams);
