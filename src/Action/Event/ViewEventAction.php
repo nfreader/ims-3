@@ -22,12 +22,14 @@ class ViewEventAction extends IncidentAction implements ActionInterface
     public function action(): Response
     {
         $event = $this->eventRepository->getEvent($this->getArg('event'));
+        $events = $this->eventRepository->getEventsForIncident($this->incident->getId());
         $comments = $this->commentRepository->getCommentsForEvent($event->getId());
         return $this->render('event/event.html.twig', [
             'incident' => $this->incident,
             'event' => $event,
             'comments' => $comments,
-            'activetab' => 'incident'
+            'activetab' => 'incident',
+            'events' => $events
         ]);
     }
 }

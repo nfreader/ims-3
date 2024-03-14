@@ -36,7 +36,6 @@ final class UpdateIncidentSettingsAction extends IncidentAction implements Actio
             return $this->redirectFor('incident.settings', ['incident' => $this->incident->getId()]);
         } else {
             $data = [];
-            $data['incident'] = $this->incident;
             $data['activeTab'] = 'settings';
 
             switch ($this->getArg('setting')) {

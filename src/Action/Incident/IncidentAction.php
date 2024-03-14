@@ -5,8 +5,10 @@ namespace App\Action\Incident;
 use App\Action\Action;
 use App\Action\GetEntitiesInterface;
 use App\Domain\Incident\Data\Incident;
+use App\Domain\Incident\Repository\IncidentRepository;
 use App\Domain\Incident\Service\FetchIncidentService;
 use App\Domain\Permissions\Data\PermissionsEnum;
+use DI\Attribute\Inject;
 use JustSteveKing\StatusCode\Http;
 use Psr\Container\ContainerInterface;
 use Slim\Exception\HttpException;
@@ -14,6 +16,9 @@ use Slim\Exception\HttpException;
 class IncidentAction extends Action implements GetEntitiesInterface
 {
     protected Incident $incident;
+
+    #[Inject()]
+    private IncidentRepository $incidentRepository;
 
     public function __construct(
         protected ContainerInterface $container,
@@ -24,6 +29,22 @@ class IncidentAction extends Action implements GetEntitiesInterface
 
     public function getEntities(): static
     {
+        if($this->getUser()) {
+            if($this->getUser()->isSudoMode()) {
+                $this->addContext(
+                    'incidents',
+                    $this->incidentRepository->listIncidents()
+                );
+            } else {
+                $this->addContext(
+                    'incidents',
+                    $this->incidentRepository->listIncidentsForActiveRole(
+                        $this->getUser()->getActiveRole()?->getRoleId()
+                    )
+                );
+            }
+        }
+
         $this->incident = $this->incidentService->getIncident(
             $this->getArg('incident')
         );
@@ -37,6 +58,7 @@ class IncidentAction extends Action implements GetEntitiesInterface
                 Http::UNAUTHORIZED->value
             );
         }
+        $this->addContext('incident', $this->incident);
         return $this;
     }
 
