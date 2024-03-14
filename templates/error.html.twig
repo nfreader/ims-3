@@ -14,9 +14,8 @@
 		<div class="list-group">
 			{% for t in error.trace %}
 				<div class="list-group-item d-flex">
-					<h1 class="me-3">{{loop.index}}</h1>
 					<div>
-						<span class="font-monospace d-block">{{t.file}}:{{t.line}}</span>
+						<span class="font-monospace d-block mb-0" style="font-size:.5rem">{{t.file}}:{{t.line}}:</span>
 						<code>{{t.class}}{{t.type}}{{t.function}}()</code>
 					</div>
 				</div>
