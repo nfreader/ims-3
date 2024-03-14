@@ -77,12 +77,16 @@ textarea {
   text-transform: uppercase !important;
 }
 
-.list-group-item:first-child .event-severity  {
-  border-bottom-right-radius: 5px !important;
-}
+// .list-group-item:first-child .event-severity  {
+//   border-bottom-right-radius: 5px !important;
+// }
 
-.list-group-item:last-child .event-severity    {
-  border-top-right-radius: 5px !important;
+// .list-group-item:last-child .event-severity    {
+//   border-top-right-radius: 5px !important;
+// }
+
+.event-severity {
+  border-radius: 0;
 }
 
 #mdEditorTabs.nav-tabs .nav-link.active {
