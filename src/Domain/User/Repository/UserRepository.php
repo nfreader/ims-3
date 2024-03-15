@@ -60,9 +60,7 @@ class UserRepository extends Repository
     {
         $queryBuilder = $this->qb();
         $queryBuilder->select(...self::COLUMNS);
-        $queryBuilder->addSelect('concat_ws(",", ua.agency) as agencyList');
         $queryBuilder->from($this->table, $this->alias);
-        $queryBuilder->leftJoin($this->alias, 'user_agency', 'ua', 'u.id = ua.target');
         $queryBuilder->addGroupBy('u.id');
         $queryBuilder->addOrderBy('u.lastName', 'ASC');
         $queryBuilder->addOrderBy('u.firstName', 'ASC');

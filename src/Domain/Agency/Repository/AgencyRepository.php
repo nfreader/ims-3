@@ -88,21 +88,4 @@ class AgencyRepository extends Repository
         return $result->rowCount();
     }
 
-    public function getUsersForAgency(int $id): array
-    {
-        $queryBuilder = $this->qb();
-        $queryBuilder->select('ua.title as agencyTitle', ...UserRepository::COLUMNS)
-        ->from('user_agency', 'ua')
-        ->join('ua', 'user', 'u', 'u.id = ua.target')
-        ->where('ua.agency = '. $queryBuilder->createPositionalParameter($id))
-        ->groupBy('ua.id');
-        $result = $queryBuilder->executeQuery($queryBuilder->getSQL(), [$id]);
-        $this->overrideMetadata(User::class);
-        $return = [];
-        foreach($result->fetchAllAssociative() as $r) {
-            $return[] = new User(...$this->mapRow($r));
-        }
-        return $return;
-    }
-
 }

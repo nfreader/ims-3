@@ -25,11 +25,6 @@ class FetchAgencyService
         return $agency;
     }
 
-    public function getUsersForAgency(int $id): array
-    {
-        return $this->agencyRepository->getUsersForAgency($id);
-    }
-
     public function getAgenciesWithRoles(): array
     {
         $agencies = $this->agencyRepository->getAgencies();

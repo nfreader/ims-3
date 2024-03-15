@@ -19,7 +19,6 @@ class ViewAgencyAction extends Action implements ActionInterface
         $agency = $this->agencyService->getAgency($this->getArg('agency'));
         return $this->render('manage/agency/agency.html.twig', [
             'agency' => $agency,
-            'members' => $this->agencyService->getUsersForAgency($agency->getId()),
             'activetab' => 'agency'
         ]);
     }
