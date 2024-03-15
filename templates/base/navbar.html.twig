@@ -27,7 +27,7 @@
 			{% if app.user %}
 				<ul class="navbar-nav d-flex align-items-center">
 					<li class="navbar-item">
-						{% include 'base/roleChooser.html.twig' %}
+						{% include 'base/roleChooser.html.twig' with {'reload':true} %}
 					</li>
 					{% include 'base/authMenu.html.twig' %}
 				</ul>

@@ -11,6 +11,7 @@ async function setActiveRole(role){
     body: JSON.stringify({'role': role}),
     headers: {
       "Content-Type": "application/json",
+      "Accept": "application/json"
     },
   })
   return await response.json()
@@ -35,7 +36,7 @@ if (currentData) {
 const incidentSelector = document.getElementById("incidentGlobal");
 const eventSelector = document.getElementById("eventGlobal");
 const globalNav = document.getElementById("globalNav");
-
+if(globalNav){
 globalNav.addEventListener("change", (e) => {
   const formData = new FormData(globalNav);
   var targetIncident = formData.get("incident");
@@ -69,7 +70,7 @@ await getGlobalNav().then((data) => {
     globalEventControl.classList.remove('visually-hidden')
   }
 });
-
+}
 const agencyTargets = document.querySelectorAll('.agencyTarget')
 const agencyChoosers = document.querySelectorAll('.agencyChooser')
 const foundAgencyChoosers = [...agencyChoosers].map((chooser) => {
@@ -95,6 +96,10 @@ const foundAgencyChoosers = [...agencyChoosers].map((chooser) => {
             window.location.reload()
           }
           if(!currentIncident && !currentEvent){
+            window.location.reload()
+          }
+          console.log(chooser.dataset.reload)
+          if(chooser.dataset.reload){
             window.location.reload()
           }
         })
