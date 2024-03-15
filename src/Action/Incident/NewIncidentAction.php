@@ -17,6 +17,9 @@ final class NewIncidentAction extends Action implements ActionInterface
     {
         $user = $this->getUser();
         $incident = $this->newIncidentService->createNewIncident($this->getRequest()->getParsedBody(), $user);
-        return $this->render('home/home.html.twig');
+        return $this->redirectFor(
+            'incident.view',
+            ['incident' => $incident->getId()]
+        );
     }
 }

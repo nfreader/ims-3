@@ -1,7 +1,8 @@
 {% from 'macros.html.twig' import empty %}
+{% from 'macros/formInputs.twig' import textInput %}
 <div class="list-group list-group-flush mb-3 border-top border-bottom">
 	{% for i in incidents %}
-		<a class="list-group-item list-group-item-action d-grid gap-2 align-items-center {{incident.getId == i.getId ? 'active  bg-opacity-10'}}" href="{{url_for('incident.view',{'incident': i.getId})}}">
+		<a class="list-group-item list-group-item-action d-grid gap-2 align-items-center {{incident.getId == i.getId ? 'active'}} {{i.isActive ? '' : 'opacity-50'}}" href="{{url_for('incident.view',{'incident': i.getId})}}">
 			<h4 class="d-flex align-items-center gap-2 mb-0">
 				{% if i.getAgencyLogo %}
 					<img src="/uploads/{{i.getAgencyLogo}}" height="32" width="32"/>
@@ -17,4 +18,37 @@
 			{{empty('No Active Incidents')}}
 		</li>
 	{% endfor %}
+	<button class="list-group-item list-group-item-action link-primary" data-bs-toggle="modal" data-bs-target="#newIncidentModal">
+		<i class="fa-solid fa-circle-plus"></i>
+		Create New Incident</button>
+</div>
+
+<div class="modal fade" id="newIncidentModal" tabindex="-1" aria-labelledby="newIncidentModalLabel" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-hidden="true">
+	<div class="modal-dialog">
+		<div class="modal-content">
+			<div class="modal-header">
+				<h1 class="modal-title fs-5" id="newIncidentModalLabel">New Incident</h1>
+				<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+			</div>
+			<div class="modal-body">
+				<form class="card-body form" method="post" action="{{url_for('incident.new')}}" name="newIncident" id="newIncident">
+					<div class="row mb-3">
+						<div class="col">
+							{{textInput('text','name',"Incident Name")}}
+						</div>
+					</div>
+					<div class="row">
+						<div class="col d-flex align-items-center gap-2">
+							<span>Posting as:</span>
+							{% include 'base/roleChooser.html.twig' %}
+						</div>
+					</div>
+				</form>
+			</div>
+			<div class="modal-footer">
+				<button type="reset" class="btn btn-secondary" data-bs-dismiss="modal" form="newIncident">Cancel</button>
+				<button type="submit" class="btn btn-primary" form="newIncident">Create Incident</button>
+			</div>
+		</div>
+	</div>
 </div>
