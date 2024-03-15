@@ -88,13 +88,3 @@ form.addEventListener('submit', function(e){
   setTimeout(() => {window.location.reload()}, 100);
 })
 
-const setBG = () => {
-  const body = document.querySelector('body')
-  if(body.classList.contains('sudo')) {
-    const svgText = `<svg width='128' height='128' xmlns="http://www.w3.org/2000/svg" viewBox="0 0 256 256"><text x="0" y="128" style="font-family:&quot;Arial&quot;,sans-serif;font-weight:700;font-size:18.534px;opacity:.25;transform:rotate(-45deg)" fill='red'>SUDO MODE</text></svg>`
-    const bg = window.getComputedStyle(body).getPropertyValue('background')
-    body.setAttribute('style',`background: url(data:image/svg+xml;base64,${btoa(svgText)}) repeat scroll 0% 0% / 384px padding-box border-box, ${bg}`)
-  }
-}
-
-setBG()

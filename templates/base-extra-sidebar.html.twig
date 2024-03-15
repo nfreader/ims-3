@@ -3,7 +3,7 @@
 {% block subnav %}{% endblock %}
 <main class="container-fluid">
 	<div class="row">
-		<aside class="sidebar border-end col-md-3 col-lg-2 p-0 bg-body-tertiary text-truncate">
+		<aside class="sidebar border-end p-0 bg-body-tertiary text-truncate col-2" id="sidebar">
 			{% block sidebar %}
 				<h6 class="px-2 mt-2 mb-1 text-body-secondary text-uppercase d-flex align-items-center justify-content-between">
 					<span>Incidents</span><i class="fa-solid fa-sort"></i>
@@ -11,7 +11,7 @@
 				{% include 'incident/components/listing.html.twig' %}
 			{% endblock %}
 		</aside>
-        <aside class="sidebar border-end col-md-3 col-lg-2 p-0 bg-body-tertiary text-truncate">
+        <aside class="sidebar border-end p-0 bg-body-tertiary text-truncate col-2" id="sidebar2">
 			{% block sidebar2 %}
 				<h6 class="px-2 mt-2 mb-1 text-body-secondary text-uppercase d-flex align-items-center justify-content-between">
 					<span>Events</span><i class="fa-solid fa-sort"></i>
@@ -19,9 +19,11 @@
 					{% include 'event/components/listing.html.twig' with {'events': events, 'incident': incident.getId} only %}
 			{% endblock %}
 		</aside>
-		<section class="main-content flex-grow-1 col px-md-4 py-2 border-start border-4">
+		<section class="main-content px-md-4 py-2 col" id="panel">
 		{% block body %}{% endblock %}
 		</section>
-	</div>
+		</div>
 </main>
+{{ webpack_entry_script_tags('resizePanel') }}
+
 {% include 'base/footer.html.twig' %}

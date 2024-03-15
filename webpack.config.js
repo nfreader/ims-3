@@ -23,11 +23,10 @@ Encore
     .addEntry('app', './assets/app.js')
     .addEntry('mdeditor', './assets/mdeditor.js')
     .addEntry('globalNav', './assets/globalNav.js')
-    
     .addEntry("toggleRoleModal", "./assets/components/toggleRoleModal.js")
-
     .addEntry("manageRoleUsers", "./assets/components/manageRoleUsers.js")
-
+    .addEntry("markdownEditor", "./assets/components/markdownEditor.js")
+    .addEntry("resizePanel", "./assets/components/resizeablePanel.js")
 
     // enables the Symfony UX Stimulus bridge (used in assets/bootstrap.js)
     .enableStimulusBridge('./assets/controllers.json')
