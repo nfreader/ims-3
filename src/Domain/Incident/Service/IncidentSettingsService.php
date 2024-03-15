@@ -37,7 +37,7 @@ class IncidentSettingsService
                 throw new Exception("Invalid setting", 401);
                 break;
 
-            case 'permissions':
+            case 'roles':
                 $this->updatePermissions($data);
                 break;
 

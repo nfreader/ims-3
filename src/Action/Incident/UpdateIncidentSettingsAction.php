@@ -22,7 +22,11 @@ final class UpdateIncidentSettingsAction extends IncidentAction implements Actio
     public function action(): Response
     {
         if(!$this->getUser()->can(PermissionsEnum::EDIT_INCIDENT, $this->incident)) {
-            throw new HttpException($this->getRequest(), "Your active role does not have permission to perform these actions", Http::UNAUTHORIZED->value);
+            throw new HttpException(
+                $this->getRequest(),
+                "Your active role does not have permission to perform these actions",
+                Http::UNAUTHORIZED->value
+            );
         }
         if('POST' === $this->request->getMethod()) {
             if($setting = $this->getArg('setting')) {
@@ -33,7 +37,11 @@ final class UpdateIncidentSettingsAction extends IncidentAction implements Actio
                     $this->getUser()
                 );
             }
-            return $this->redirectFor('incident.settings', ['incident' => $this->incident->getId()]);
+            $redirectArgs = ['incident' => $this->incident->getId(), 'setting' => $setting];
+            return $this->redirectFor(
+                'incident.settings',
+                $redirectArgs
+            );
         } else {
             $data = [];
             $data['activeTab'] = 'settings';
