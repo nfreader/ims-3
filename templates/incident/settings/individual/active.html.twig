@@ -1,3 +1,12 @@
+<div class="card-body d-flex align-items-center justify-content-between">
+	<div>
+		<strong class="d-block">Change Status</strong>
+		This incident is currently
+		{{incident.isActive ? 'enabled' : 'disabled'}}
+	</div>
+	<button class="btn btn-outline-danger" data-bs-toggle="modal" data-bs-target="#activeModal">Change Status</button>
+</div>
+
 <div class="modal fade" id="activeModal" tabindex="-1" aria-labelledby="activeModalLabel" aria-hidden="true">
 	<div class="modal-dialog modal-dialog-centered modal-dialog-scrollable">
 		<div class="modal-content text-center">

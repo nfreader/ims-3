@@ -91,16 +91,21 @@ class IncidentRepository extends Repository
 
     public function toggleIncident(int $id, bool $active): void
     {
-        $this->updateSetting($id, 'active', !$active);
+        $this->updateSetting($id, 'active', !$active, ParameterType::BOOLEAN);
     }
 
-    private function updateSetting(int $id, string $key, mixed $value): void
+    public function setName(int $id, string $name): void
+    {
+        $this->updateSetting($id, 'name', $name);
+    }
+
+    private function updateSetting(int $id, string $key, mixed $value, ParameterType $type = ParameterType::STRING): void
     {
         $queryBuilder = $this->qb();
         $queryBuilder->update($this->table);
         $queryBuilder->set(
             $key,
-            $queryBuilder->createNamedParameter($value, ParameterType::INTEGER)
+            $queryBuilder->createNamedParameter($value, $type)
         );
         $queryBuilder->where(
             'id = '.$queryBuilder->createNamedParameter($id, ParameterType::INTEGER)

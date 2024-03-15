@@ -37,7 +37,6 @@ final class UpdateIncidentSettingsAction extends IncidentAction implements Actio
         } else {
             $data = [];
             $data['activeTab'] = 'settings';
-
             switch ($this->getArg('setting')) {
                 case 'settings':
                 default:

@@ -1,0 +1,7 @@
+<form id="renameIncident" name="renameIncident" class="card-body d-flex gap-2 align-items-center justify-content-between" action="{{url_for('incident.settings',{'incident':incident.getId,'setting':'rename'})}}" method="post">
+	<label for="rename" class="fw-bold">Rename Incident</label>
+	<div class="col">
+		<input type="text" class="form-control" id="rename" name="rename" value="{{incident.getName}}">
+	</div>
+	<button type="submit" class="btn btn-outline-primary">Rename</button>
+</form>

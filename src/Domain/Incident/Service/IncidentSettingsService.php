@@ -44,6 +44,10 @@ class IncidentSettingsService
             case 'active':
                 $this->toggleIncident();
                 break;
+
+            case 'rename':
+                $this->renameIncident($data);
+                break;
         }
     }
 
@@ -52,6 +56,12 @@ class IncidentSettingsService
         $this->incidentRepository->toggleIncident($this->incident->getId(), $this->incident->isActive());
         $verb = !$this->incident->isActive() ? 'Enabled' : 'Disabled';
         $this->flash->addSuccessMessage("This incident has been $verb");
+    }
+
+    private function renameIncident(array $data): void
+    {
+        $this->incidentRepository->setName($this->incident->getId(), $data['rename']);
+        $this->flash->addSuccessMessage("This incident has been renamed");
     }
 
     private function updatePermissions(array $data)
