@@ -21,6 +21,11 @@ $theme-colors-rgb: map-loop($theme-colors, to-rgb, "$value");
 @import "~@fortawesome/fontawesome-free/css/all.css";
 @import "~@fortawesome/fontawesome-free/css/v4-shims.css";
 @import "~@fortawesome/fontawesome-free/css/v5-font-face.css";
+
+.opacity-50 {
+  opacity: .5;
+}
+
 #app {
   height: 100vh;
   max-height: 100%;
