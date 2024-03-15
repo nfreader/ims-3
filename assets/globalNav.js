@@ -5,16 +5,16 @@ async function getGlobalNav() {
   return await response.json();
 }
 
-async function setActiveRole(role){
-  const response = await fetch("/user/pickRole",{
-    method: 'POST',
-    body: JSON.stringify({'role': role}),
+async function setActiveRole(role) {
+  const response = await fetch("/user/pickRole", {
+    method: "POST",
+    body: JSON.stringify({ role: role }),
     headers: {
       "Content-Type": "application/json",
-      "Accept": "application/json"
+      Accept: "application/json",
     },
-  })
-  return await response.json()
+  });
+  return await response.json();
 }
 
 const url = window.location;
@@ -36,75 +36,75 @@ if (currentData) {
 const incidentSelector = document.getElementById("incidentGlobal");
 const eventSelector = document.getElementById("eventGlobal");
 const globalNav = document.getElementById("globalNav");
-if(globalNav){
-globalNav.addEventListener("change", (e) => {
-  const formData = new FormData(globalNav);
-  var targetIncident = formData.get("incident");
-  var targetEvent = formData.get("event");
-  if (targetEvent && targetIncident == currentIncident) {
-    window.location.assign(
-      `${url.origin}/incident/${targetIncident}/event/${targetEvent}`
-    );
-  } else {
-    window.location.assign(`${url.origin}/incident/${targetIncident}`);
-  }
-});
-
-await getGlobalNav().then((data) => {
-  data.incidents.forEach((i) => {
-    var current = i.id == currentIncident;
-    var opt = new Option(i.name, i.id, false, current);
-    incidentSelector.appendChild(opt);
-  });
-  data.events.forEach((e) => {
-    if (e.incident == currentIncident) {
-      var current = e.id == currentEvent;
-      var opt = new Option(e.title, e.id, false, current);
-      eventSelector.appendChild(opt);
+if (globalNav) {
+  globalNav.addEventListener("change", (e) => {
+    const formData = new FormData(globalNav);
+    var targetIncident = formData.get("incident");
+    var targetEvent = formData.get("event");
+    if (targetEvent && targetIncident == currentIncident) {
+      window.location.assign(
+        `${url.origin}/incident/${targetIncident}/event/${targetEvent}`
+      );
+    } else {
+      window.location.assign(`${url.origin}/incident/${targetIncident}`);
     }
   });
-  const globalEventControl = document.querySelector('#globalEventControl')
-  if (1 >= eventSelector.children.length){
-    globalEventControl.classList.add('visually-hidden')
-  } else {
-    globalEventControl.classList.remove('visually-hidden')
-  }
-});
+
+  await getGlobalNav().then((data) => {
+    data.incidents.forEach((i) => {
+      var current = i.id == currentIncident;
+      var opt = new Option(i.name, i.id, false, current);
+      incidentSelector.appendChild(opt);
+    });
+    data.events.forEach((e) => {
+      if (e.incident == currentIncident) {
+        var current = e.id == currentEvent;
+        var opt = new Option(e.title, e.id, false, current);
+        eventSelector.appendChild(opt);
+      }
+    });
+    const globalEventControl = document.querySelector("#globalEventControl");
+    if (1 >= eventSelector.children.length) {
+      globalEventControl.classList.add("visually-hidden");
+    } else {
+      globalEventControl.classList.remove("visually-hidden");
+    }
+  });
 }
-const agencyTargets = document.querySelectorAll('.agencyTarget')
-const agencyChoosers = document.querySelectorAll('.agencyChooser')
+const agencyTargets = document.querySelectorAll(".agencyTarget");
+const agencyChoosers = document.querySelectorAll(".agencyChooser");
 const foundAgencyChoosers = [...agencyChoosers].map((chooser) => {
-  const agencyOptions = chooser.querySelectorAll('.role-badge')
+  const agencyOptions = chooser.querySelectorAll(".role-badge");
   const optionList = [...agencyOptions].map((agency) => {
-    agency.addEventListener('click', (e) => {
-      const roleId = agency.dataset.roleId ?? -1
-      e.preventDefault()
-      for(const target of agencyTargets){
-        const newElement = agency.cloneNode(true)
-        newElement.classList.remove('role-badge')
-        target.replaceChildren(newElement)
+    agency.addEventListener("click", (e) => {
+      const roleId = agency.dataset.roleId ?? -1;
+      e.preventDefault();
+      for (const target of agencyTargets) {
+        const newElement = agency.cloneNode(true);
+        newElement.classList.remove("role-badge");
+        target.replaceChildren(newElement);
       }
       const update = async () => {
         await setActiveRole(roleId).then((data) => {
-          const myToastEl = document.getElementById('notification') 
-          const myToast = new bootstrap.Toast(myToastEl)
-          myToastEl.querySelector('.toast-body').textContent = "Your active role has been updated"
-          myToastEl.classList.add("text-bg-success")
-          myToast.show()
-          const errorCheck = document.querySelector('#appErrorCode')
-          if(errorCheck){
-            window.location.reload()
+          const myToastEl = document.getElementById("notification");
+          const myToast = new bootstrap.Toast(myToastEl);
+          myToastEl.querySelector(".toast-body").textContent =
+            "Your active role has been updated";
+          myToastEl.classList.add("text-bg-success");
+          myToast.show();
+          const errorCheck = document.querySelector("#appErrorCode");
+          if (errorCheck) {
+            window.location.reload();
           }
-          if(!currentIncident && !currentEvent){
-            window.location.reload()
+          if (!currentIncident && !currentEvent) {
+            window.location.reload();
           }
-          console.log(chooser.dataset.reload)
-          if(chooser.dataset.reload){
-            window.location.reload()
+          if (chooser.dataset.reload) {
+            window.location.reload();
           }
-        })
-      }
-      update()
-    })
-  })
-})
+        });
+      };
+      update();
+    });
+  });
+});
