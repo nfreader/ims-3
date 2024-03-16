@@ -37,6 +37,7 @@ use Slim\Interfaces\RouteParserInterface;
 use Slim\Middleware\ErrorMiddleware;
 use Slim\Views\Twig;
 use Slim\Views\TwigMiddleware;
+use Symfony\Component\Filesystem\Path;
 use Symfony\Component\HttpFoundation\Session\Session;
 use Symfony\Component\HttpFoundation\Session\Storage\MockArraySessionStorage;
 use Symfony\Component\HttpFoundation\Session\Storage\NativeSessionStorage;
@@ -48,7 +49,7 @@ use Twig\RuntimeLoader\RuntimeLoaderInterface;
 
 return [
     // Application settings
-    'settings' => fn () => require __DIR__ . '/settings.php',
+    'settings' => fn () => require Path::normalize(__DIR__ . '/settings.php'),
 
     'request_id' => fn () => substr(strtoupper(bin2hex(random_bytes(32))), 0, 6),
 
@@ -56,10 +57,10 @@ return [
         $app = AppFactory::createFromContainer($container);
 
         // Register routes
-        (require __DIR__ . '/routes.php')($app);
+        (require Path::normalize(__DIR__ . '/routes.php'))($app);
 
         // Register middleware
-        (require __DIR__ . '/middleware.php')($app);
+        (require Path::normalize(__DIR__ . '/middleware.php'))($app);
 
         return $app;
     },

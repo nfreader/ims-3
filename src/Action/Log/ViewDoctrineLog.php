@@ -5,19 +5,20 @@ namespace App\Action\Log;
 use App\Action\Action;
 use App\Action\ActionInterface;
 use Nyholm\Psr7\Response;
+use Symfony\Component\Filesystem\Path;
 
 final class ViewDoctrineLog extends Action implements ActionInterface
 {
     public function action(): Response
     {
         if('POST' === $this->request->getMethod()) {
-            unlink("../logs/doctrine_db.log");
+            unlink(Path::normalize("../logs/doctrine_db.log"));
             $this->addSuccessMessage("Log file has been cleared");
             return $this->redirectFor('log.doctrine');
         }
         $search = $_GET['search'] ?? false;
         $lines = [];
-        foreach(file("../logs/doctrine_db.log") as $line) {
+        foreach(file(Path::normalize("../logs/doctrine_db.log")) as $line) {
             $l = null;
             if($search) {
                 if(str_contains($line, $search)) {
