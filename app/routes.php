@@ -50,7 +50,10 @@ return function (App $app) {
     });
 
     $app->group('/comment', function (RouteCollectorProxy $app) {
-        $app->post('/{comment:[0-9]+}/edit', \App\Action\Comment\EditCommentAction::class)->setName('comment.edit');
+        $app->post(
+            '/{comment:[0-9]+}/edit',
+            \App\Action\Comment\EditCommentAction::class
+        )->setName('comment.edit');
     })->add(function (ServerRequestInterface $request, RequestHandlerInterface $handler) {
         $request = $request->withAttribute('user', true);
         $response = $handler->handle($request);
