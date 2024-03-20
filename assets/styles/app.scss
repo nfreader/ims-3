@@ -143,3 +143,18 @@ textarea {
   pointer-events: none;
   user-select: none;
 }
+
+.diff {
+  color: rgb(28, 3, 58);
+  background-color: rgb(210, 168, 255);
+}
+
+.diff-add {
+  color: rgb(3, 58, 22);
+  background-color: rgb(175, 245, 180);
+}
+
+.diff-minus {
+  color: rgb(103, 6, 12);
+  background-color: rgb(255, 220, 215);
+}
