@@ -3,6 +3,7 @@
 namespace App\Domain\Event\Repository;
 
 use App\Domain\Event\Data\Event;
+use App\Domain\Event\Data\EventComposite;
 use App\Repository\Repository;
 use Doctrine\DBAL\Query\QueryBuilder;
 
@@ -11,7 +12,7 @@ class EventRepository extends Repository
     public string $table = 'event';
     public string $alias = 'e';
 
-    public ?string $entityClass = Event::class;
+    public ?string $entityClass = EventComposite::class;
 
     public const COLUMNS = [
         'e.id',
@@ -24,6 +25,7 @@ class EventRepository extends Repository
         "concat_ws(' ', u.firstName, u.lastName) as creatorName",
         'u.email as creatorEmail',
         'e.edited',
+        'e.editor',
         "concat_ws(' ', edit.firstName, edit.lastName) as editorName",
         'edit.email as editorEmail',
         'r.id as roleId',
@@ -74,7 +76,7 @@ class EventRepository extends Repository
         $queryBuilder = $this->getBaseQuery();
         $queryBuilder->where('e.id = '.$queryBuilder->createNamedParameter($event));
         $result = $queryBuilder->executeQuery($queryBuilder->getSQL());
-        return $this->getResult($result);
+        return $this->getResult($result, method:'getEvent');
     }
 
     public function getEventsForIncident(int $incident): array
@@ -84,13 +86,14 @@ class EventRepository extends Repository
         $queryBuilder->addGroupBy('e.id');
         $queryBuilder->addOrderBy('e.created DESC');
         $result = $queryBuilder->executeQuery($queryBuilder->getSQL());
-        return $this->getResults($result);
+        return $this->getResults($result, method:'getEvent');
     }
 
     /**
      * listEvents
      *
-     * Returns an array of events intended to be consumed by an API.
+     * Returns an array of events intended to be consumed by an API. Results do
+     * not get parsed.
      *
      * @return array
      */
