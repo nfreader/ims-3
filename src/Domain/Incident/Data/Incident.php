@@ -5,33 +5,38 @@ namespace App\Domain\Incident\Data;
 use App\Data\CheckPermissionsInterface;
 use App\Domain\Permissions\Data\PermissionsEnum;
 use App\Domain\Permissions\Data\PermissionTypeEnum;
+use App\Domain\Role\Data\RoleBadge;
 use App\Domain\User\Data\User;
+use App\Domain\User\Data\UserBadge;
 use DateTimeImmutable;
 use JsonSerializable;
 
 class Incident implements JsonSerializable, CheckPermissionsInterface
 {
-
     private bool $public = false;
 
     public function __construct(
         private int $id,
         private string $name,
-        private int $creator,
+        private UserBadge $creator,
         private DateTimeImmutable $created,
-        private string $creatorName,
-        private string $creatorEmail,
         private bool $active = true,
-        private ?string $agencyName = null,
-        private ?int $agencyId = null,
-        private ?string $agencyLogo = null,
-        private ?string $roleName = null,
-        private ?int $roleId = null,
+        private ?RoleBadge $role = null,
         private array $permissions = []
     ) {
-        if(!$this->getAgencyId()){
+        if(!$this->getRole()) {
             $this->public = true;
         }
+    }
+
+    public function getCreator(): UserBadge
+    {
+        return $this->creator;
+    }
+
+    public function getRole(): ?RoleBadge
+    {
+        return $this->role;
     }
 
     public function isActive(): bool
@@ -39,7 +44,8 @@ class Incident implements JsonSerializable, CheckPermissionsInterface
         return $this->active;
     }
 
-    private function isPublic(): bool{
+    private function isPublic(): bool
+    {
         return $this->public;
     }
 
@@ -53,34 +59,9 @@ class Incident implements JsonSerializable, CheckPermissionsInterface
         return $this->id;
     }
 
-    public function getCreator(): int
-    {
-        return $this->creator;
-    }
-
     public function getCreated(): DateTimeImmutable
     {
         return $this->created;
-    }
-
-    public function getCreatorName(): string
-    {
-        return $this->creatorName;
-    }
-
-    public function getCreatorEmail(): string
-    {
-        return $this->creatorEmail;
-    }
-
-    public function getAgencyId(): ?int
-    {
-        return $this->agencyId;
-    }
-
-    public function getAgencyLogo(): ?string
-    {
-        return $this->agencyLogo;
     }
 
     public function getPermissions(): array
@@ -120,7 +101,7 @@ class Incident implements JsonSerializable, CheckPermissionsInterface
         if (!$user->getActiveRole()) {
             return false;
         }
-        
+
         //Check the user's active role permissions
         foreach ($this->getPermissions()['role'] as $p) {
             if ($permission->value & $p->getFlags()) {
@@ -138,10 +119,6 @@ class Incident implements JsonSerializable, CheckPermissionsInterface
             'id' => $this->getId(),
             'name' => $this->getName(),
             'created' => $this->getCreated(),
-            'created_by' => [
-                'name' => $this->getCreatorName(),
-                'email' => $this->getCreatorEmail()
-            ]
         ];
     }
 }

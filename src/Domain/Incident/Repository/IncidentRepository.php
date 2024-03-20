@@ -3,6 +3,7 @@
 namespace App\Domain\Incident\Repository;
 
 use App\Domain\Incident\Data\Incident;
+use App\Domain\Incident\Data\IncidentComposite;
 use App\Domain\Permissions\Data\Permissions;
 use App\Domain\Permissions\Data\PermissionsEnum;
 use App\Domain\Permissions\Data\PermissionTypeEnum;
@@ -16,7 +17,7 @@ class IncidentRepository extends Repository
 
     public string $alias = 'i';
 
-    public ?string $entityClass = Incident::class;
+    public ?string $entityClass = IncidentComposite::class;
 
     public const COLUMNS = [
         'i.id',
@@ -53,7 +54,8 @@ class IncidentRepository extends Repository
         $queryBuilder->addSelect(...[
             'a.name as agencyName',
             'a.id as agencyId',
-            'a.logo as agencyLogo'
+            'a.logo as agencyLogo',
+            'r.name as roleName'
         ]);
         $queryBuilder->leftJoin($this->alias, 'user', 'u', 'i.creator = u.id');
         $queryBuilder->leftJoin($this->alias, 'role', 'r', 'i.role = r.id');
@@ -66,7 +68,7 @@ class IncidentRepository extends Repository
     {
         $queryBuilder = $this->getBaseQuery();
         $result = $queryBuilder->executeQuery($queryBuilder->getSQL());
-        return $this->getResults($result);
+        return $this->getResults($result, method:'getIncident');
     }
 
     public function listIncidentsForActiveRole(?int $role): array
@@ -78,7 +80,7 @@ class IncidentRepository extends Repository
         $queryBuilder->andWhere('i.active = 1');
         $queryBuilder->orderBy('i.id asc');
         $result = $queryBuilder->executeQuery($queryBuilder->getSQL(), [$role]);
-        return $this->getResults($result);
+        return $this->getResults($result, method:'getIncident');
     }
 
     public function getIncident(int $incident): Incident
@@ -86,7 +88,7 @@ class IncidentRepository extends Repository
         $queryBuilder = $this->getBaseQuery();
         $queryBuilder->where('i.id = ' . $queryBuilder->createPositionalParameter($incident));
         $result = $queryBuilder->executeQuery($queryBuilder->getSQL(), [$incident]);
-        return $this->getResult($result);
+        return $this->getResult($result, method:'getIncident');
     }
 
     public function toggleIncident(int $id, bool $active): void
