@@ -4,6 +4,7 @@ namespace App\Action\Log;
 
 use App\Action\Action;
 use App\Action\ActionInterface;
+use Doctrine\DBAL\ParameterType;
 use Nyholm\Psr7\Response;
 use Symfony\Component\Filesystem\Path;
 
@@ -35,6 +36,11 @@ final class ViewDoctrineLog extends Action implements ActionInterface
                         $t->ignore = false;
                     }
                 }
+                foreach($l->context->types as &$t) {
+                    $t = ParameterType::cases()[$t]->name;
+                }
+                $l->context->types = (array) $l->context->types;
+                $l->context->params = (array) $l->context->params;
                 $lines[] = $l;
             }
         }
