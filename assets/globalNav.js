@@ -5,13 +5,13 @@ async function getGlobalNav() {
   return await response.json();
 }
 
-async function setActiveRole(role) {
+async function setActiveRole(role, notify = false) {
   const response = await fetch("/user/pickRole", {
     method: "POST",
-    body: JSON.stringify({ role: role }),
+    body: JSON.stringify({ role: role, notify: notify }),
     headers: {
       "Content-Type": "application/json",
-      Accept: "application/json",
+      "Accept": "application/json",
     },
   });
   return await response.json();
@@ -85,22 +85,23 @@ const foundAgencyChoosers = [...agencyChoosers].map((chooser) => {
         target.replaceChildren(newElement);
       }
       const update = async () => {
-        await setActiveRole(roleId).then((data) => {
-          const myToastEl = document.getElementById("notification");
-          const myToast = new bootstrap.Toast(myToastEl);
-          myToastEl.querySelector(".toast-body").textContent =
-            "Your active role has been updated";
-          myToastEl.classList.add("text-bg-success");
-          myToast.show();
-          const errorCheck = document.querySelector("#appErrorCode");
-          if (errorCheck) {
-            window.location.reload();
-          }
-          if (!currentIncident && !currentEvent) {
-            window.location.reload();
-          }
+        await setActiveRole(roleId, chooser.dataset.reload).then((data) => {
           if (chooser.dataset.reload) {
             window.location.reload();
+          } else {
+            const myToastEl = document.getElementById("notification");
+            const myToast = new bootstrap.Toast(myToastEl);
+            myToastEl.querySelector(".toast-body").textContent =
+              "Your active role has been updated";
+            myToastEl.classList.add("text-bg-success");
+            myToast.show();
+            const errorCheck = document.querySelector("#appErrorCode");
+            if (errorCheck) {
+              window.location.reload();
+            }
+            if (!currentIncident && !currentEvent) {
+              window.location.reload();
+            }
           }
         });
       };

@@ -16,7 +16,10 @@ class SetActiveRoleAction extends Action implements ActionInterface
         } else {
             $this->getSession()->set('activeRole', $data['role']);
         }
-        return $this->json('Okay');
+        if($data['notify']) {
+            $this->addSuccessMessage("Your active role has been changed");
+        }
+        return $this->json(['status' => 'okay']);
     }
 
 }
