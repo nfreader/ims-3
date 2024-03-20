@@ -51,7 +51,8 @@ class NewCommentService
             $author->getId(),
             $incident->getId(),
             $event->getId(),
-            $action
+            $action,
+            $author->getActiveRole()?->getRoleId()
         );
         return $message;
     }
