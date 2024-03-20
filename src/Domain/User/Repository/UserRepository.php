@@ -24,7 +24,7 @@ class UserRepository extends Repository
         'u.created',
         'u.created_ip as createdIp',
         'u.status',
-        'u.is_admin as isAdmin'
+        'u.is_admin as isAdmin',
     ];
 
     public array $entityMetadata = [];
@@ -37,8 +37,7 @@ class UserRepository extends Repository
         $queryBuilder->where('u.id = ' . $queryBuilder->createPositionalParameter($id));
         $sql = $queryBuilder->getSQL();
         $result = $this->connection->executeQuery($sql, [$id]);
-        $result = $result->fetchAssociative();
-        return new $this->entityClass(...$this->mapRow($result));
+        return $this->getResult($result, method:'getUser');
     }
 
     public function getUserByEmail(string $email): ?User
@@ -49,11 +48,7 @@ class UserRepository extends Repository
         $queryBuilder->where('u.email = ' . $queryBuilder->createPositionalParameter($email));
         $sql = $queryBuilder->getSQL();
         $result = $this->connection->executeQuery($sql, [$email]);
-        $result = $result->fetchAssociative();
-        if (!$result) {
-            return null;
-        }
-        return new $this->entityClass(...$this->mapRow($result));
+        return $this->getResult($result, method:'getUser');
     }
 
     public function getAllUsers(): array
@@ -65,11 +60,7 @@ class UserRepository extends Repository
         $queryBuilder->addOrderBy('u.lastName', 'ASC');
         $queryBuilder->addOrderBy('u.firstName', 'ASC');
         $result = $this->connection->executeQuery($queryBuilder->getSQL());
-        $result = $result->fetchAllAssociative();
-        foreach ($result as &$r) {
-            $r = new $this->entityClass(...$this->mapRow($r));
-        }
-        return $result;
+        return $this->getResults($result, method:'getUser');
     }
 
     public function insertNewUser(
@@ -95,25 +86,4 @@ class UserRepository extends Repository
             4 => ip2long($_SERVER['REMOTE_ADDR'])
         ]);
     }
-
-    // public function insertNewUser(
-    //     string $firstName,
-    //     string $lastName,
-    //     string $email,
-    //     string $password
-    // ) {
-    //     $this->insert('user', [
-    //         'firstName' => $firstName,
-    //         'lastName' => $lastName,
-    //         'email' => $email,
-    //         'password' => $password,
-    //         'created_ip' => ip2long($_SERVER['REMOTE_ADDR']),
-    //     ]);
-    // }
-
-    // public function getAllUsers(): array
-    // {
-    //     $sql = QueryBuilder::select($this->table, $this->columns, []);
-    //     return $this->run($sql)->getResults();
-    // }
 }
