@@ -3,6 +3,7 @@
 namespace App\Domain\User\Repository;
 
 use App\Domain\User\Data\User;
+use App\Domain\User\Data\UserComposite;
 use App\Repository\Repository;
 use App\Repository\QueryBuilder;
 use Doctrine\DBAL\ParameterType;
@@ -13,7 +14,7 @@ class UserRepository extends Repository
     public string $table = 'user';
     public string $alias = 'u';
 
-    public ?string $entityClass = User::class;
+    public ?string $entityClass = UserComposite::class;
 
     public const COLUMNS = [
         'u.id',

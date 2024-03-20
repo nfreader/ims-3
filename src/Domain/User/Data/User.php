@@ -24,10 +24,7 @@ class User implements JsonSerializable
         private bool $status = false,
         private array $agencies = [],
         private array $roles = [],
-        private ?Agency $activeAgency = null,
         private ?UserRole $activeRole = null,
-        private ?string $agencyTitle = null,
-        private ?string $agencyList = null,
         private bool $sudoMode = false
     ) {
     }
@@ -101,44 +98,6 @@ class User implements JsonSerializable
         }, $this->agencies));
     }
 
-    /**
-     * getAgencies
-     *
-     * Returns a list of agencies the user is a member of. The array is empty if the user is not in any agencies.
-     *
-     * @return array
-     */
-    public function getAgencies(): array
-    {
-        return $this->agencies;
-    }
-
-    /**
-     * getActiveAgency
-     *
-     * If the activeAgency property is set, iterates through the list of agencies the user is a member of and returns the one with the ID that matches the current active agency.
-     *
-     * @return ?Agency
-     */
-    public function getActiveAgency(): ?Agency
-    {
-        return $this->activeAgency;
-    }
-
-    /**
-     * setActiveAgency
-     *
-     * Sets the $activeAgency property to the ID of the agency the user is currently accessing the application under. Returns false if no active agency is set.
-     *
-     * @param integer|null $activeAgency
-     * @return self
-     */
-    public function setActiveAgency(?Agency $activeAgency): static
-    {
-        $this->activeAgency = $activeAgency;
-        return $this;
-    }
-
     public function setActiveRole(?UserRole $activeRole): static
     {
         $this->activeRole = $activeRole;
@@ -166,12 +125,6 @@ class User implements JsonSerializable
         }
         return false;
     }
-
-    public function getAgencyTitle(): ?string
-    {
-        return $this->agencyTitle;
-    }
-
 
     public function getFirstName(): string
     {
