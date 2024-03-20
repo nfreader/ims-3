@@ -32,7 +32,9 @@ return function (App $app) {
 
             $app->post('/new', \App\Action\Event\NewEventAction::class)->setName('event.new');
 
-            $app->post('/comment', \App\Action\Comment\NewCommentAction::class)->setName('comment.new');
+            $app->post('/{event:[0-9]+}/comment', \App\Action\Comment\NewCommentAction::class)->setName('comment.new');
+
+            $app->get('/{event:[0-9]+}/comment/{comment:[0-9]+}', \App\Action\Comment\ViewCommentAction::class)->setName('comment.view');
         });
 
     })->add(function (ServerRequestInterface $request, RequestHandlerInterface $handler) {
