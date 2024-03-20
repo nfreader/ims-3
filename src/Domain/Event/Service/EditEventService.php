@@ -23,12 +23,7 @@ class EditEventService
             $text,
             $event->getDesc()
         );
-        $this->eventRepository->update('event', [
-            'desc' => $newText,
-            'editor' => $author->getId()
-        ], [
-            'id' => $event->getId()
-        ]);
+        $this->replaceEventText($event, $newText, $author);
     }
 
     public function appendComment(Event $event, string $text, User $author)
@@ -41,21 +36,14 @@ class EditEventService
             (new DateTime('now'))->format("F j, Y \a\t H:i:s (e)"),
             $text,
         );
-        $this->eventRepository->update('event', [
-            'desc' => $newText,
-            'editor' => $author->getId()
-        ], [
-            'id' => $event->getId()
-        ]);
+        $this->replaceEventText($event, $newText, $author);
     }
 
     public function replaceEventText(Event $event, string $text, User $author)
     {
-        $this->eventRepository->update('event', [
-            'desc' => $text,
+        $this->eventRepository->updateEvent($event->getId(), [
+            'event_text' => $text,
             'editor' => $author->getId()
-        ], [
-            'id' => $event->getId()
         ]);
     }
 
