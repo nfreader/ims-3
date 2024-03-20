@@ -16,7 +16,7 @@
 				<h6 class="px-2 mt-2 mb-1 text-body-secondary text-uppercase d-flex align-items-center justify-content-between">
 					<span>Events</span><i class="fa-solid fa-sort"></i>
 				</h6>
-					{% include 'event/components/listing.html.twig' with {'events': events, 'incident': incident.getId} only %}
+					{% include 'event/components/listing.html.twig' with {'events': events, 'incident': incident.getId, 'event':event.getId} only %}
 			{% endblock %}
 		</aside>
 		<section class="main-content px-md-4 py-2 col" id="panel">
