@@ -33,14 +33,6 @@ const popoverList = [...popoverTriggerList].map(
     })
 );
 
-const anchorTags = document.querySelectorAll("[href]");
-const anchorTagList = [...anchorTags].map((a) => {
-  const href = a.getAttribute("href");
-  if (window.location.pathname.endsWith(href)) {
-    a.classList.add("active");
-  }
-});
-
 async function postAsyncForm(url, data) {
   const response = await fetch(url, {
     method: "POST",
