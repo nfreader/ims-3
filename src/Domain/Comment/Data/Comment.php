@@ -4,22 +4,24 @@ namespace App\Domain\Comment\Data;
 
 use DateTimeImmutable;
 use App\Domain\Comment\Data\CommentActionEnum;
+use App\Domain\Role\Data\RoleBadge;
+use App\Domain\User\Data\UserBadge;
 
 class Comment
 {
     public function __construct(
         private int $id,
         private string $text,
-        private int $author,
+        private UserBadge $author,
         private int $incident,
         private int $event,
         private DateTimeImmutable $created,
-        private string $creatorName,
-        private string $creatorEmail,
         private CommentActionEnum $action,
-        private ?DateTimeImmutable $updated = null,
-        private ?string $editorName = null,
-        private ?string $editorEmail = null
+        private ?DateTimeImmutable $edited = null,
+        private ?UserBadge $editor = null,
+        private array $edits = [],
+        private ?RoleBadge $authorRole = null,
+        private ?RoleBadge $editorRole = null
     ) {
 
     }
@@ -36,26 +38,15 @@ class Comment
         return $this;
     }
 
-    public function getCreatorName(): string
-    {
-        return $this->creatorName;
-    }
-
     public function getCreated(): DateTimeImmutable
     {
         return $this->created;
-    }
-
-    public function getCreatorEmail(): string
-    {
-        return $this->creatorEmail;
     }
 
     public function getId(): int
     {
         return $this->id;
     }
-
 
     public function getIncident(): int
     {
@@ -72,8 +63,41 @@ class Comment
         return $this->action;
     }
 
-    public function getUpdated(): ?DateTimeImmutable
+    public function getEdits(): array
     {
-        return $this->updated;
+        return $this->edits;
+    }
+
+    public function setEdits(array $edits): self
+    {
+        $this->edits = array_reverse($edits);
+
+        return $this;
+    }
+
+    public function getAuthor(): UserBadge
+    {
+        return $this->author;
+    }
+
+    public function getEditor(): ?UserBadge
+    {
+        return $this->editor;
+    }
+
+    public function getEdited(): ?DateTimeImmutable
+    {
+        return $this->edited;
+    }
+
+
+    public function getAuthorRole(): ?RoleBadge
+    {
+        return $this->authorRole;
+    }
+
+    public function getEditorRole(): ?RoleBadge
+    {
+        return $this->editorRole;
     }
 }

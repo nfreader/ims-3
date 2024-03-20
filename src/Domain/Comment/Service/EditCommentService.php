@@ -25,8 +25,19 @@ class EditCommentService
                 'event' => $comment->getEvent()
             ]);
         }
-        $this->commentRepository->updateCommentRow($comment->getId(), $data['text'], $user->getId());
-        $this->commentRepository->insertCommentEdit($comment->getId(), $data['text'], $comment->getText(), $user->getId());
+        $this->commentRepository->updateCommentRow(
+            id:$comment->getId(),
+            newText:$data['text'],
+            editor:$user->getId(),
+            editorRole:$user->getActiveRole()?->getRoleId()
+        );
+        $this->commentRepository->insertCommentEdit(
+            id: $comment->getId(),
+            previous:$comment->getText(),
+            current:$data['text'],
+            editor:$user->getId(),
+            role:$user->getActiveRole()?->getRoleId()
+        );
         $comment->setText($data['text']);
         return $comment;
     }

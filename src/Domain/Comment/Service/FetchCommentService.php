@@ -15,7 +15,9 @@ class FetchCommentService
 
     public function getComment(int $id): Comment
     {
-        return $this->commentRepository->getCommentById($id);
+        $comment = $this->commentRepository->getCommentById($id);
+        $comment->setEdits($this->commentRepository->getCommentEdits($comment->getId()));
+        return $comment;
     }
 
 }

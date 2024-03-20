@@ -3,33 +3,43 @@
 namespace App\Domain\Comment\Repository;
 
 use App\Domain\Comment\Data\Comment;
+use App\Domain\Comment\Data\CommentComposite;
+use App\Domain\Comment\Data\CommentEdit;
+use App\Domain\Comment\Data\CommentEditComposite;
 use App\Repository\Repository;
 use Doctrine\DBAL\Query\QueryBuilder;
-use GuzzleHttp\Psr7\Query;
-use SebastianBergmann\Diff\Differ;
-use SebastianBergmann\Diff\Output\StrictUnifiedDiffOutputBuilder;
-use SebastianBergmann\Diff\Output\UnifiedDiffOutputBuilder;
 
 class CommentRepository extends Repository
 {
     public string $table = 'comment';
     public string $alias = 'c';
 
-    public ?string $entityClass = Comment::class;
+    public ?string $entityClass = CommentComposite::class;
 
     public const COLUMNS = [
         'c.id',
         'c.text',
         'c.author',
+        "concat_ws(' ', u.firstName, u.lastName) as authorName",
+        'u.email as authorEmail',
         'c.incident',
         'c.event',
         'c.created',
         'c.action',
-        "concat_ws(' ', u.firstName, u.lastName) as creatorName",
-        'u.email as creatorEmail',
         'c.updated',
+        'c.editor',
         "concat_ws(' ', e.firstName, e.lastName) as editorName",
-        'e.email as editorEmail'
+        'e.email as editorEmail',
+        'ar.id as authorRoleId',
+        'ar.name as authorRoleName',
+        'aa.id as authorAgencyId',
+        'aa.name as authorAgencyName',
+        'aa.logo as authorAgencyLogo',
+        'er.id as editorRoleId',
+        'er.name as editorRoleName',
+        'ea.id as editorAgencyId',
+        'ea.name as editorAgencyName',
+        'ea.logo as editorAgencyLogo'
     ];
 
     public function insertNewComment(
@@ -37,7 +47,8 @@ class CommentRepository extends Repository
         int $author,
         int $incident,
         int $event,
-        string $action
+        string $action,
+        int $role
     ): int {
         $queryBuilder = $this->qb();
         $queryBuilder->insert($this->table);
@@ -46,7 +57,8 @@ class CommentRepository extends Repository
             'author' => $queryBuilder->createNamedParameter($author),
             'incident' => $queryBuilder->createNamedParameter($incident),
             'event' => $queryBuilder->createNamedParameter($event),
-            'action' => $queryBuilder->createNamedParameter($action)
+            'action' => $queryBuilder->createNamedParameter($action),
+            'role' => $queryBuilder->createNamedParameter($role)
         ]);
         $queryBuilder->executeStatement($queryBuilder->getSQL());
         return $this->connection->lastInsertId();
@@ -59,6 +71,11 @@ class CommentRepository extends Repository
         $queryBuilder->from($this->table, $this->alias);
         $queryBuilder->leftJoin($this->alias, 'user', 'u', 'c.author = u.id');
         $queryBuilder->leftJoin($this->alias, 'user', 'e', 'c.editor = e.id');
+        //Author Role (if set)
+        $queryBuilder->leftJoin($this->alias, 'role', 'ar', 'c.role = ar.id');
+        $queryBuilder->leftJoin('ar', 'agency', 'aa', 'ar.agency = aa.id');
+        $queryBuilder->leftJoin($this->alias, 'role', 'er', 'c.editor_role = er.id');
+        $queryBuilder->leftJoin('er', 'agency', 'ea', 'er.agency = ea.id');
         return $queryBuilder;
     }
 
@@ -67,7 +84,7 @@ class CommentRepository extends Repository
         $queryBuilder = $this->getBaseQuery();
         $queryBuilder->where('c.event = '.$queryBuilder->createNamedParameter($event));
         $result = $queryBuilder->executeQuery($queryBuilder->getSQL());
-        return $this->getResults($result);
+        return $this->getResults($result, method:'getComment');
     }
 
     public function getCommentById(int $id): Comment
@@ -75,13 +92,14 @@ class CommentRepository extends Repository
         $queryBuilder = $this->getBaseQuery();
         $queryBuilder->where('c.id = '.$queryBuilder->createNamedParameter($id));
         $result = $queryBuilder->executeQuery($queryBuilder->getSQL());
-        return $this->getResult($result);
+        return $this->getResult($result, method:'getComment');
     }
 
     public function updateCommentRow(
         int $id,
         string $newText,
-        int $editor
+        int $editor,
+        ?int $editorRole = null
     ): void {
         $queryBuilder = $this->qb();
         $queryBuilder->update($this->table);
@@ -93,6 +111,10 @@ class CommentRepository extends Repository
             'editor',
             $queryBuilder->createNamedParameter($editor)
         );
+        $queryBuilder->set(
+            'editor_role',
+            $queryBuilder->createNamedParameter($editorRole)
+        );
         $queryBuilder->where('id = '. $queryBuilder->createNamedParameter($id));
         $queryBuilder->executeStatement($queryBuilder->getSQL());
     }
@@ -101,19 +123,9 @@ class CommentRepository extends Repository
         int $id,
         string $previous,
         string $current,
-        int $editor
+        int $editor,
+        ?int $role = null
     ): int {
-        $builder = new StrictUnifiedDiffOutputBuilder([
-            'collapseRanges'      => true,
-            'commonLineThreshold' => 6,
-            'contextLines'        => 3,
-            'fromFile'            => '',
-            'fromFileDate'        => null,
-            'toFile'              => '',
-            'toFileDate'          => null,
-        ]);
-        $differ = new Differ($builder);
-        $diff = $differ->diff($previous, $current);
         $queryBuilder = $this->qb();
         $queryBuilder->insert('comment_edit');
         $queryBuilder->values([
@@ -121,33 +133,36 @@ class CommentRepository extends Repository
             'previous' => $queryBuilder->createNamedParameter($previous),
             'current' => $queryBuilder->createNamedParameter($current),
             'editor' => $queryBuilder->createNamedParameter($editor),
-            'diff' => $queryBuilder->createNamedParameter($diff)
+            'role' => $queryBuilder->createNamedParameter($role)
         ]);
         $queryBuilder->executeStatement($queryBuilder->getSQL());
         return $this->connection->lastInsertId();
     }
 
-    // public function updateCommentRow(int $id, string $newText, int $editor): void
-    // {
-    //     $this->update('comment', [
-    //         'text' => $newText,
-    //         'editor' => $editor
-    //     ], [
-    //         'id' => $id
-    //     ]);
-    // }
-
-    // public function insertCommentEdit(int $id, string $previous, string $current, int $editor): int
-    // {
-
-    //     $this->insert('comment_edit', [
-    //         'comment' => $id,
-    //         'previous' => $previous,
-    //         'current' => $current,
-    //         'editor' => $editor,
-    //         'diff' => $differ->diff($previous, $current)
-    //     ]);
-    //     $pdo = $this->getPdo();
-    //     return $pdo->lastInsertId();
-    // }
+    public function getCommentEdits(int $comment): array
+    {
+        $queryBuilder = $this->qb();
+        $queryBuilder->select(...[
+            'e.id',
+            'e.comment',
+            'e.current',
+            'e.previous',
+            'e.edited',
+            'e.editor',
+            "concat_ws(' ', ue.firstName, ue.lastName) as editorName",
+            'ue.email as editorEmail',
+            'er.id as editorRoleId',
+            'er.name as editorRoleName',
+            'ea.id as editorAgencyId',
+            'ea.name as editorAgencyName',
+            'ea.logo as editorAgencyLogo'
+        ]);
+        $queryBuilder->from('comment_edit', 'e');
+        $queryBuilder->leftJoin('e', 'user', 'ue', 'ue.id = e.editor');
+        $queryBuilder->leftJoin('e', 'role', 'er', 'e.role = er.id');
+        $queryBuilder->leftJoin('er', 'agency', 'ea', 'er.agency = ea.id');
+        $queryBuilder->where('e.comment = '.$queryBuilder->createNamedParameter($comment));
+        $result = $queryBuilder->executeQuery($queryBuilder->getSQL());
+        return $this->getResults($result, CommentEditComposite::class, 'getEdit');
+    }
 }
