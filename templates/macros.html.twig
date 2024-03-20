@@ -1,34 +1,3 @@
-{% macro PlayerBadge(badge, popover = true) %}
-	{% if user.has('ADMIN') and popover %}
-		<span class="playerBadge badge link-underline-opacity-0 link-underline" style="background:{{badge.getBackColor}}; color:{{badge.getForecolor}};" data-rank="{{badge.getTitle}}" data-bs-title="{{badge.getTitle}}" data-bs-container="body" data-bs-toggle="popover" data-bs-content="<div class='btn-group'> <a href='{{url_for("tgdb.player",{"ckey":badge.getCkey})}}' class='btn btn-outline-primary'><i class='fas fa-user'></i></a> <a href='{{url_for("tgdb.bans.ckey",{"ckey":badge.getCkey})}}' class='btn btn-outline-primary'><i class='fas fa-hammer'></i></a> <a href='{{url_for("tgdb.notes.ckey",{"ckey":badge.getCkey})}}' class='btn btn-outline-primary'><i class='fas fa-sticky-note'></i></a> <a href='#' class='btn btn-outline-primary'><i class='fas fa-circle'></i></a> </div>">
-			<i class="fas fa-{{badge.geticon}}"></i>
-			{{badge.getckey}}</span>
-	{% else %}
-		<span class="playerBadge badge link-underline-opacity-0 link-underline" style="background:{{badge.getBackColor}}; color:{{badge.getForecolor}};" data-rank="{{badge.getTitle}}" data-bs-title="{{badge.getTitle}}" data-bs-container="body" data-bs-toggle="tooltip">
-			<i class="fas fa-{{badge.geticon}}"></i>
-			{{badge.getckey}}</span>
-	{% endif %}
-{% endmacro %}
-
-{% macro RoundBadge(round, link = true) %}
-	<{{link?'a':'span'}} href="{{url_for('round',{'id':round})}}" class="roundBadge badge text-bg-dark link-underline link-underline-opacity-0">
-		<i class="fa-solid fa-circle"></i>
-		{{round ?: 'Invalid Round'}}
-	</{{link?'a':'span'}}>
-{% endmacro %}
-
-{% macro JobBadge(badge) %}
-	<span class="jobBadge badge" style="{{badge.style}}">
-		<i class="{{badge.icon}}"></i>
-		{{badge.name}}</span>
-{% endmacro %}
-
-{% macro BanBadge(status) %}
-	<span class="banBadge badge bg-{{status.getCssClass}}-subtle text-{{status.getCssClass}}-emphasis border border-{{status.getCssClass}}-subtle">
-		{{status.value}}
-	</span>
-{% endmacro %}
-
 {% macro pagination(nbPages = 5, currentPage = 1, url, extraClasses = '', showIfOne = true) %}
 	{% set classes = '' %}
 	{% set param = '' %}
@@ -110,6 +79,22 @@
 			<div class="pe-none">
 				<strong>{{role.getCreatorName ? role.getCreatorName ~ ', ':''}}{{role.getRoleName}}</strong><br>
 				{{role.getAgencyName}}
+			</div>
+		</div>
+		{% if container %}
+		</div>
+	{% endif %}
+{% endmacro %}
+
+{% macro userBadge(user, container = false) %}
+	{% if container %}
+		<div class="bg-white border border-subtle rounded px-2 py-1 d-inline-block text-start text-black">
+		{% endif %}
+		<div class="user-badge d-flex align-items-center gap-2 lh-1" style="font-size: .9rem">
+		<i class="fas fa-user fs-2 d-block" style="width: 32px; height: 32px;"></i>
+			<div class="pe-none">
+				<strong>{{user.getName}}</strong><br>
+				<code>{{user.getEmail}}</code>
 			</div>
 		</div>
 		{% if container %}

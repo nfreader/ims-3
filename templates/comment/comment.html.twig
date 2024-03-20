@@ -1,0 +1,62 @@
+{% extends 'base-extra-sidebar.html.twig' %}
+{% from 'macros.html.twig' import userBadge, roleBadge %}
+{% block body %}
+	{% include 'incident/components/incidentHeader.html.twig' %}
+	<h2>Comment History</h2>
+	<hr>
+	<a href="{{url_for('event.view',{'incident':incident.getId,'event':event.getId})}}" class="text-decoration-none fs-5 d-block mb-3">
+		<i class="fa-solid fa-angles-left"></i>
+		Back to Event</a>
+	<div class="card mb-3">
+		<div class="card-header">Current Comment Text</div>
+		<div class="card-body">
+			<pre class="mb-0">{{comment.getText}}</pre>
+		</div>
+	</div>
+	{% for edit in comment.getEdits %}
+		<div class="card mb-3">
+			<div class="card-header">
+				<span class="d-block mb-1" style="font-size: .8rem">Edited
+					{{edit.getEdited|date}}</span>
+				{% if edit.getEditorRole %}
+					{{roleBadge(edit.getEditorRole, true)}}
+				{% else %}
+					{{userBadge(edit.getEditor, true)}}
+				{% endif %}
+			</div>
+			<div class="card-body">
+				<div class="row mb-3">
+					<div class="col">
+						<div class="card">
+							<div class="card-header bg-danger-subtle">Previous Comment Text</div>
+							<div class="card-body">
+								<pre class="mb-0">{{edit.getPrevious}}</pre>
+							</div>
+						</div>
+					</div>
+					<div class="col">
+						<div class="card">
+							<div class="card-header bg-success-subtle">New Comment Text</div>
+							<div class="card-body">
+								<pre class="mb-0">{{edit.getCurrent}}</pre>
+							</div>
+						</div>
+					</div>
+				</div>
+				<div class="card bg-body-tertiary">
+					<div class="card-header">Difference</div>
+					<div class="card-body font-monospace ">
+						{% set diff = edit.getDiff|split('\n') %}
+						{% for d in diff %}
+							<span class="d-inline-block {{html_classes('diff',{
+								'diff-add': d starts with "+",
+								'diff-minus': d starts with "-"
+							})}}">{{d}}</span>
+							<br>
+						{% endfor %}
+					</div>
+				</div>
+			</div>
+		</div>
+	{% endfor %}
+{% endblock %}

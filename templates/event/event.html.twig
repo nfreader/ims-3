@@ -1,6 +1,6 @@
 {% extends 'base-extra-sidebar.html.twig' %}
 {% block body %}
-	{% from 'macros.html.twig' import empty, tag, roleBadge %}
+	{% from 'macros.html.twig' import empty, tag, roleBadge, userBadge %}
 	{% include 'incident/components/incidentHeader.html.twig' %}
 
 	<div class="card">
@@ -21,14 +21,16 @@
 				{% endif %}
 			</div>
 		</h2>
+		<div class="mb-1 px-3 py-1 d-flex align-items-center gap-2 border-bottom bg-body-tertiary">
 		<div>
-			{% if event.getRoleBadge %}
-				<div class="mb-1 px-3 py-1 d-flex align-items-center gap-2 border-bottom" style="font-size: .9rem">{{roleBadge(event.getRoleBadge, true)}}
-					Created
-					{{event.getCreated|date}}
-				</div>
-
+		<span class="d-block mb-1" style="font-size: .8rem">Posted
+		{{event.getCreated|date}}</span>
+			{% if event.getCreatorBadge %}
+				{{roleBadge(event.getCreatorBadge, true)}}
+				{% else %}
+				{{userBadge(event.getCreator, true)}}
 			{% endif %}
+		</div>
 		</div>
 		<div class="card-body markdown-content">
 			{{event.getDesc|markdown_to_html}}

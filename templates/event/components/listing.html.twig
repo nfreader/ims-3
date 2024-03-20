@@ -1,14 +1,17 @@
 {% from 'macros.html.twig' import empty %}
-
+{% from 'macros/formInputs.twig' import textInput, markdownEditor %}
 <div class="list-group list-group-flush border-top border-bottom">
 	{% for e in events %}
-		<a href="{{url_for('event.view',{'incident':incident, 'event':e.getId})}}" class="list-group-item list-group-item-action {{event.getId == e.getId ? 'active bg-opacity-10'}}">
+		<a href="{{url_for('event.view',{'incident':incident, 'event':e.getId})}}" class="list-group-item list-group-item-action {{event == e.getId ? 'active'}}">
 			<div class="d-flex w-100">
 				<span class="badge event-severity text-bg-{{e.getSeverity.getclass}} bg-opacity-100">{{e.getSeverity.getShort}}</span>
 				<div class="flex-grow-1 ms-4">
 					<div class="d-flex justify-content-between">
 						<div>
-							<h5><i class="fa-solid fa-message"></i> <span class="font-monospace">{{e.getId}}</span> {{e.title}}</h5>
+							<h5>
+								<i class="fa-solid fa-message"></i>
+								<span class="font-monospace">{{e.getId}}</span>
+								{{e.title}}</h5>
 							<p class="mb-1">{{e.getDesc|striptags|u.truncate(240, '...', false)}}
 							</p>
 						</div>
@@ -19,4 +22,57 @@
 	{% else %}
 		<div class="list-group-item">{{empty("No Events")}}</div>
 	{% endfor %}
+	<button class="list-group-item list-group-item-action link-primary" data-bs-toggle="modal" data-bs-target="#newEventModal">
+		<i class="fa-solid fa-circle-plus"></i>
+		Create New Event</button>
+</div>
+
+<div class="modal fade" id="newEventModal" tabindex="-1" aria-labelledby="newEventModalLabel" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-hidden="true">
+	<div class="modal-dialog modal-xl modal-dialog-scrollable">
+		<div class="modal-content" style="height: 100%">
+			<div class="modal-header">
+				<h1 class="modal-title fs-5" id="newEventModalLabel">Create New Event</h1>
+				<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+			</div>
+			<div class="modal-body">
+				<form class="card-body form" action="{{url_for('event.new',{'incident':incident})}}" method="post" name="newEvent" id="newEvent" autocomplete="off">
+					<div class="row mb-3">
+						<div class="col">
+							{{textInput('text','title',"Event Title")}}
+						</div>
+						<div class="col">
+							<label for="new_event_form_severity" class="form-label required fw-bold">Severity
+								<i class="fa-solid fa-asterisk text-danger" data-bs-toggle="tooltip" data-bs-title="Required Field"></i>
+							</label>
+							<div class="btn-group d-flex" role="group" aria-label="Select Severity">
+								{% set enum = enum('\\App\\Domain\\Event\\Data\\Severity') %}
+								{% for label, case in enum.cases %}
+									<input type="radio" class="btn-check" name="severity" id="severity_{{case.value}}" value="{{case.value}}" required>
+									<label class="btn btn-outline-{{case.getClass}}" for="severity_{{case.value}}">{{case.value|title}}</label>
+								{% endfor %}
+							</div>
+						</div>
+					</div>
+					<div class="row mb-3">
+						<div class="col">
+							<div class="mb-3">
+								{{markdownEditor('desc','Event Description', null, incident)}}
+							</div>
+						</div>
+					</div>
+					<div class="row">
+						<div class="col d-flex align-items-center gap-2">
+							<span>Posting as:</span>
+							{% include 'base/roleChooser.html.twig' %}
+						</div>
+
+					</div>
+				</form>
+			</div>
+			<div class="modal-footer">
+				<button type="reset" class="btn btn-secondary" data-bs-dismiss="modal" form="newIncident">Cancel</button>
+				<button type="submit" class="btn btn-primary" form="newEvent">Create Event</button>
+			</div>
+		</div>
+	</div>
 </div>

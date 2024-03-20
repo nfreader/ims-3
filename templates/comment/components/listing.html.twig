@@ -1,4 +1,4 @@
-{% from 'macros.html.twig' import empty, tag %}
+{% from 'macros.html.twig' import empty, tag, userBadge, roleBadge %}
 {% from 'macros/formInputs.twig' import markdownEditor %}
 {% if comments %}
 	<div class="border-start py-3 ms-4 border-5 border-subtle"></div>
@@ -6,15 +6,27 @@
 {% for c in comments %}
 	<div class="card">
 		<div class="card-header d-flex justify-content-between align-items-center">
-			<div>
-				<i class="fa-solid fa-comment"></i>
-				{{loop.index}}
-				by
-				{{c.getCreatorName}}
-				-
-				{{c.getCreated|date}}
-				{% if c.getUpdated %}
-					{{tag('edited','This comment has been edited')}}
+			<div class="d-flex align-items-center gap-2">
+				<div>
+					<span class="d-block mb-1" style="font-size: .8rem">Posted
+						{{c.getCreated|date}}</span>
+					{% if c.getAuthorRole %}
+						{{roleBadge(c.getAuthorRole, true)}}
+					{% else %}
+						{{userBadge(c.getAuthor, true)}}
+					{% endif %}
+				</div>
+				{% if c.getEditor %}
+					<div class="vr"></div>
+					<div>
+						<span class="d-block mb-1" style="font-size: .8rem">Last Edited
+							{{c.getEdited|date}}</span>
+						{% if c.editorRole %}
+							{{roleBadge(c.getEditorRole, true)}}
+						{% else %}
+							{{userBadge(c.getEditor, true)}}
+						{% endif %}
+					</div>
 				{% endif %}
 				{% if c.getAction.showTag %}
 					{{tag(c.getAction.getPastTense,c.getAction.getTitle)}}
@@ -29,6 +41,11 @@
 						<a class="dropdown-item toggleCommentEditor" href="#" data-comment-target="{{c.getId}}">
 							<i class="fa-solid fa-pen"></i>
 							Edit Comment</a>
+					</li>
+					<li>
+						<a class="dropdown-item" href="{{url_for('comment.view',{ 'incident':incident.getId, 'event':event.getId, 'comment':c.getId })}}">
+							<i class="fa-solid fa-binoculars"></i>
+							View Comment</a>
 					</li>
 				</ul>
 			</div>

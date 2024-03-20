@@ -4,8 +4,8 @@
 	{% for i in incidents %}
 		<a class="list-group-item list-group-item-action d-grid gap-2 align-items-center {{incident.getId == i.getId ? 'active'}} {{i.isActive ? '' : 'opacity-50'}}" href="{{url_for('incident.view',{'incident': i.getId})}}">
 			<h4 class="d-flex align-items-center gap-2 mb-0">
-				{% if i.getAgencyLogo %}
-					<img src="/uploads/{{i.getAgencyLogo}}" height="32" width="32"/>
+				{% if i.getRole %}
+					<img src="/uploads/{{i.getRole.getAgencyLogo}}" height="32" width="32"/>
 				{% else %}
 					<i class="fa-regular fa-circle-dot fs-3"></i>
 				{% endif %}

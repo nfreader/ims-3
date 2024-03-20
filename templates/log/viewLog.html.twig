@@ -8,31 +8,52 @@
 		</form>
 	</h2>
 	<hr>
-    <p>Showing {{lines|length}} entries</p>
+	<p>Showing
+		{{lines|length}}
+		entries</p>
 	<div class="list-group">
 		{% set lastRequest = lines[0].context.request %}
 		<div class="list-group-item">
-			<strong>Request</strong> <code>{{lastRequest}}</code>
+			<strong>Request</strong>
+			<code>{{lastRequest}}</code>
 		</div>
 		{% for l in lines %}
 			{% if lastRequest != l.context.request %}
 				<div class="list-group-item">
-					<strong>Request</strong> <code>{{l.context.request}}</code>
+					<strong>Request</strong>
+					<code>{{l.context.request}}</code>
 				</div>
 				{% set lastRequest = l.context.request %}
 			{% endif %}
 			<div class="list-group-item">
-			<strong>Query:</strong>
+				<strong>Query:</strong>
 				<pre class="border border-subtle p-3 rounded">{{l.message}}</pre>
+				<strong>Params:</strong>
+				<table class="table table-bordered table-sm">
+					<thead>
+						<th>Position/Key</th>
+						<th>Value</th>
+						<th>Type</th>
+					</thead>
+					<tbody>
+						{% for key, value in l.context.params %}
+							<tr>
+								<td>{{key}}</td>
+								<td>{{value}}</td>
+								<td>{{l.context.types[key]}}</td>
+							</tr>
+						{% endfor %}
+					</tbody>
+				</table>
 				<strong>Trace:</strong>
-                <div class="list-group">
-                {% for t in l.context.trace %}
-                    <div class="list-group-item {{t.ignore ? '':'opacity-50'}}">
-					<span class="font-monospace d-block mb-0" style="font-size:.5rem">{{t.file}}:{{t.line}}:</span>
-                    <code>{{t.class}}{{t.type}}{{t.function}}</code>
-                    </div>
-                {% endfor %}
-                </div>
+				<div class="list-group">
+					{% for t in l.context.trace %}
+						<div class="list-group-item {{t.ignore ? '':'opacity-50'}}">
+							<span class="font-monospace d-block mb-0" style="font-size:.5rem">{{t.file}}:{{t.line}}:</span>
+							<code>{{t.class}}{{t.type}}{{t.function}}</code>
+						</div>
+					{% endfor %}
+				</div>
 			</div>
 		{% endfor %}
 	</div>
