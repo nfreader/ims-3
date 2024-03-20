@@ -16,7 +16,7 @@ class EventRepository extends Repository
     public const COLUMNS = [
         'e.id',
         'e.title',
-        'e.desc',
+        'e.event_text as `desc`',
         'e.severity',
         'e.incident',
         'e.creator',
@@ -45,7 +45,7 @@ class EventRepository extends Repository
         $queryBuilder->insert($this->table);
         $queryBuilder->values([
             'title' => $queryBuilder->createNamedParameter($title),
-            '`desc`' => $queryBuilder->createNamedParameter($desc),
+            'event_text' => $queryBuilder->createNamedParameter($desc),
             'severity' => $queryBuilder->createNamedParameter($severity),
             'incident' => $queryBuilder->createNamedParameter($incident),
             'creator' => $queryBuilder->createNamedParameter($creator),
@@ -102,5 +102,19 @@ class EventRepository extends Repository
         $queryBuilder->addOrderBy('e.created DESC');
         $result = $queryBuilder->executeQuery($queryBuilder->getSQL());
         return $result->fetchAllAssociative();
+    }
+
+    public function updateEvent(int $id, array $data): void
+    {
+        $queryBuilder = $this->qb();
+        $queryBuilder->update($this->table);
+        foreach ($data as $key => $value) {
+            $queryBuilder->set(
+                $key,
+                $queryBuilder->createNamedParameter($value)
+            );
+        }
+        $queryBuilder->where('id = '.$queryBuilder->createNamedParameter($id));
+        $queryBuilder->executeStatement($queryBuilder->getSQL(), [...$data, $id]);
     }
 }
