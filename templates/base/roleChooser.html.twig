@@ -1,6 +1,6 @@
 {% from 'macros.html.twig' import roleBadge %}
 <div class="dropdown agencyChooser" data-reload="{{reload}}">
-	<span class="dropdown-toggle border border-subtle bg-white d-flex rounded-2 d-flex align-items-center py-1 px-2 gap-2" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+	<span class="dropdown-toggle border border-subtle bg-white rounded-2 d-flex align-items-center py-1 px-2 gap-2" type="button" data-bs-toggle="dropdown" aria-expanded="false">
 		<div class="agencyTarget pe-none">
 			{% if app.user.getActiveRole %}
 				{{roleBadge(app.user.getActiveRole)}}
