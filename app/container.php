@@ -13,11 +13,14 @@ use App\Repository\QueryLogger as RepositoryQueryLogger;
 use Doctrine\DBAL\Configuration;
 use Doctrine\DBAL\Connection;
 use Doctrine\DBAL\DriverManager;
+use Embed\Embed;
 use Firehed\DbalLogger\Middleware;
 use League\CommonMark\Environment\Environment;
 use League\CommonMark\Extension\CommonMark\CommonMarkCoreExtension;
 use League\CommonMark\Extension\CommonMark\Node\Block\BlockQuote;
 use League\CommonMark\Extension\DefaultAttributes\DefaultAttributesExtension;
+use League\CommonMark\Extension\Embed\Bridge\OscaroteroEmbedAdapter;
+use League\CommonMark\Extension\Embed\EmbedExtension;
 use League\CommonMark\Extension\GithubFlavoredMarkdownExtension;
 use League\CommonMark\Extension\Table\Table;
 use League\CommonMark\MarkdownConverter;
@@ -156,16 +159,28 @@ return [
                             'class' => 'table table-bordered',
                         ],
                         BlockQuote::class => [
-                            'class' => 'blockquote border-start border-2 ps-2'
+                            'class' => 'blockquote border-start border-4 ps-4'
                         ],
                     ],
                 ];
                 if (MarkdownRuntime::class === $class) {
+                    $embedLibrary = new Embed();
+                    $embedLibrary->setSettings([
+                        'oembed:query_parameters' => [
+                            'maxwidth' => 800,
+                            'maxheight' => 600,
+                        ],
+                    ]);
+                    $config['embed'] = [
+                        'adapter' => new OscaroteroEmbedAdapter(),
+                        'allowed_domains' => ['youtube.com', 'twitter.com', 'github.com'],
+                        'fallback' => 'link'
+                    ];
                     $environment = new Environment($config);
                     $environment->addExtension(new CommonMarkCoreExtension());
                     $environment->addExtension(new DefaultAttributesExtension());
                     $environment->addExtension(new GithubFlavoredMarkdownExtension());
-                    // $environment->addExtension(new HeadingPermalinkExtension());
+                    $environment->addExtension(new EmbedExtension());
                     return new MarkdownConverter($environment);
                 }
             }
@@ -250,7 +265,7 @@ return [
         ];
         $configuration = new Configuration();
 
-        if($settings['log_queries']) {
+        if ($settings['log_queries']) {
             $logger = $container->get(RepositoryQueryLogger::class);
             $configuration->setMiddlewares([new Middleware($logger)]);
         }

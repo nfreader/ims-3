@@ -32,7 +32,8 @@
         "twig/html-extra": "^3.8",
         "doctrine/sql-formatter": "^1.2",
         "doctrine/migrations": "^3.7",
-        "symfony/filesystem": "^7.0"
+        "symfony/filesystem": "^7.0",
+        "embed/embed": "^4.4"
     },
     "autoload": {
         "psr-4": {

@@ -158,3 +158,14 @@ textarea {
   color: rgb(103, 6, 12);
   background-color: rgb(255, 220, 215);
 }
+blockquote.twitter-tweet {
+  border-left: 4px solid #1DA1F2;
+  padding-left: 1rem;
+}
+
+blockquote.twitter-tweet:before {
+  display: block;
+  font: var(--fa-font-brands);
+  content: '\f099';
+  color: #1DA1F2;
+}
