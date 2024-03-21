@@ -1,0 +1,5 @@
+{% if app.user.isSudoMode %}
+	<a href="{{url_for('manage.home')}}" class="navbar-brand fw-bold text-danger animate__bounce animate__infinite d-block" data-bs-toggle="tooltip" data-bs-title="Sudo Mode is active. Click here to manage the application.">
+		<i class="fa-solid fa-triangle-exclamation"></i>
+	</a>
+{% endif %}
