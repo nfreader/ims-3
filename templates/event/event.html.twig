@@ -10,7 +10,7 @@
 			-
 			{{event.getTitle}}
 		</h2>
-		<div class="text-bg-{{event.getSeverity.getclass}} bg-opacity-100 px-3 fw-bold">{{event.getSeverity.getLong}}</div>
+		<div class="text-bg-{{event.getSeverity.getclass}} bg-opacity-100 px-3 fw-bold border-bottom">{{event.getSeverity.getLong}}</div>
 		<div class="mb-1 px-3 py-1 d-flex align-items-center gap-2 border-bottom bg-body-tertiary">
 			<div>
 				<span class="d-block mb-1" style="font-size: .8rem">Posted
@@ -41,6 +41,6 @@
 	{% include 'comment/components/listing.html.twig' %}
 	{% if app.user.can('POST_UPDATES', incident) %}
 		<div class="border-start py-3 ms-4 border-5 border-subtle"></div>
-		{% include 'event/form/eventForm.html.twig' with {'incident':incident.getId, 'event': event.getId} only %}
+		{% include 'comment/form/commentForm.html.twig' with {'incident':incident.getId, 'event': event.getId} only %}
 	{% endif %}
 {% endblock %}
