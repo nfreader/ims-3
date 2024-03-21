@@ -74,6 +74,8 @@ class CommentRepository extends Repository
         //Author Role (if set)
         $queryBuilder->leftJoin($this->alias, 'role', 'ar', 'c.role = ar.id');
         $queryBuilder->leftJoin('ar', 'agency', 'aa', 'ar.agency = aa.id');
+
+        //Editor Role (if set)
         $queryBuilder->leftJoin($this->alias, 'role', 'er', 'c.editor_role = er.id');
         $queryBuilder->leftJoin('er', 'agency', 'ea', 'er.agency = ea.id');
         return $queryBuilder;

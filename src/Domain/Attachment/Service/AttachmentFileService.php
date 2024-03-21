@@ -12,20 +12,15 @@ use App\Domain\Incident\Data\Incident;
 use App\Domain\Incident\Service\FetchIncidentService;
 use App\Domain\User\Data\User;
 use App\Exception\UnauthorizedException;
-use Exception;
 use League\Flysystem\Filesystem;
 use Nyholm\Psr7\UploadedFile;
 use Psr\Container\ContainerInterface;
 use Ramsey\Uuid\Uuid;
-use Slim\Exception\HttpException;
-use Slim\Http\ServerRequest;
-use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Session\Session;
 
 class AttachmentFileService
 {
     private Filesystem $filesystem;
-    private Session $session;
 
     public function __construct(
         private ContainerInterface $container,
@@ -34,7 +29,6 @@ class AttachmentFileService
         private FetchEventService $eventService,
         private FetchCommentService $commentService
     ) {
-        $this->session = $this->container->get(Session::class);
         $this->filesystem = $container->get(Filesystem::class);
     }
 
@@ -90,9 +84,19 @@ class AttachmentFileService
     private function moveAndRenameFile(UploadedFile $file): UploadResult
     {
         $info = pathinfo($file->getClientFilename());
-        $newName = sprintf('%s.%s', Uuid::uuid7(), $info['extension']);
-        $this->filesystem->write($newName, $file->getStream()->getContents());
-        return new UploadResult(false, file: $newName);
+        $newName = sprintf(
+            '%s.%s',
+            Uuid::uuid7(),
+            $info['extension']
+        );
+        $this->filesystem->write(
+            $newName,
+            $file->getStream()->getContents()
+        );
+        return new UploadResult(
+            false,
+            file: $newName
+        );
     }
 
     private function addAttachmentToDatabase(
