@@ -1,6 +1,6 @@
 # IMS
 
-An Incident Management System for tracking real-world events. 
+An Incident Management System for tracking real-world events.
 
 ## Structure 
 
@@ -18,10 +18,12 @@ An Incident Management System for tracking real-world events.
 
 * `ACTIVITY_LOG` - Lets the user post updates to the incident activity log 
 
-* `UPDATE_ROLES` - If granted, allows the user to manage roles and permissions for a given incident
+* `UPDATE_ROLES` - If granted, allows the user to manage roles and permissions access for a given incident
 
 ## TODO
 
+* ~~Change to a dashboard layout~~
+* Disable img tags for sgvs in markdown
 * Email notifications
 * Implement default comment actions for events (prepend, append, replace)
 * Move uploads to S3
