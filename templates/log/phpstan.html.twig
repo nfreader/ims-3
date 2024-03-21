@@ -1,0 +1,34 @@
+{% extends 'manage/base.html.twig' %}
+
+{% block body %}
+	<h2 class="d-flex justify-content-between align-items-center">
+		<span>PHPStan Output</span>
+		<form action="{{url_for(url)}}" method="post">
+			<button type="submit" class="btn btn-danger">Clear Log File</button>
+		</form>
+	</h2>
+	<hr>
+	<p>Showing
+		{{errors.totals.file_errors}}
+		entries</p>
+	<div class="list-group">
+		{% for filename, errlist in errors.files %}
+			<div class="list-group-item font-monospace">
+				<strong>{{errlist.errors}}
+					errors in
+					{{filename}}</strong>
+				<ul>
+					{% for m in errlist.messages %}
+						<li class="{{m.ignorable ? "text-muted"}}">
+						<span class="d-block">{{m.message}}</span>
+						<span class="d-block"><a href="vscode://file/{{filename}}:{{m.line}}">{{filename}}:{{m.line}}</a></span>
+							{% if m.tip %}
+								<span class="d-block ps-4"><a href="{{m.tip[5:]}}" target="_blank">{{m.tip}}</a></span>
+							{% endif %}
+						</li>
+					{% endfor %}
+				</div>
+			{% endfor %}
+
+		</div>
+	{% endblock %}
