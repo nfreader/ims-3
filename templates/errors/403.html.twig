@@ -1,0 +1,20 @@
+<div class="d-flex gap-4 rounded text-bg-danger p-4 mb-4">
+	<h1 class="fw-bold fs-1">
+		<i class="fa-solid fa-ban"></i>
+		{{error.getCode}}<br>
+		Forbidden
+	</h1>
+	<div class="vr border border-white border-2 opacity-100"></div>
+	<div>
+		<h4>{{error.getMessage}}</h4>
+		<p class="lead mb-2">Try changing your active role using the selector below</p>
+		<div class="text-dark d-inline-block">
+			{% include 'base/roleChooser.html.twig' with {'reload':true} %}
+		</div>
+		<p class="mt-2 mb-0">If the issue persists, you may need to contact your {{app.name}} administrator</p>
+	</div>
+
+</div>
+<p class="lead">Please include this request ID when reporting this error:
+	<code>{{request_id}}</code>
+</p>
