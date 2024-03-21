@@ -12,6 +12,7 @@
 			{% endif %}
 			{% if debug %}
 				<div>
+					<a href="http://localhost:8025" target="_blank" class="btn btn-primary btn-sm">Mail</a>
 					<a href="{{url_for('log.doctrine')}}?search={{request_id}}" class="btn btn-primary btn-sm" target="_blank">View Queries</a>
 					<button type="button" class="btn btn-primary btn-sm" data-bs-toggle="modal" data-bs-target="#contextModal">
 						View Context
