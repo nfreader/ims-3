@@ -6,23 +6,23 @@
 		<aside class="sidebar border-end p-0 bg-body-tertiary text-truncate col-2" id="sidebar">
 			{% block sidebar %}
 				<h6 class="px-2 mt-2 mb-1 text-body-secondary text-uppercase d-flex align-items-center justify-content-between">
-					<span>Incidents</span><i class="fa-solid fa-sort"></i>
+					<span>Incidents</span>
+					<i class="fa-solid fa-sort"></i>
 				</h6>
 				{% include 'incident/components/listing.html.twig' %}
 			{% endblock %}
 		</aside>
-        <aside class="sidebar border-end p-0 bg-body-tertiary text-truncate col-2" id="sidebar2">
+		<aside class="sidebar border-end p-0 bg-body-tertiary text-truncate col-2" id="sidebar2">
 			{% block sidebar2 %}
 				<h6 class="px-2 mt-2 mb-1 text-body-secondary text-uppercase d-flex align-items-center justify-content-between">
-					<span>Events</span><i class="fa-solid fa-sort"></i>
+					<span>Events</span>
+					<i class="fa-solid fa-sort"></i>
 				</h6>
-					{% include 'event/components/listing.html.twig' with {'events': events, 'incident': incident.getId, 'event':event.getId} only %}
+				{% include 'event/components/listing.html.twig' %}
 			{% endblock %}
 		</aside>
-		<section class="main-content px-md-4 py-2 col" id="panel">
-		{% block body %}{% endblock %}
-		</section>
-		</div>
+		<section class="main-content px-md-4 py-3 col" id="panel"> {% block body %}{% endblock %}</section>
+	</div>
 </main>
 {{ webpack_entry_script_tags('resizePanel') }}
 

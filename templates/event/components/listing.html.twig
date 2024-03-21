@@ -2,16 +2,17 @@
 {% from 'macros/formInputs.twig' import textInput, markdownEditor %}
 <div class="list-group list-group-flush border-top border-bottom">
 	{% for e in events %}
-		<a href="{{url_for('event.view',{'incident':incident, 'event':e.getId})}}" class="list-group-item list-group-item-action {{event == e.getId ? 'active'}}">
+		<a href="{{url_for('event.view',{'incident':incident.getId, 'event':e.getId})}}" class="list-group-item list-group-item-action {{event.getId == e.getId ? 'active'}}">
 			<div class="d-flex w-100">
 				<span class="badge event-severity text-bg-{{e.getSeverity.getclass}} bg-opacity-100">{{e.getSeverity.getShort}}</span>
 				<div class="flex-grow-1 ms-4">
 					<div class="d-flex justify-content-between">
 						<div>
-							<h5>
+							<h5 class="mb-0">
 								<i class="fa-solid fa-message"></i>
 								<span class="font-monospace">{{e.getId}}</span>
 								{{e.title}}</h5>
+							<span style="font-size:.8rem;">{{e.getCreated|date}}</span>
 							<p class="mb-1">{{e.getDesc|striptags|u.truncate(240, '...', false)}}
 							</p>
 						</div>
@@ -22,9 +23,11 @@
 	{% else %}
 		<div class="list-group-item">{{empty("No Events")}}</div>
 	{% endfor %}
-	<button class="list-group-item list-group-item-action link-primary" data-bs-toggle="modal" data-bs-target="#newEventModal">
-		<i class="fa-solid fa-circle-plus"></i>
-		Create New Event</button>
+	{% if app.user.can('POST_UPDATES', incident) %}
+			<button class="list-group-item list-group-item-action link-primary" data-bs-toggle="modal" data-bs-target="#newEventModal">
+				<i class="fa-solid fa-circle-plus"></i>
+				Create New Event</button>
+		{% endif %}
 </div>
 
 <div class="modal fade" id="newEventModal" tabindex="-1" aria-labelledby="newEventModalLabel" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-hidden="true">
@@ -35,7 +38,7 @@
 				<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
 			</div>
 			<div class="modal-body">
-				<form class="card-body form" action="{{url_for('event.new',{'incident':incident})}}" method="post" name="newEvent" id="newEvent" autocomplete="off">
+				<form class="card-body form" action="{{url_for('event.new',{'incident':incident.getId})}}" method="post" name="newEvent" id="newEvent" autocomplete="off">
 					<div class="row mb-3">
 						<div class="col">
 							{{textInput('text','title',"Event Title")}}
@@ -56,7 +59,7 @@
 					<div class="row mb-3">
 						<div class="col">
 							<div class="mb-3">
-								{{markdownEditor('desc','Event Description', null, incident)}}
+								{{markdownEditor('desc','Event Description', null, incident.getId)}}
 							</div>
 						</div>
 					</div>

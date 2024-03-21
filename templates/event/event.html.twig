@@ -3,34 +3,36 @@
 	{% from 'macros.html.twig' import empty, tag, roleBadge, userBadge %}
 	{% include 'incident/components/incidentHeader.html.twig' %}
 
-	<div class="card">
-		<h2 class="card-header d-flex justify-content-between align-items-center border-5 border-{{event.getSeverity.getClass}}">
+	<div class="card border-dark">
+		<h2 class="card-header d-flex align-items-center gap-2">
+			<i class="fa-solid fa-message"></i>
+			<span class="font-monospace">{{event.getId}}</span>
+			-
+			{{event.getTitle}}
+		</h2>
+		<div class="text-bg-{{event.getSeverity.getclass}} bg-opacity-100 px-3 fw-bold">{{event.getSeverity.getLong}}</div>
+		<div class="mb-1 px-3 py-1 d-flex align-items-center gap-2 border-bottom bg-body-tertiary">
 			<div>
-				<i class="fa-solid fa-message"></i>
-				<span class="font-monospace">{{event.getId}}</span>
-				-
-				{{event.getTitle}}
-			</div>
-			<div style="font-size: 1rem" class="text-end">
-				{% if not event.getEdited %}
-					{% else %}
-						edited
-						{{event.getEdited|date}}
-						by
-						{{event.getEditorName}}
+				<span class="d-block mb-1" style="font-size: .8rem">Posted
+					{{event.getCreated|date}}</span>
+				{% if event.getRole %}
+					{{roleBadge(event.getRole, true)}}
+				{% else %}
+					{{userBadge(event.getCreator, true)}}
 				{% endif %}
 			</div>
-		</h2>
-		<div class="mb-1 px-3 py-1 d-flex align-items-center gap-2 border-bottom bg-body-tertiary">
-		<div>
-		<span class="d-block mb-1" style="font-size: .8rem">Posted
-		{{event.getCreated|date}}</span>
-			{% if event.getCreatorBadge %}
-				{{roleBadge(event.getCreatorBadge, true)}}
-				{% else %}
-				{{userBadge(event.getCreator, true)}}
+			{% if event.getEdited %}
+				<div class="vr"></div>
+				<div>
+					<span class="d-block mb-1" style="font-size: .8rem">Edited
+						{{event.getEdited|date}}</span>
+					{% if event.getEditorRole %}
+						{{roleBadge(event.getEditorRole, true)}}
+					{% else %}
+						{{userBadge(event.getEditor, true)}}
+					{% endif %}
+				</div>
 			{% endif %}
-		</div>
 		</div>
 		<div class="card-body markdown-content">
 			{{event.getDesc|markdown_to_html}}
@@ -39,6 +41,6 @@
 	{% include 'comment/components/listing.html.twig' %}
 	{% if app.user.can('POST_UPDATES', incident) %}
 		<div class="border-start py-3 ms-4 border-5 border-subtle"></div>
-		{% include 'comment/form/commentForm.html.twig' with {'incident':incident.getId, 'event': event.getId} only %}
+		{% include 'event/form/eventForm.html.twig' with {'incident':incident.getId, 'event': event.getId} only %}
 	{% endif %}
 {% endblock %}
