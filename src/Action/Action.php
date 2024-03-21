@@ -17,8 +17,6 @@ use Symfony\Component\HttpFoundation\Session\Session;
 
 abstract class Action
 {
-    protected $config = [];
-
     #[Inject]
     public JsonRenderer $jsonRenderer;
 
@@ -38,12 +36,27 @@ abstract class Action
 
     private RouteContext $route;
 
-    private ?array $query = null;
+    /**
+     * query
+     *
+     * @var array<mixed>
+     */
+    private array $query = [];
 
-    private ?array $args = null;
+    /**
+     * args
+     *
+     * @var array<mixed>
+     */
+    private array $args = [];
 
-    private ?User $user;
+    private ?User $user = null;
 
+    /**
+     * context
+     *
+     * @var array<mixed>
+     */
     private array $context = [];
 
     public function __construct(
@@ -79,7 +92,7 @@ abstract class Action
         if($this instanceof ActionInterface) {
             return $this->action();
         }
-
+        return $this->getResponse();
     }
 
     private function setRequest(ServerRequestInterface $request): static
