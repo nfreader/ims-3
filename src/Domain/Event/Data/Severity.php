@@ -26,9 +26,20 @@ enum Severity: string
         return match ($this) {
             Severity::INFORMATIONAL => 'Info',
             Severity::LOW => 'Low',
-            Severity::MEDIUM => 'Medium',
+            Severity::MEDIUM => 'Med',
             Severity::HIGH => 'High',
-            Severity::CRITICAL => 'Critical'
+            Severity::CRITICAL => 'Crit'
+        };
+    }
+
+    public function getLong(): string
+    {
+        return match ($this) {
+            Severity::INFORMATIONAL => 'Informational Event',
+            Severity::LOW => 'Low Severity Event',
+            Severity::MEDIUM => 'Medium Severity Event',
+            Severity::HIGH => 'High Severity Event',
+            Severity::CRITICAL => 'Critical Severity Event'
         };
     }
 
