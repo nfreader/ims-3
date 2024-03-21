@@ -54,8 +54,8 @@ class IncidentAction extends Action implements GetEntitiesInterface
         )) {
             throw new HttpException(
                 $this->getRequest(),
-                "Your active role does not have permission to view this",
-                Http::UNAUTHORIZED->value
+                "Your active role does not have permission to view this incident",
+                Http::FORBIDDEN->value
             );
         }
         $this->addContext('incident', $this->incident);

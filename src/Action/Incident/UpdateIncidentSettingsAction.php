@@ -25,7 +25,7 @@ final class UpdateIncidentSettingsAction extends IncidentAction implements Actio
             throw new HttpException(
                 $this->getRequest(),
                 "Your active role does not have permission to perform these actions",
-                Http::UNAUTHORIZED->value
+                Http::FORBIDDEN->value
             );
         }
         if('POST' === $this->request->getMethod()) {
