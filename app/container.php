@@ -180,7 +180,7 @@ return [
                     $environment->addExtension(new CommonMarkCoreExtension());
                     $environment->addExtension(new DefaultAttributesExtension());
                     $environment->addExtension(new GithubFlavoredMarkdownExtension());
-                    $environment->addExtension(new EmbedExtension());
+                    // $environment->addExtension(new EmbedExtension());
                     return new MarkdownConverter($environment);
                 }
             }
