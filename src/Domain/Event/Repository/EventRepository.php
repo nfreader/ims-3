@@ -32,7 +32,14 @@ class EventRepository extends Repository
         'r.name as roleName',
         'a.id as agencyId',
         'a.name as agencyName',
-        'a.logo as agencyLogo'
+        'a.logo as agencyLogo',
+
+        //Editor Role
+        'er.id as editorRoleId',
+        'er.name as editorRoleName',
+        'ea.id as editorAgencyId',
+        'ea.name as editorAgencyName',
+        'ea.logo as editorAgencyLogo'
     ];
 
     public function insertNewEvent(
@@ -68,6 +75,8 @@ class EventRepository extends Repository
         $queryBuilder->leftJoin($this->alias, 'comment', 'c', 'c.event = e.id');
         $queryBuilder->leftJoin($this->alias, 'role', 'r', 'e.role = r.id');
         $queryBuilder->leftJoin('r', 'agency', 'a', 'r.agency = a.id');
+        $queryBuilder->leftJoin($this->alias, 'role', 'er', 'e.editor_role = er.id');
+        $queryBuilder->leftJoin('er', 'agency', 'ea', 'er.agency = ea.id');
         return $queryBuilder;
     }
 

@@ -18,19 +18,34 @@ class EventComposite
         private string $severity,
         private int $incident,
         private string $created,
+
+        //Author user
         private int $creator,
         private string $creatorName,
         private string $creatorEmail,
-        private ?string $edited = null,
-        private ?int $editor = null,
-        private ?string $editorName = null,
-        private ?string $editorEmail = null,
-        private ?int $comments = null,
+
+        // Author Role
         private ?string $agencyName = null,
         private ?int $agencyId = null,
         private ?string $agencyLogo = null,
         private ?string $roleName = null,
-        private ?int $roleId = null
+        private ?int $roleId = null,
+
+        //Editor User
+        private ?string $edited = null,
+        private ?int $editor = null,
+        private ?string $editorName = null,
+        private ?string $editorEmail = null,
+
+        // Editor Role
+        private ?string $editorAgencyName = null,
+        private ?int $editorAgencyId = null,
+        private ?string $editorAgencyLogo = null,
+        private ?string $editorRoleName = null,
+        private ?int $editorRoleId = null,
+
+        //Misc
+        private ?int $comments = null,
     ) {
 
     }
@@ -63,6 +78,14 @@ class EventComposite
                 $this->editorName,
                 $this->editorEmail
             ) : null,
+            editorRole: $this->editorRoleId ? new RoleBadge(
+                $this->editorAgencyId,
+                $this->editorAgencyName,
+                $this->editorRoleId,
+                $this->editorRoleName,
+                $this->editorAgencyLogo,
+                $this->editorName
+            ) : null
         );
     }
 }

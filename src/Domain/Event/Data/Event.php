@@ -9,8 +9,6 @@ use App\Domain\User\Data\UserBadge;
 
 class Event
 {
-    private ?RoleBadge $roleBadge = null;
-
     public function __construct(
         private int $id,
         private string $title,
@@ -22,6 +20,7 @@ class Event
         private ?RoleBadge $role = null,
         private ?DateTimeImmutable $edited = null,
         private ?UserBadge $editor = null,
+        private ?RoleBadge $editorRole = null,
         private ?int $comments = null
     ) {
     }
@@ -61,7 +60,7 @@ class Event
         return $this->edited;
     }
 
-    public function getCreatorBadge(): ?RoleBadge
+    public function getRole(): ?RoleBadge
     {
         return $this->role;
     }
@@ -74,5 +73,10 @@ class Event
     public function getEditor(): ?UserBadge
     {
         return $this->editor;
+    }
+
+    public function getEditorRole(): ?RoleBadge
+    {
+        return $this->editorRole;
     }
 }
