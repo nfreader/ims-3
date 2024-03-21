@@ -5,25 +5,22 @@ namespace App\Domain\Comment\Service;
 use App\Domain\Comment\Data\Comment;
 use App\Domain\Comment\Repository\CommentRepository;
 use App\Domain\User\Data\User;
-use App\Exception\RedirectWithMessageException;
 use DI\Attribute\Inject;
+use JustSteveKing\StatusCode\Http;
+use Symfony\Component\HttpKernel\Exception\HttpException;
 
 class EditCommentService
 {
     #[Inject]
     private CommentRepository $commentRepository;
 
-    public function editComment(int $id, array $data, User $user): Comment|string
+    public function editComment(Comment $comment, array $data, User $user): Comment
     {
-        $comment = $this->commentRepository->getCommentById($id);
         //Check permissions here
         //
         //
         if($comment->getText() === $data['text'] || !$data['text']) {
-            throw new RedirectWithMessageException("No changes were made to this comment", 'event.view', [
-                'incident' => $comment->getIncident(),
-                'event' => $comment->getEvent()
-            ]);
+            throw new HttpException(Http::BAD_REQUEST->value, "No changes were made to this comment");
         }
         $this->commentRepository->updateCommentRow(
             id:$comment->getId(),
