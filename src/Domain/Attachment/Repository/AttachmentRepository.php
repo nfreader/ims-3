@@ -26,7 +26,7 @@ class AttachmentRepository extends Repository
             'event' => $queryBuilder->createNamedParameter($event),
             'comment' => $queryBuilder->createNamedParameter($comment)
         ]);
-        $queryBuilder->executeStatement($queryBuilder->getSQL());
+        $queryBuilder->executeStatement();
         return $this->connection->lastInsertId();
     }
 

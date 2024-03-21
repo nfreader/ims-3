@@ -60,7 +60,7 @@ class CommentRepository extends Repository
             'action' => $queryBuilder->createNamedParameter($action),
             'role' => $queryBuilder->createNamedParameter($role)
         ]);
-        $queryBuilder->executeStatement($queryBuilder->getSQL());
+        $queryBuilder->executeStatement();
         return $this->connection->lastInsertId();
     }
 
@@ -118,7 +118,7 @@ class CommentRepository extends Repository
             $queryBuilder->createNamedParameter($editorRole)
         );
         $queryBuilder->where('id = '. $queryBuilder->createNamedParameter($id));
-        $queryBuilder->executeStatement($queryBuilder->getSQL());
+        $queryBuilder->executeStatement();
     }
 
     public function insertCommentEdit(
@@ -137,7 +137,7 @@ class CommentRepository extends Repository
             'editor' => $queryBuilder->createNamedParameter($editor),
             'role' => $queryBuilder->createNamedParameter($role)
         ]);
-        $queryBuilder->executeStatement($queryBuilder->getSQL());
+        $queryBuilder->executeStatement();
         return $this->connection->lastInsertId();
     }
 

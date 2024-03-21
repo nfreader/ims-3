@@ -112,7 +112,7 @@ class IncidentRepository extends Repository
         $queryBuilder->where(
             'id = '.$queryBuilder->createNamedParameter($id, ParameterType::INTEGER)
         );
-        $queryBuilder->executeStatement($queryBuilder->getSQL());
+        $queryBuilder->executeStatement();
     }
 
 }

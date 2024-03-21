@@ -60,7 +60,7 @@ class EventRepository extends Repository
             'creator' => $queryBuilder->createNamedParameter($creator),
             'role' => $queryBuilder->createNamedParameter($role)
         ]);
-        $queryBuilder->executeStatement($queryBuilder->getSQL());
+        $queryBuilder->executeStatement();
         return $this->connection->lastInsertId();
     }
 
