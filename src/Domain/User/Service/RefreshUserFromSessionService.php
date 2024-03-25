@@ -2,6 +2,8 @@
 
 namespace App\Domain\User\Service;
 
+use App\Domain\Profile\Repository\ProfileRepository;
+use App\Domain\Profile\Service\FetchUserSettingsService;
 use App\Domain\Role\Repository\RoleRepository;
 use App\Domain\User\Data\User;
 use App\Domain\User\Repository\UserRepository;
@@ -15,10 +17,13 @@ class RefreshUserFromSessionService
 
     private RoleRepository $roleRepository;
 
+    private ProfileRepository $profileRepository;
+
     public function __construct(private ContainerInterface $container)
     {
         $this->userRepository = new UserRepository($container->get(Connection::class));
         $this->roleRepository = new RoleRepository($container->get(Connection::class));
+        $this->profileRepository = new ProfileRepository($container->get(Connection::class));
     }
 
     public function refreshUser(): ?User
@@ -36,6 +41,8 @@ class RefreshUserFromSessionService
             if($user->isAdmin()) {
                 $user->setSudoMode($session->get('sudo_mode', false));
             }
+            $settings = $this->profileRepository->getProfileForUser($user->getId());
+            $user->setPreferences(FetchUserSettingsService::mapSettings($settings));
             return $user;
         }
         return null;

@@ -15,6 +15,7 @@ return function (App $app) {
         $app->post('/logout', \App\Action\User\Auth\LogoutUserAction::class)->setName('user.logout');
         $app->post('/pickRole', \App\Action\User\SetActiveRoleAction::class);
         $app->post('/sudo', \App\Action\User\ToggleSudoModeAction::class)->setName('user.sudo');
+        $app->map(['GET','POST'], '/preferences', \App\Action\Profile\UpdateProfileAction::class)->setName('user.profile');
     });
 
     $app->group('/incident', function (RouteCollectorProxy $app) {

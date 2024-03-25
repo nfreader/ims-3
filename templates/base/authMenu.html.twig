@@ -4,7 +4,9 @@
 		{{app.user.getName}}
 	</a>
 	<ul class="dropdown-menu">
+		<li><a class="dropdown-item" href="{{url_for('user.profile')}}"><i class="fa-solid fa-user-gear"></i> Preferences</a></li>
 		{% if app.user.isAdmin %}
+			<li><hr class="dropdown-divider"></li>
 			<li class="d-grid px-2">
 				{% if app.user.isSudoMode %}
 					<button type="submit" class="btn btn-success btn-sm" form="sudoMode">Exit Sudo Mode</button>

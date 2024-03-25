@@ -196,6 +196,10 @@ abstract class Action
         if('application/json' === $this->request->getHeaderLine('Accept')) {
             return $this->json($context);
         }
+        $this->addContext(
+            'layout',
+            $this->getUser()?->getPreference('appLayout')
+        );
         $context = [...$context, ...$this->context];
         return $this->twigRenderer->render($this->getResponse(), $template, $context);
     }

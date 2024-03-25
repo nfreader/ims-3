@@ -1,0 +1,32 @@
+<div class="card mb-4">
+	<div class="card-body">
+		<h4 class="mb-3">Application Layout</h4>
+		<div class="list-group list-group-radio grid gap-2 border-0">
+			<div class="position-relative g-col-6">
+				<input class="form-check-input position-absolute top-50 end-0 me-3 fs-5" type="radio" name="appLayout" id="linear" value="linear" {{'linear' == app.user.getPreference('appLayout') ? 'checked' : ''}}>
+				<label class="list-group-item py-3 pe-5 d-flex align-items-center gap-2" for="linear">
+					<i class="fa-solid fa-bars fs-1"></i>
+					<div>
+						<strong class="fw-semibold">Linear</strong>
+						<span class="d-block small opacity-75">View incidents and events one at a time</span>
+					</div>
+				</label>
+			</div>
+			<div class="position-relative g-col-6">
+				<input class="form-check-input position-absolute top-50 end-0 me-3 fs-5" type="radio" name="appLayout" id="dashboard" value="dashboard"  {{'dashboard' == app.user.getPreference('appLayout') ? 'checked' : ''}}>
+				<label class="list-group-item py-3 pe-5 d-flex align-items-center gap-2" for="dashboard">
+					<i class="fa-solid fa-table-columns fs-1"></i>
+					<div>
+						<strong class="fw-semibold">Dashboard</strong>
+						<span class="d-block small opacity-75">View all your incidents and events</span>
+					</div>
+				</label>
+			</div>
+			{% for e in errors.appLayout %}
+				<div class="text-danger">
+					{{e}}
+				</div>
+			{% endfor %}
+		</div>
+	</div>
+</div>

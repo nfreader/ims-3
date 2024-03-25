@@ -2,7 +2,6 @@
 
 namespace App\Domain\User\Data;
 
-use App\Domain\Agency\Data\Agency;
 use App\Domain\Incident\Data\Incident;
 use App\Domain\Permissions\Data\PermissionsEnum;
 use App\Domain\Role\Data\UserRole;
@@ -25,7 +24,8 @@ class User implements JsonSerializable
         private array $agencies = [],
         private array $roles = [],
         private ?UserRole $activeRole = null,
-        private bool $sudoMode = false
+        private bool $sudoMode = false,
+        private array $preferences = []
     ) {
     }
 
@@ -193,5 +193,36 @@ class User implements JsonSerializable
         $this->sudoMode = $sudoMode;
 
         return $this;
+    }
+
+    /**
+     * setPreferences
+     * Sets the users preferences
+     *
+     * @param array $preferences<ProfileSetting>
+     * @return static
+     */
+    public function setPreferences(array $preferences): static
+    {
+        $this->preferences = $preferences;
+        return $this;
+    }
+
+    /**
+     * getPreference
+     * Get a single preference from the preferences array. If the requested
+     * preference is not found, throws an exception
+     *
+     * @param string $preference
+     * @return mixed
+     * @throws Exception
+     */
+    public function getPreference(string $preference): mixed
+    {
+        $setting = $this->preferences[$preference] ?? null;
+        if(!$setting) {
+            throw new Exception("Invalid preference requested", 500);
+        }
+        return $setting;
     }
 }
