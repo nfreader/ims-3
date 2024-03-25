@@ -1,5 +1,14 @@
-	<footer class="navbar sticky-bottom navbar-expand-lg bg-body-tertiary border-top py-2">
-		<div class="container-fluid">
+	<div class="sticky-bottom">
+	{% if app.user.isSudoMode %}
+		<div class="text-bg-danger fw-bold text-center sticky-top" style="top: 59px;">
+			<div class="container">***SUDO MODE ACTIVE***</div>
+		</div>
+	{% endif %}
+	<footer class="navbar navbar-expand-lg bg-body-tertiary border-top py-2">
+		<div class="{{html_classes({
+		'container-fluid' : 'dashboard' == layout,
+		'container' : 'linear' == layout
+		})}}">
 			<span>{{app.name}}
 				{{app.version}}
 				&middot; &copy;
@@ -21,11 +30,7 @@
 			{% endif %}
 		</div>
 	</footer>
-	{% if app.user.isSudoMode %}
-		<div class="text-bg-danger fw-bold text-center sticky-top" style="top: 59px;">
-			<div class="container">***SUDO MODE ACTIVE***</div>
-		</div>
-	{% endif %}
+	</div>
 	</div>
 	<div class="modal" tabindex="-1" id="contextModal" aria-labelledby="contextModalLabel" aria-hidden="true">
 		<div class="modal-dialog modal-fullscreen">

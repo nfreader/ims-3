@@ -1,7 +1,10 @@
 <header class="navbar sticky-top navbar-expand-lg bg-body-tertiary border-bottom py-2">
-	<div class="container-fluid">
+	<div class="{{html_classes({
+		'container-fluid' : 'dashboard' == layout,
+		'container' : 'linear' == layout
+		})}}">
 		<a class="navbar-brand fw-bold" href="{{url_for('home')}}">{{app.name}}</a>
-{% include 'base/sudoModeIcon.html.twig' %}
+		{% include 'base/sudoModeIcon.html.twig' %}
 		<button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
 			<span class="navbar-toggler-icon"></span>
 		</button>

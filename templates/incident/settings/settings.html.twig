@@ -1,4 +1,4 @@
-{% extends 'base.html.twig' %}
+{% extends [layout ~ '.html.twig', 'layout.html.twig'] %}
 {% from 'macros.html.twig' import agencyBadge %}
 {% block body %}
 	{% set activeSubnav = 'general' %}

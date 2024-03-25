@@ -1,4 +1,4 @@
-{% extends 'base-extra-sidebar.html.twig' %}
+{% extends [layout ~ '.html.twig', 'layout.html.twig'] %}
 {% from 'macros.html.twig' import userBadge, roleBadge %}
 {% block body %}
 	{% include 'incident/components/incidentHeader.html.twig' %}

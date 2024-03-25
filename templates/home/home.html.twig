@@ -1,4 +1,4 @@
-{% extends 'base.html.twig' %}
+{% extends [layout ~ '.html.twig', 'layout.html.twig'] %}
 {% block body %}
-
+	{% include ['incident/components/'~ layout ~'-listing.html.twig','incident/components/listing.html.twig'] %}
 {% endblock %}

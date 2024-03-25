@@ -1,0 +1,10 @@
+{% include 'base/header.html.twig' %}
+{% include 'base/navbar.html.twig' %}
+{% block subnav %}{% endblock %}
+<main class="{{html_classes({
+		'container-fluid' : 'dashboard' == layout,
+		'container py-4' : 'linear' == layout
+		})}}">
+	{% block body %}{% endblock %}
+</main>
+{% include 'base/footer.html.twig' %}

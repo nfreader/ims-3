@@ -1,4 +1,5 @@
-{% extends 'base-extra-sidebar.html.twig' %}
+{% extends [layout ~ '.html.twig', 'layout.html.twig'] %}
 {% block body %}
 	{% include 'incident/components/incidentHeader.html.twig' %}
+	{% include ['event/components/'~ layout ~'-listing.html.twig','event/components/listing.html.twig'] %}
 {% endblock %}
