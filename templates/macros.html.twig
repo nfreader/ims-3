@@ -91,7 +91,7 @@
 		<div class="bg-white border border-subtle rounded px-2 py-1 d-inline-block text-start text-black">
 		{% endif %}
 		<div class="user-badge d-flex align-items-center gap-2 lh-1" style="font-size: .9rem">
-		<i class="fas fa-user fs-2 d-block" style="width: 32px; height: 32px;"></i>
+			<i class="fas fa-user fs-2 d-block" style="width: 32px; height: 32px;"></i>
 			<div class="pe-none">
 				<strong>{{user.getName}}</strong><br>
 				<code>{{user.getEmail}}</code>
@@ -99,5 +99,18 @@
 		</div>
 		{% if container %}
 		</div>
+	{% endif %}
+{% endmacro %}
+
+{% macro inlineAuthor(user, role) %}
+	{% if role %}
+		<span data-bs-toggle="popover" data-bs-title="{{user.getName}}, {{user.getEmail}}" data-bs-content="Posted as {{role.getRoleName}}, {{role.getAgencyName}}" data-bs-trigger="hover focus">
+			<img class="pe-none" src="/uploads/{{role.getAgencyLogo}}" width="24" height="24"/>
+			<strong>{{user.getName}}</strong>
+		</span>
+	{% else %}
+		<span data-bs-toggle="popover" data-bs-content="{{user.getName}}, {{user.getEmail}}" data-bs-trigger="hover focus">
+			<strong>{{user.getName}}</strong>
+		</span>
 	{% endif %}
 {% endmacro %}

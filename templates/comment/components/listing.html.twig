@@ -1,4 +1,4 @@
-{% from 'macros.html.twig' import empty, tag, userBadge, roleBadge %}
+{% from 'macros.html.twig' import empty, tag, userBadge, roleBadge, inlineAuthor %}
 {% from 'macros/formInputs.twig' import markdownEditor %}
 {% if comments %}
 	<div class="border-start py-3 ms-4 border-5 border-subtle"></div>
@@ -7,16 +7,7 @@
 	<div class="card">
 		<div class="card-header d-flex justify-content-between align-items-center">
 			<div>
-				{% if c.getAuthorRole %}
-					<span data-bs-toggle="popover" data-bs-title="{{c.getAuthor.getName}}, {{c.getAuthor.getEmail}}" data-bs-content="Posted as {{c.getAuthorRole.getRoleName}}, {{c.getAuthorRole.getAgencyName}}" data-bs-trigger="hover focus">
-						<img class="pe-none" src="/uploads/{{c.getAuthorRole.getAgencyLogo}}" width="24" height="24"/>
-						<strong>{{c.getAuthor.getName}}</strong>
-					</span>
-				{% else %}
-					<span data-bs-toggle="popover" data-bs-content="{{c.getAuthor.getName}}, {{c.getAuthor.getEmail}}" data-bs-trigger="hover focus">
-						<strong>{{c.getAuthor.getName}}</strong>
-					</span>
-				{% endif %}
+				{{inlineAuthor(c.getAuthor, c.getAuthorRole)}}
 				commented
 				<time>{{c.getCreated|date}}</time>
 			</span>

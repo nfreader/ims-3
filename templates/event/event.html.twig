@@ -1,6 +1,6 @@
 {% extends [layout ~ '.html.twig', 'layout.html.twig'] %}
 {% block body %}
-	{% from 'macros.html.twig' import empty, tag, roleBadge, userBadge %}
+	{% from 'macros.html.twig' import empty, tag, roleBadge, userBadge, inlineAuthor %}
 	{% include 'incident/components/incidentHeader.html.twig' %}
 
 	<div class="card border-dark">
@@ -14,7 +14,8 @@
 		<div class="mb-1 px-3 py-1 d-flex align-items-center gap-2 border-bottom bg-body-tertiary">
 			<div>
 				<span class="d-block mb-1" style="font-size: .8rem">Posted
-					<time>{{event.getCreated|date}}</time></span>
+					<time>{{event.getCreated|date}}</time>
+				</span>
 				{% if event.getRole %}
 					{{roleBadge(event.getRole, true)}}
 				{% else %}
@@ -24,8 +25,10 @@
 			{% if event.getEdited %}
 				<div class="vr"></div>
 				<div>
-					<span class="d-block mb-1" style="font-size: .8rem">Edited
-						{{event.getEdited|date}}</span>
+					<span class="d-block mb-1" style="font-size: .8rem">Last Edited
+						<time>{{event.getEdited|date}}</time>
+						by
+					</span>
 					{% if event.getEditorRole %}
 						{{roleBadge(event.getEditorRole, true)}}
 					{% else %}
@@ -35,7 +38,33 @@
 			{% endif %}
 		</div>
 		<div class="card-body markdown-content">
-			{{event.getDesc|markdown_to_html}}
+			{% set replace = false %}
+			{% for c in comments %}
+				{% if 'prepend' == c.getAction.value %}
+					<strong>UPDATED BY</strong>
+					{{inlineAuthor(c.getAuthor, c.getAuthorRole)}}
+					<time>{{c.getCreated|date}}</time>:
+					{{c.getText|markdown_to_html}}
+					<hr>
+				{% endif %}
+				{% if 'replace' == c.getAction.value %}
+					{% set replace = c %}
+				{% endif %}
+			{% endfor %}
+			{% if replace %}
+				{{replace.getText|markdown_to_html}}
+			{% else %}
+				{{event.getDesc|markdown_to_html}}
+			{% endif %}
+			{% for c in comments|reverse %}
+				{% if 'append' == c.getAction.value %}
+				<hr>
+					<strong>UPDATED BY</strong>
+					{{inlineAuthor(c.getAuthor, c.getAuthorRole)}}
+					<time>{{c.getCreated|date}}</time>:
+					{{c.getText|markdown_to_html}}
+				{% endif %}
+			{% endfor %}
 		</div>
 	</div>
 	{% include 'comment/components/listing.html.twig' %}
