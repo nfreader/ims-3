@@ -29,7 +29,7 @@ class IncidentAction extends Action implements GetEntitiesInterface
 
     public function getEntities(): static
     {
-        if($this->getUser()) {
+        if($this->getUser() && 'dashboard' === $this->getUser()->getPreference('appLayout')) {
             if($this->getUser()->isSudoMode()) {
                 $this->addContext(
                     'incidents',
