@@ -21,6 +21,7 @@ use League\CommonMark\Extension\CommonMark\Node\Block\BlockQuote;
 use League\CommonMark\Extension\DefaultAttributes\DefaultAttributesExtension;
 use League\CommonMark\Extension\Embed\Bridge\OscaroteroEmbedAdapter;
 use League\CommonMark\Extension\Embed\EmbedExtension;
+use League\CommonMark\Extension\ExternalLink\ExternalLinkExtension;
 use League\CommonMark\Extension\GithubFlavoredMarkdownExtension;
 use League\CommonMark\Extension\Table\Table;
 use League\CommonMark\MarkdownConverter;
@@ -162,6 +163,10 @@ return [
                             'class' => 'blockquote border-start border-4 ps-4'
                         ],
                     ],
+                    'external_link' => [
+                        'internal_hosts' => 'ims.wip', //TODO: Config item
+                        'open_in_new_window' => true,
+                    ]
                 ];
                 if (MarkdownRuntime::class === $class) {
                     $embedLibrary = new Embed();
@@ -176,9 +181,11 @@ return [
                         'allowed_domains' => ['youtube.com', 'twitter.com', 'github.com'],
                         'fallback' => 'link'
                     ];
+
                     $environment = new Environment($config);
                     $environment->addExtension(new CommonMarkCoreExtension());
                     $environment->addExtension(new DefaultAttributesExtension());
+                    $environment->addExtension(new ExternalLinkExtension());
                     $environment->addExtension(new GithubFlavoredMarkdownExtension());
                     // $environment->addExtension(new EmbedExtension());
                     return new MarkdownConverter($environment);
