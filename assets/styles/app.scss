@@ -180,3 +180,8 @@ blockquote.twitter-tweet:before {
 .rounded .list-group-item:last-child .event-severity    {
   border-top-right-radius: 5px !important;
 }
+
+[data-bs-toggle="tooltip"],
+[data-bs-toggle="popover"] strong {
+  text-decoration: underline dotted;
+}

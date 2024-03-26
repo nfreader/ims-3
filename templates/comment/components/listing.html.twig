@@ -6,75 +6,70 @@
 {% for c in comments %}
 	<div class="card">
 		<div class="card-header d-flex justify-content-between align-items-center">
-			<div class="d-flex align-items-center gap-2">
-				<div>
-					<span class="d-block mb-1" style="font-size: .8rem">Posted
-						{{c.getCreated|date}}</span>
-					{% if c.getAuthorRole %}
-						{{roleBadge(c.getAuthorRole, true)}}
-					{% else %}
-						{{userBadge(c.getAuthor, true)}}
-					{% endif %}
-				</div>
-				{% if c.getEditor %}
-					<div class="vr"></div>
-					<div>
-						<span class="d-block mb-1" style="font-size: .8rem">Last Edited
-							{{c.getEdited|date}}</span>
-						{% if c.editorRole %}
-							{{roleBadge(c.getEditorRole, true)}}
-						{% else %}
-							{{userBadge(c.getEditor, true)}}
-						{% endif %}
-					</div>
+			<div>
+				{% if c.getAuthorRole %}
+					<span data-bs-toggle="popover" data-bs-title="{{c.getAuthor.getName}}, {{c.getAuthor.getEmail}}" data-bs-content="Posted as {{c.getAuthorRole.getRoleName}}, {{c.getAuthorRole.getAgencyName}}" data-bs-trigger="hover focus">
+						<img class="pe-none" src="/uploads/{{c.getAuthorRole.getAgencyLogo}}" width="24" height="24"/>
+						<strong>{{c.getAuthor.getName}}</strong>
+					</span>
+				{% else %}
+					<span data-bs-toggle="popover" data-bs-content="{{c.getAuthor.getName}}, {{c.getAuthor.getEmail}}" data-bs-trigger="hover focus">
+						<strong>{{c.getAuthor.getName}}</strong>
+					</span>
 				{% endif %}
-				{% if c.getAction.showTag %}
-					{{tag(c.getAction.getPastTense,c.getAction.getTitle)}}
-				{% endif %}
-			</div>
-			<div class="dropdown">
-				<a href="#" class="dropdown-toggle no-caret text-dark fs-5" type="button" data-bs-toggle="dropdown" aria-expanded="false">
-					<i class="fa-solid fa-ellipsis"></i>
-				</a>
-				<ul class="dropdown-menu">
-					<li>
-						<a class="dropdown-item toggleCommentEditor" href="#" data-comment-target="{{c.getId}}">
-							<i class="fa-solid fa-pen"></i>
-							Edit Comment</a>
-					</li>
-					<li>
-						<a class="dropdown-item" href="{{url_for('comment.view',{ 'incident':incident.getId, 'event':event.getId, 'comment':c.getId })}}">
-							<i class="fa-solid fa-binoculars"></i>
-							View Comment</a>
-					</li>
-				</ul>
-			</div>
+				commented
+				<time>{{c.getCreated|date}}</time>
+			</span>
+			{% if c.getEditor %}
+				• Edited
+			{% endif %}
+			{% if c.getAction.showTag %}
+				{{tag(c.getAction.getPastTense,c.getAction.getTitle)}}
+			{% endif %}
 		</div>
-		<div class="card-body" id="comment-{{c.getId}}">
-			<div id="comment-{{c.getId}}-content">{{c.getText|markdown_to_html}}</div>
-			<form class="form visually-hidden commentEditor" action="{{url_for('comment.edit',{'comment':c.getId})}}" method="post" autocomplete="off" id="comment-{{c.getId}}-editor" data-comment-id="{{c.getId}}">
-				<div class="row mb-3">
-					<div class="col">
-						{{markdownEditor('text','Edit Comment', c.getText, c.getIncident, c.getEvent, c.getId)}}
-					</div>
-				</div>
-				<div class="row">
-					{% if c.getAction.showTag %}
-						<div class="col">
-							<p class="mb-0">
-								<i class="fa-solid fa-triangle-exclamation"></i>
-								Editing this comment won't edit it in the event</p>
-						</div>
-					{% endif %}
-					<div class="col d-flex justify-content-end gap-3">
-						<button type="reset" class="btn btn-secondary btn-sm">Cancel</button>
-						<button type="submit" class="btn btn-primary btn-sm">Save Changes</button>
-					</div>
-				</div>
-			</form>
+		<div class="dropdown">
+			<a href="#" class="dropdown-toggle no-caret text-dark fs-5" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+				<i class="fa-solid fa-ellipsis"></i>
+			</a>
+			<ul class="dropdown-menu">
+				<li>
+					<a class="dropdown-item toggleCommentEditor" href="#" data-comment-target="{{c.getId}}">
+						<i class="fa-solid fa-pen"></i>
+						Edit Comment</a>
+				</li>
+				<li>
+					<a class="dropdown-item" href="{{url_for('comment.view',{ 'incident':incident.getId, 'event':event.getId, 'comment':c.getId })}}">
+						<i class="fa-solid fa-binoculars"></i>
+						View Comment</a>
+				</li>
+			</ul>
 		</div>
 	</div>
-	{% if not loop.last %}
-		<div class="border-start py-3 ms-4 border-5 border-subtle"></div>
-	{% endif %}
+	<div class="card-body" id="comment-{{c.getId}}">
+		<div id="comment-{{c.getId}}-content">{{c.getText|markdown_to_html}}</div>
+		<form class="form visually-hidden commentEditor" action="{{url_for('comment.edit',{'comment':c.getId})}}" method="post" autocomplete="off" id="comment-{{c.getId}}-editor" data-comment-id="{{c.getId}}">
+			<div class="row mb-3">
+				<div class="col">
+					{{markdownEditor('text','Edit Comment', c.getText, c.getIncident, c.getEvent, c.getId)}}
+				</div>
+			</div>
+			<div class="row">
+				{% if c.getAction.showTag %}
+					<div class="col">
+						<p class="mb-0">
+							<i class="fa-solid fa-triangle-exclamation"></i>
+							Editing this comment won't edit it in the event</p>
+					</div>
+				{% endif %}
+				<div class="col d-flex justify-content-end gap-3">
+					<button type="reset" class="btn btn-secondary btn-sm">Cancel</button>
+					<button type="submit" class="btn btn-primary btn-sm">Save Changes</button>
+				</div>
+			</div>
+		</form>
+	</div>
+</div>
+{% if not loop.last %}
+	<div class="border-start py-3 ms-4 border-5 border-subtle"></div>
+{% endif %}
 {% endfor %}

@@ -17,7 +17,7 @@
 		<div class="card mb-3">
 			<div class="card-header">
 				<span class="d-block mb-1" style="font-size: .8rem">Edited
-					{{edit.getEdited|date}}</span>
+					<time>{{edit.getEdited|date}}</time> by</span>
 				{% if edit.getEditorRole %}
 					{{roleBadge(edit.getEditorRole, true)}}
 				{% else %}

@@ -3,7 +3,7 @@
 <div class="list-group mb-3">
 	{% for i in incidents %}
 		<li class="list-group-item d-flex gap-2 align-items-center">
-			<a href="{{url_for('incident.view',{'incident': i.getId})}}" class="link-underline link-underline-opacity-0">
+			<a href="{{url_for('incident.view',{'incident': i.getId})}}" class="text-decoration-none">
 				{% if i.getRole %}
 					<img src="/uploads/{{i.getRole.getAgencyLogo}}" height="48" width="48"/>
 				{% else %}
@@ -12,16 +12,16 @@
 			</a>
 			<div>
 				<h4>
-					<a href="{{url_for('incident.view',{'incident': i.getId})}}">{{i.name}}</a>
+					<a href="{{url_for('incident.view',{'incident': i.getId})}}" class="text-decoration-none">{{i.name}}</a>
 					{% if not i.isActive %}
 						<span class="badge text-bg-danger">Disabled</span>
 					{% endif %}
 				</h4>
 				<small class="text-muted">#{{i.getId}}
 					created
-					{{i.created|date}}
+					<time>{{i.getCreated|date}}</time>
 					by
-					{{i.getCreatorName}}</small>
+					{{i.getCreator.getName}}{% if i.getRole %}, {{i.getRole.getRoleName}} - {{i.getRole.getAgencyName}}{% endif %}</small>
 			</div>
 		</li>
 	{% else %}

@@ -14,7 +14,7 @@
 		<div class="mb-1 px-3 py-1 d-flex align-items-center gap-2 border-bottom bg-body-tertiary">
 			<div>
 				<span class="d-block mb-1" style="font-size: .8rem">Posted
-					{{event.getCreated|date}}</span>
+					<time>{{event.getCreated|date}}</time></span>
 				{% if event.getRole %}
 					{{roleBadge(event.getRole, true)}}
 				{% else %}

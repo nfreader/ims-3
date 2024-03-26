@@ -9,6 +9,21 @@
 // any CSS you import will output into a single css file (app.css in this case)
 import "./styles/app.scss";
 import * as bootstrap from "bootstrap";
+import { intlFormatDistance, parseJSON } from "date-fns";
+import { utcToZonedTime, getTimezoneOffset } from 'date-fns-tz';
+
+const timeElements = document.querySelectorAll('time')
+const timestamps =  [...timeElements].map((e) => {
+  const time = new Date(e.textContent)
+  e.setAttribute('title', time.toLocaleString())
+  e.setAttribute('data-bs-toggle', 'tooltip')
+  e.textContent = utcToZonedTime(time)
+  e.textContent = intlFormatDistance(
+    utcToZonedTime(
+      time,
+      Intl.DateTimeFormat().resolvedOptions().timeZone),
+    new Date())
+})
 
 const tooltipTriggerList = document.querySelectorAll(
   '[data-bs-toggle="tooltip"]'
@@ -22,16 +37,8 @@ const toastList = [...toastElList].map((toastEl) =>
   new bootstrap.Toast(toastEl).show()
 );
 
-const popoverTriggerList = document.querySelectorAll(
-  '[data-bs-toggle="popover"]'
-);
-const popoverList = [...popoverTriggerList].map(
-  (popoverTriggerEl) =>
-    new bootstrap.Popover(popoverTriggerEl, {
-      trigger: "click",
-      html: true,
-    })
-);
+const popoverTriggerList = document.querySelectorAll('[data-bs-toggle="popover"]')
+const popoverList = [...popoverTriggerList].map(popoverTriggerEl => new bootstrap.Popover(popoverTriggerEl))
 
 async function postAsyncForm(url, data) {
   const response = await fetch(url, {
@@ -81,3 +88,4 @@ form.addEventListener("submit", function (e) {
     window.location.reload();
   }, 100);
 });
+

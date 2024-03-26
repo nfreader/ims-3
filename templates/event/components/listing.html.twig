@@ -14,9 +14,13 @@
 							</p>
 						</div>
 						<small class="text-end">Created
-							{{e.created|date}}<br>
+							<time>{{e.getCreated|date}}</time><br>
 							by
-							<a href="mailto:{{e.getCreatorEmail}}">{{e.getCreatorName}} &lt;{{e.getCreatorEmail}}&gt;</a>
+							<a href="mailto:{{e.getCreator.getEmail}}">{{e.getCreator.getName}} &lt;{{e.getCreator.getEmail}}&gt;</a>
+							{% if e.getRole %}
+							<br>
+							{{e.getRole.getRoleName}}, {{e.getRole.getAgencyName}}
+							{% endif %}
 							<br>
 							<i class="fa-solid fa-comment"></i> {{e.getCommentCount}}</small>
 					</div>

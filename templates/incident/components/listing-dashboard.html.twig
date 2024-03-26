@@ -11,7 +11,7 @@
 				{% endif %}
 				<span>{{i.name}}</span>
 			</h4>
-			<span class="text-end" style="font-size: .8rem">{{i.created|date}}</span>
+			<span class="text-end" style="font-size: .8rem"><time>{{i.created|date}}</time></span>
 		</a>
 	{% else %}
 		<li class="list-group-item">

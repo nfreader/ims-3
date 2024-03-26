@@ -15,7 +15,7 @@
 	</div>
 	<div class="text-end">
 		<span class="d-block mb-1" style="font-size: .8rem">Created
-			{{incident.getCreated|date}}</span>
+			<time>{{incident.getCreated|date}}</time> by</span>
 		{% if incident.getRole %}
 			{{roleBadge(incident.getRole, true)}}
 		{% else %}

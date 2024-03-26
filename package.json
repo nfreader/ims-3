@@ -16,6 +16,8 @@
     "@popperjs/core": "^2.11.8",
     "@symfony/stimulus-bridge": "^3.2.2",
     "core-js": "^3.33.3",
+    "date-fns": "2",
+    "date-fns-tz": "^2.0.1",
     "vue": "^3.4.18",
     "vue-loader": "^17.4.2",
     "webpack": "^5.89.0",
@@ -26,5 +28,6 @@
     "dev": "encore dev",
     "watch": "encore dev --watch",
     "build": "encore production --progress"
-  }
+  },
+  "packageManager": "yarn@1.22.22+sha1.ac34549e6aa8e7ead463a7407e1c7390f61a6610"
 }
