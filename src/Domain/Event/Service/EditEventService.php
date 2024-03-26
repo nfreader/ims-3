@@ -41,10 +41,10 @@ class EditEventService
 
     public function replaceEventText(Event $event, string $text, User $author)
     {
-        $this->eventRepository->updateEvent($event->getId(), [
-            'event_text' => $text,
-            'editor' => $author->getId()
-        ]);
+        // $this->eventRepository->updateEvent($event->getId(), [
+        //     'event_text' => $text,
+        //     'editor' => $author->getId()
+        // ]);
     }
 
 }
