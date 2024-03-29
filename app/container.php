@@ -10,6 +10,7 @@ use App\Middleware\ExceptionHandlerMiddleware;
 use App\Renderer\JsonRenderer;
 use App\Repository\Repository;
 use App\Repository\QueryLogger as RepositoryQueryLogger;
+use App\Service\ApplicationSettingsService;
 use Doctrine\DBAL\Configuration;
 use Doctrine\DBAL\Connection;
 use Doctrine\DBAL\DriverManager;
@@ -54,6 +55,10 @@ use Twig\RuntimeLoader\RuntimeLoaderInterface;
 return [
     // Application settings
     'settings' => fn () => require Path::normalize(__DIR__ . '/settings.php'),
+
+    ApplicationSettingsService::class => function (ContainerInterface $container) {
+        return new ApplicationSettingsService($container->get('settings'));
+    },
 
     'request_id' => fn () => substr(strtoupper(bin2hex(random_bytes(32))), 0, 6),
 
