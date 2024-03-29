@@ -28,7 +28,7 @@ class UserPasswordResetRepository extends Repository
         $queryBuilder->select(...['user', 'code,', 'created'])
         ->from($this->table)
         ->where('code = '. $queryBuilder->createNamedParameter($code, ParameterType::STRING))
-        ->andWhere('DATE_SUB(CURDATE(),INTERVAL 30 MINUTE) <= created');
+        ->andWhere('DATE_SUB(CURDATE(),INTERVAL 10 MINUTE) <= created');
         $result = $queryBuilder->executeQuery();
         return $result->fetchAssociative();
     }
@@ -41,7 +41,7 @@ class UserPasswordResetRepository extends Repository
             'validator',
         ])->from($this->table)
         ->where('selector = '. $queryBuilder->createNamedParameter($selector))
-        ->andWhere('DATE_SUB(CURDATE(),INTERVAL 30 MINUTE) <= created');
+        ->andWhere('DATE_SUB(CURDATE(),INTERVAL 10 MINUTE) <= created');
         $result = $queryBuilder->executeQuery();
         return $result->fetchAssociative();
     }
@@ -58,7 +58,7 @@ class UserPasswordResetRepository extends Repository
     {
         $queryBuilder = $this->qb();
         $queryBuilder->delete($this->table);
-        $queryBuilder->where('DATE_SUB(CURDATE(),INTERVAL 30 MINUTE) <= created');
+        $queryBuilder->where('DATE_SUB(CURDATE(),INTERVAL 10 MINUTE) <= created');
         $queryBuilder->executeStatement();
     }
 
