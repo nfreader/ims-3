@@ -58,4 +58,10 @@ $settings['database'] = [
     'port' => 3306,
     'log_queries' => false
 ];
+
+$settings['mail'] = [
+    'dsn' => 'smtp://localhost:1025',
+    'fromAddress' => 'system@this.website'
+];
+
 return $settings;

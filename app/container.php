@@ -1,5 +1,6 @@
 <?php
 
+use App\Domain\Notification\Email\Service\SendEmailNotificationService;
 use App\Domain\User\Data\User;
 use App\Domain\User\Service\RefreshUserFromSessionService;
 use App\Extension\Twig\EnumExtension;
@@ -297,5 +298,13 @@ return [
 
     Repository::class => function (ContainerInterface $container) {
         return new Repository($container->get(Connection::class));
+    },
+
+    SendEmailNotificationService::class => function (ContainerInterface $container) {
+        return new SendEmailNotificationService(
+            $container->get('settings')['mail']['dsn'],
+            $container->get('settings')['mail']['fromAddress'],
+            $container->get(Twig::class)
+        );
     }
 ];

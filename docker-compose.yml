@@ -1,6 +1,6 @@
 version: "3.1"
 services:
-  bb_mariadb:
+  database:
     image: mariadb:latest
     container_name: ims-mariadb
     volumes:
@@ -10,3 +10,17 @@ services:
       - MARIADB_DATABASE=ims
     ports:
       - "3306:3306"
+  queue: 
+    container_name: ims-rabbitmq
+    image: rabbitmq:3.13-management
+    ports:
+      - "5672:5672"
+      - "15672:15672"
+  # mailer:
+  #   image: axllent/mailpit
+  #   ports:
+  #     - "1025"
+  #     - "8025"
+  #   environment:
+  #     MP_SMTP_AUTH_ACCEPT_ANY: 1
+  #     MP_SMTP_AUTH_ALLOW_INSECURE: 1

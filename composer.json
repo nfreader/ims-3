@@ -33,7 +33,12 @@
         "doctrine/sql-formatter": "^1.2",
         "doctrine/migrations": "^3.7",
         "symfony/filesystem": "^7.0",
-        "embed/embed": "^4.4"
+        "embed/embed": "^4.4",
+        "symfony/mailer": "^7.0",
+        "php-amqplib/php-amqplib": "^3.6",
+        "symfony/messenger": "^7.0",
+        "symfony/twig-bridge": "^7.0",
+        "twig/cssinliner-extra": "^3.8"
     },
     "autoload": {
         "psr-4": {
