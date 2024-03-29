@@ -22,7 +22,6 @@ use League\CommonMark\Extension\CommonMark\CommonMarkCoreExtension;
 use League\CommonMark\Extension\CommonMark\Node\Block\BlockQuote;
 use League\CommonMark\Extension\DefaultAttributes\DefaultAttributesExtension;
 use League\CommonMark\Extension\Embed\Bridge\OscaroteroEmbedAdapter;
-use League\CommonMark\Extension\Embed\EmbedExtension;
 use League\CommonMark\Extension\ExternalLink\ExternalLinkExtension;
 use League\CommonMark\Extension\GithubFlavoredMarkdownExtension;
 use League\CommonMark\Extension\Table\Table;
@@ -140,7 +139,6 @@ return [
             : false;
 
         $twig = Twig::create($twigConfig['paths'], $twigConfig['options']);
-
         $loader = $twig->getLoader();
         $publicPath = (string) $settings['public'];
         if ($loader instanceof FilesystemLoader) {
