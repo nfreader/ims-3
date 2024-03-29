@@ -5,6 +5,7 @@ namespace App\Domain\Incident\Repository;
 use App\Domain\Incident\Data\Incident;
 use App\Domain\Permissions\Data\PermissionTypeEnum;
 use App\Domain\Permissions\Data\Permissions;
+use App\Domain\Permissions\Data\PermissionsComposite;
 use App\Repository\Repository;
 
 class IncidentPermissionsRepository extends Repository
@@ -13,7 +14,7 @@ class IncidentPermissionsRepository extends Repository
 
     public string $alias = 'p';
 
-    public ?string $entityClass = Permissions::class;
+    public ?string $entityClass = PermissionsComposite::class;
 
     public function insertPermissions(PermissionTypeEnum $type, int $target, int $flags, int $incident)
     {
@@ -49,7 +50,7 @@ class IncidentPermissionsRepository extends Repository
         ]);
         $queryBuilder->where('f.incident = '.$queryBuilder->createPositionalParameter($incident));
         $result = $queryBuilder->executeQuery($queryBuilder->getSQL(), [$incident]);
-        return $this->getResults($result);
+        return $this->getResults($result, method:'getPermissions');
     }
 
 
