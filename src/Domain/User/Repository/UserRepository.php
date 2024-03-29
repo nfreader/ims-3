@@ -87,4 +87,18 @@ class UserRepository extends Repository
             4 => ip2long($_SERVER['REMOTE_ADDR'])
         ]);
     }
+
+    public function setPassword(string $password, int $user)
+    {
+        $this->updateUser('password', $password, $user);
+    }
+
+    private function updateUser(string $key, string|int|bool $value, int $user)
+    {
+        $queryBuilder = $this->qb();
+        $queryBuilder->update($this->table)
+        ->set($key, $queryBuilder->createNamedParameter($value))
+        ->where('id = '.$queryBuilder->createNamedParameter($user));
+        $queryBuilder->executeStatement();
+    }
 }

@@ -1,0 +1,21 @@
+<style>
+    body {
+        padding: 2rem;
+        font-family: system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", "Noto Sans", "Liberation Sans", Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";
+    }
+    p {
+        display: block;
+    }
+</style>
+
+{% apply inline_css %}
+<body>
+{% block body %}
+{% endblock %}
+{% block footer %}
+<div style="border-top: 1px solid #ccc; padding: 1rem 0 0 0; font-size: 90%;">
+This email was sent by <a href="mailto:{{email.from[0].address}}">{{email.from[0].address}}</a>
+</div>
+{% endblock %}
+</body>
+{% endapply %}

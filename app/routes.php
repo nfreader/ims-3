@@ -13,6 +13,7 @@ return function (App $app) {
         $app->post('/register', \App\Action\User\Auth\RegisterUserAction::class)->setName('user.register');
         $app->post('/login', \App\Action\User\Auth\LoginUserAction::class)->setName('user.login');
         $app->post('/logout', \App\Action\User\Auth\LogoutUserAction::class)->setName('user.logout');
+        $app->map(['GET','POST'], '/resetPassword', \App\Action\User\Auth\ResetPasswordAction::class)->setName('user.password');
         $app->post('/pickRole', \App\Action\User\SetActiveRoleAction::class);
         $app->post('/sudo', \App\Action\User\ToggleSudoModeAction::class)->setName('user.sudo');
         $app->map(['GET','POST'], '/preferences', \App\Action\Profile\UpdateProfileAction::class)->setName('user.profile');
