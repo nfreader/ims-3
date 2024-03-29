@@ -41,22 +41,22 @@ class Repository
 
     public function mapRow(array $row): mixed
     {
-        array_walk($row, function (&$value, $key) {
-            if (!in_array($key, array_keys($this->entityMetadata))) {
-                throw new Exception("Trying to map column to entity property that was not expected! Key: {$key} Value: {$value}");
-            } elseif (isset($this->entityMetadata[$key]) && $this->entityMetadata[$key]->getType()->isbuiltin()) {
-                return;
-            } elseif (is_null($value) && $this->entityMetadata[$key]->getType()->allowsNull()) {
-                return;
-            } else {
-                $class = new ReflectionClass($this->entityMetadata[$key]->getType()->getName());
-                if ($class->isEnum()) {
-                    $value = call_user_func($class->getName() . "::tryFrom", $value);
-                } else {
-                    $value = new ($class->getName())($value);
-                }
-            }
-        });
+        // array_walk($row, function (&$value, $key) {
+        //     if (!in_array($key, array_keys($this->entityMetadata))) {
+        //         throw new Exception("Trying to map column to entity property that was not expected! Key: {$key} Value: {$value}");
+        //     } elseif (isset($this->entityMetadata[$key]) && $this->entityMetadata[$key]->getType()->isbuiltin()) {
+        //         return;
+        //     } elseif (is_null($value) && $this->entityMetadata[$key]->getType()->allowsNull()) {
+        //         return;
+        //     } else {
+        //         $class = new ReflectionClass($this->entityMetadata[$key]->getType()->getName());
+        //         if ($class->isEnum()) {
+        //             $value = call_user_func($class->getName() . "::tryFrom", $value);
+        //         } else {
+        //             $value = new ($class->getName())($value);
+        //         }
+        //     }
+        // });
         return $row;
     }
 
@@ -83,15 +83,19 @@ class Repository
 
     public function getResult(Result $result, ?string $class = null, ?string $method = null): mixed
     {
+        $data = $result->fetchAssociative();
+        if(!$data) {
+            return null;
+        }
         if ($class) {
             $this->overrideMetadata($class);
         } else {
             $class = $this->entityClass;
         }
         if ($method) {
-            return (new $class(...$this->mapRow($result->fetchAssociative())))->$method();
+            return (new $class(...$this->mapRow($data)))->$method();
         } else {
-            return new $class(...$this->mapRow($result->fetchAssociative()));
+            return new $class(...$this->mapRow($data));
         }
     }
 }

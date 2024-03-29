@@ -24,7 +24,7 @@ class FetchUserService
         return $user;
     }
 
-    public function findUserByEmail(string $email): User|false
+    public function findUserByEmail(string $email): ?User
     {
         try {
             return $this->userRepository->getUserByEmail($email);
