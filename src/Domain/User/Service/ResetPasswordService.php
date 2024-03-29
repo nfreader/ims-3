@@ -10,6 +10,12 @@ use App\Service\ApplicationSettingsService;
 use Exception;
 use Symfony\Component\HttpFoundation\Session\Session;
 
+/**
+ * ResetPasswordService
+ *
+ * @see https://paragonie.com/blog/2017/02/split-tokens-token-based-authentication-protocols-without-side-channels
+ *
+ */
 class ResetPasswordService
 {
     public function __construct(
@@ -23,7 +29,16 @@ class ResetPasswordService
 
     }
 
-    public function generatePasswordReset(string $email)
+    /**
+     * generatePasswordReset
+     *
+     * Looks up a user by their email address. If found, generate a password
+     * reset token, save it to the database, and send a password reset email
+     *
+     * @param string $email
+     * @return void
+     */
+    public function generatePasswordReset(string $email): void
     {
         $user = $this->fetchUserService->findUserByEmail($email);
         if(!$user) {
@@ -34,8 +49,24 @@ class ResetPasswordService
         $this->email->sendTemplateEmail($user->getEmail(), 'email/resetPassword.html.twig', ['token' => $token->getClearTextToken()]);
     }
 
-    public function validateCode(string $code): bool
+    /**
+     * validateCode
+     *
+     * Given the reset code from a password reset request, validate it against
+     * what is stored in the database. Throws an exception if anything is wrong
+     *
+     * If the password reset code is valid, we set the user's ID in the session
+     * so we know who we're resetting the password for later on.
+     *
+     * @param string $code
+     * @return true
+     * @throws Exception
+     */
+    public function validateCode(string $code): true
     {
+        if(64 !== strlen($code)) {
+            throw new Exception("The password reset code you provided is invalid");
+        }
         $selector = substr($code, 0, 32);
         $validator = substr($code, 32);
         $token = $this->resetRepository->getTokenBySelector($selector);
@@ -51,6 +82,16 @@ class ResetPasswordService
         }
     }
 
+
+    /**
+     * resetPassword
+     *
+     * Sets the password for the user identified in the session.
+     *
+     * @param string $password
+     * @return void
+     * @throws Exception
+     */
     public function resetPassword(string $password)
     {
         if(!$user = $this->session->get('passwordReset', null)) {
@@ -59,7 +100,16 @@ class ResetPasswordService
         $this->session->invalidate();
         $this->userRepository->setPassword(password_hash($password, PASSWORD_DEFAULT), $user);
     }
-
+    /**
+     * validateToken
+     *
+     * Checks that the user provided token matches what was queried from the
+     * database.
+     *
+     * @param string $knownToken
+     * @param string $userToken
+     * @return boolean
+     */
     private function validateToken(string $knownToken, string $userToken): bool
     {
         $userToken = bin2hex(hash_hmac(
@@ -74,6 +124,14 @@ class ResetPasswordService
         );
     }
 
+    /**
+     * persistPasswordResetToken
+     *
+     * Handles storing the password reset token in the database
+     *
+     * @param PasswordResetToken $token
+     * @return void
+     */
     private function persistPasswordResetToken(PasswordResetToken $token)
     {
         $this->resetRepository->insertNewPasswordReset(

@@ -4,13 +4,44 @@ namespace App\Domain\User\Data;
 
 use App\Domain\User\Data\User;
 
+/**
+ * PasswordResetToken
+ *
+ * Handles setting up a new password reset token
+ *
+ */
 class PasswordResetToken
 {
     public const HASH_ALGO = 'sha512';
 
     public function __construct(
+        /**
+         * selector
+         *
+         * The cleartext "identifier" provided to the user so the reset token
+         * can be retrieved from the database
+         *
+         * @var string
+         */
         private string $selector,
+
+        /**
+         * validator
+         *
+         * Given to the user in cleartext, and a hashed version is stored in the
+         * database.
+         *
+         * @var string
+         */
         private string $validator,
+
+        /**
+         * user
+         *
+         * User instance acquired from the known email address
+         *
+         * @var User
+         */
         private User $user
     ) {
 
