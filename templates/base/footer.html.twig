@@ -7,7 +7,8 @@
 	<footer class="navbar navbar-expand-lg bg-body-tertiary border-top py-2">
 		<div class="{{html_classes({
 		'container-fluid' : 'dashboard' == layout,
-		'container' : 'linear' == layout
+		'container' : 'linear' == layout,
+		'container' : layout is null
 		})}}">
 			<span>{{app.name}}
 				{{app.version}}
