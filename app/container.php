@@ -132,11 +132,13 @@ return [
         $session = $container->get(Session::class);
         $settings = $container->get("settings");
         $twigConfig = $settings['twig'];
+        $twigConfig['paths'][] = $settings['root']."/templates";
         $appSettings = $settings['application'];
         $appSettings['user'] = $container->get(User::class);
         $twigConfig['options']['cache'] = $twigConfig['options']['cache_enabled']
             ? $twigConfig['options']['cache_path']
             : false;
+        $twigConfig['options']['cache_path'] = $settings['temp'] . '/twig';
 
         $twig = Twig::create($twigConfig['paths'], $twigConfig['options']);
         $loader = $twig->getLoader();

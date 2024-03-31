@@ -11,10 +11,7 @@ $settings['application'] = [
     'environment' => $_SERVER['APP_ENV'] ?? 'prod'
 ];
 
-$settings['root'] = dirname(__DIR__);
-$settings['temp'] = $settings['root'] . '/tmp';
-$settings['public'] = $settings['root'] . '/public';
-$settings['upload_dir'] = $settings['public'] . '/uploads';
+$settings['secret_key'] = $_ENV['APP_SECRET'];
 
 $settings['debug'] = false;
 
@@ -26,20 +23,19 @@ $settings['error'] = [
 
 $settings['logger'] = [
     'name' => 'ims',
-    'path' => $settings['root'] . '/logs',
+    'path' => dirname(__DIR__) . '/logs',
     'filename' => 'app.log',
     'level' => 'info',
     'file_permission' => 0775,
 ];
 
 $settings['twig'] = [
-    'paths' => [
-        __DIR__ . '/../templates',
-    ],
+    // 'paths' => [
+    //     __DIR__ . '/../templates',
+    // ],
     'options' => [
         'debug' => $settings['debug'],
         'cache_enabled' => !$settings['debug'],
-        'cache_path' => $settings['temp'] . '/twig',
     ],
 ];
 
