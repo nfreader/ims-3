@@ -15,7 +15,6 @@ class ResetPasswordAction extends Action implements ActionInterface
 
     public function action(): Response
     {
-        //Generate reset flow
         if('POST' === $this->request->getMethod()) {
             if($this->getQueryPart('reset')) {
                 $this->resetService->resetPassword($this->request->getParsedBody()['password']);

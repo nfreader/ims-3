@@ -60,4 +60,6 @@ $settings['mail'] = [
     'fromAddress' => 'system@this.website'
 ];
 
+$settings['messenger']['dsn'] = 'dsn://guest:guest@localhost:5672';
+
 return $settings;

@@ -36,6 +36,7 @@ require_once __dir__  . "/version.php";
 $settings['application']['version'] = VERSION_MAJOR . '.' . VERSION_MINOR . '.' . VERSION_PATCH . VERSION_TAG;
 
 $settings['secret'] = $_ENV['APP_SECRET'] ?? throw new Exception("Application secret token is missing from .env");
+$settings['url'] = $_ENV['APP_URL'] ?? throw new Exception("Application URL is missing from .env");
 
 $settings['root'] = dirname(__DIR__);
 $settings['temp'] = $settings['root'] . '/tmp';

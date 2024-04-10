@@ -6,7 +6,7 @@ use App\Domain\User\Service\RefreshUserFromSessionService;
 use App\Extension\Twig\EnumExtension;
 use App\Extension\Twig\WebpackAssetLoader;
 use App\Factory\LoggerFactory;
-use App\Handler\DefaultErrorHandler;
+use App\Messenger\MessageDispatcherService;
 use App\Middleware\ExceptionHandlerMiddleware;
 use App\Renderer\JsonRenderer;
 use App\Repository\Repository;
@@ -300,11 +300,8 @@ return [
         return new Repository($container->get(Connection::class));
     },
 
-    SendEmailNotificationService::class => function (ContainerInterface $container) {
-        return new SendEmailNotificationService(
-            $container->get('settings')['mail']['dsn'],
-            $container->get('settings')['mail']['fromAddress'],
-            $container->get(Twig::class)
-        );
+    MessageDispatcherService::class => function (ContainerInterface $container) {
+        return MessageDispatcherService::newFromDSN($container->get('settings')['messenger']['dsn']);
     }
+
 ];

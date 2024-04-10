@@ -2,16 +2,19 @@
 
 namespace App\Domain\User\Service;
 
-use App\Domain\Notification\Email\Service\SendEmailNotificationService;
 use App\Domain\User\Data\PasswordResetToken;
 use App\Domain\User\Repository\UserPasswordResetRepository;
 use App\Domain\User\Repository\UserRepository;
+use App\Messenger\MessageDispatcherService;
 use App\Service\ApplicationSettingsService;
+use Doctrine\DBAL\Exception\UniqueConstraintViolationException;
 use Exception;
 use Symfony\Component\HttpFoundation\Session\Session;
 
 /**
  * ResetPasswordService
+ *
+ * Handles all password reset requests
  *
  * @see https://paragonie.com/blog/2017/02/split-tokens-token-based-authentication-protocols-without-side-channels
  *
@@ -22,11 +25,10 @@ class ResetPasswordService
         private UserRepository $userRepository,
         private FetchUserService $fetchUserService,
         private UserPasswordResetRepository $resetRepository,
-        private SendEmailNotificationService $email,
         private ApplicationSettingsService $settings,
-        private Session $session
+        private Session $session,
+        private MessageDispatcherService $message
     ) {
-
     }
 
     /**
@@ -41,12 +43,15 @@ class ResetPasswordService
     public function generatePasswordReset(string $email): void
     {
         $user = $this->fetchUserService->findUserByEmail($email);
-        if(!$user) {
+        if (!$user) {
             return;
         }
         $token = PasswordResetToken::newToken($user);
-        $this->persistPasswordResetToken($token);
-        $this->email->sendTemplateEmail($user->getEmail(), 'email/resetPassword.html.twig', ['token' => $token->getClearTextToken()]);
+        if($this->persistPasswordResetToken($token)) {
+            $this->message->publishMessage($token, 'email.resetPassword');
+        } else {
+            throw new Exception("Your password reset request could not be processed", 500);
+        }
     }
 
     /**
@@ -64,16 +69,16 @@ class ResetPasswordService
      */
     public function validateCode(string $code): true
     {
-        if(64 !== strlen($code)) {
+        if (64 !== strlen($code)) {
             throw new Exception("The password reset code you provided is invalid");
         }
         $selector = substr($code, 0, 32);
         $validator = substr($code, 32);
         $token = $this->resetRepository->getTokenBySelector($selector);
-        if(!$token) {
+        if (!$token) {
             throw new Exception("The password reset code you provided is invalid");
         }
-        if($this->validateToken($token['validator'], $validator)) {
+        if ($this->validateToken($token['validator'], $validator)) {
             $this->resetRepository->deleteResetToken($selector);
             $this->session->set('passwordReset', $token['user']);
             return true;
@@ -81,7 +86,6 @@ class ResetPasswordService
             throw new Exception("The password reset code you provided is invalid");
         }
     }
-
 
     /**
      * resetPassword
@@ -94,12 +98,13 @@ class ResetPasswordService
      */
     public function resetPassword(string $password)
     {
-        if(!$user = $this->session->get('passwordReset', null)) {
+        if (!$user = $this->session->get('passwordReset', null)) {
             throw new Exception("The password reset code you provided is invalid");
         }
         $this->session->invalidate();
         $this->userRepository->setPassword(password_hash($password, PASSWORD_DEFAULT), $user);
     }
+
     /**
      * validateToken
      *
