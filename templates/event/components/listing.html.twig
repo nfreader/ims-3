@@ -4,7 +4,7 @@
 	{% for e in events %}
 		<div class="list-group-item">
 			<div class="d-flex w-100">
-				<span class="badge event-severity text-bg-{{e.getSeverity.getclass}} bg-opacity-100">{{e.getSeverity.getShort}}</span>
+				<span class="badge event-severity text-bg-{{e.getSeverity.getclass}} bg-opacity-100">{{e.getSeverity.value|title}}</span>
 				<div class="flex-grow-1 ms-4">
 					<div class="d-flex justify-content-between">
 						<div>

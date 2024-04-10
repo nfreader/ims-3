@@ -3,23 +3,25 @@
 	{% from 'macros.html.twig' import empty, tag, roleBadge, userBadge, inlineAuthor %}
 	{% include 'incident/components/incidentHeader.html.twig' %}
 
+	<h2 class="my-4">
+		<i class="fa-solid fa-message"></i>
+		<span class="font-monospace">{{event.getId}}</span>
+		-
+		{{event.getTitle}}
+	</h2>
+
 	<div class="card border-dark">
-		<h2 class="card-header d-flex align-items-center gap-2">
-			<i class="fa-solid fa-message"></i>
-			<span class="font-monospace">{{event.getId}}</span>
-			-
-			{{event.getTitle}}
-		</h2>
-		<div class="text-bg-{{event.getSeverity.getclass}} bg-opacity-100 px-3 fw-bold border-bottom">{{event.getSeverity.getLong}}</div>
-		<div class="mb-1 px-3 py-1 d-flex align-items-center gap-2 border-bottom bg-body-tertiary">
+		<div class="card-header bg-secondary-subtle">
 			<div>
-				{{inlineAuthor(event.getCreator, event.getRole)}} Posted
-					<time>{{event.getCreated|date}}</time>
+				{{inlineAuthor(event.getCreator, event.getRole)}}
+				Posted
+				<time>{{event.getCreated|date}}</time>
+				{% if event.getEdited %}
+					• Edited
+				{% endif %}
 			</div>
-			{% if event.getEdited %}
-				• Edited
-			{% endif %}
 		</div>
+		<div class="text-bg-{{event.getSeverity.getclass}} bg-opacity-100 px-3 fw-bold border-bottom">{{event.getSeverity.getLong}}</div>
 		<div class="card-body markdown-content">
 			{% set replace = false %}
 			{% for c in comments %}
@@ -34,14 +36,16 @@
 					{% set replace = c %}
 				{% endif %}
 			{% endfor %}
+			<div class="lead">
 			{% if replace %}
 				{{replace.getText|markdown_to_html}}
 			{% else %}
 				{{event.getDesc|markdown_to_html}}
 			{% endif %}
+			</div>
 			{% for c in comments|reverse %}
 				{% if 'append' == c.getAction.value %}
-				<hr>
+					<hr>
 					<strong>UPDATED BY</strong>
 					{{inlineAuthor(c.getAuthor, c.getAuthorRole)}}
 					<time>{{c.getCreated|date}}</time>:

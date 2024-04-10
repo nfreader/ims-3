@@ -4,8 +4,8 @@
 	<div class="border-start py-3 ms-4 border-5 border-subtle"></div>
 {% endif %}
 {% for c in comments %}
-	<div class="card">
-		<div class="card-header d-flex justify-content-between align-items-center">
+	<div class="card border-dark">
+		<div class="card-header d-flex justify-content-between align-items-center bg-secondary-subtle">
 			<div>
 				{{inlineAuthor(c.getAuthor, c.getAuthorRole)}}
 				commented
@@ -37,7 +37,7 @@
 		</div>
 	</div>
 	<div class="card-body" id="comment-{{c.getId}}">
-		<div id="comment-{{c.getId}}-content">{{c.getText|markdown_to_html}}</div>
+		<div id="comment-{{c.getId}}-content" class="comment-content">{{c.getText|markdown_to_html}}</div>
 		<form class="form visually-hidden commentEditor" action="{{url_for('comment.edit',{'comment':c.getId})}}" method="post" autocomplete="off" id="comment-{{c.getId}}-editor" data-comment-id="{{c.getId}}">
 			<div class="row mb-3">
 				<div class="col">
