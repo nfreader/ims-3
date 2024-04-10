@@ -39,7 +39,6 @@ use Psr\Http\Message\UriFactoryInterface;
 use Slim\App;
 use Slim\Factory\AppFactory;
 use Slim\Interfaces\RouteParserInterface;
-use Slim\Middleware\ErrorMiddleware;
 use Slim\Views\Twig;
 use Slim\Views\TwigMiddleware;
 use Symfony\Component\Filesystem\Path;
@@ -96,28 +95,6 @@ return [
         return $container->get(App::class)->getRouteCollector()->getRouteParser();
     },
 
-    ErrorMiddleware::class => function (ContainerInterface $container) {
-        $settings = $container->get('settings')['error'];
-        $app = $container->get(App::class);
-
-        $logger = $container->get(LoggerFactory::class)
-            ->addFileHandler('error.log')
-            ->createLogger();
-
-
-        $errorMiddleware = new ErrorMiddleware(
-            $app->getCallableResolver(),
-            $app->getResponseFactory(),
-            (bool)$settings['display_error_details'],
-            (bool)$settings['log_errors'],
-            (bool)$settings['log_error_details'],
-            $logger
-        );
-
-        $errorMiddleware->setDefaultErrorHandler($container->get(DefaultErrorHandler::class));
-
-        return $errorMiddleware;
-    },
 
     //TwigMiddleware
     TwigMiddleware::class => function (ContainerInterface $container) {
