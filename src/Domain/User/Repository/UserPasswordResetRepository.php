@@ -24,6 +24,7 @@ class UserPasswordResetRepository extends Repository
 
     public function getResetCode(string $code)
     {
+        $this->purgeExpiredCodes();
         $queryBuilder = $this->qb();
         $queryBuilder->select(...['user', 'code,', 'created'])
         ->from($this->table)
@@ -35,6 +36,7 @@ class UserPasswordResetRepository extends Repository
 
     public function getTokenBySelector(string $selector)
     {
+        $this->purgeExpiredCodes();
         $queryBuilder = $this->qb();
         $queryBuilder->select(...[
             'user',
@@ -58,7 +60,7 @@ class UserPasswordResetRepository extends Repository
     {
         $queryBuilder = $this->qb();
         $queryBuilder->delete($this->table);
-        $queryBuilder->where('DATE_SUB(CURDATE(),INTERVAL 10 MINUTE) <= created');
+        $queryBuilder->where('DATE_SUB(CURDATE(), INTERVAL 10 MINUTE) >= created');
         $queryBuilder->executeStatement();
     }
 

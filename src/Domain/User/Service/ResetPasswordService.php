@@ -130,17 +130,24 @@ class ResetPasswordService
      * Handles storing the password reset token in the database
      *
      * @param PasswordResetToken $token
-     * @return void
+     * @return bool
      */
-    private function persistPasswordResetToken(PasswordResetToken $token)
+    private function persistPasswordResetToken(PasswordResetToken $token): bool
     {
-        $this->resetRepository->insertNewPasswordReset(
-            $token->getUser()->getId(),
-            $token->getSelector(),
-            $token->getHashedValidator(
-                $this->settings->getSettings()['secret_key']
-            )
-        );
+        try {
+            $this->resetRepository->insertNewPasswordReset(
+                $token->getUser()->getId(),
+                $token->getSelector(),
+                $token->getHashedValidator(
+                    $this->settings->getSettings()['secret_key']
+                )
+            );
+        } catch (UniqueConstraintViolationException $e) {
+            //TODO: Logging
+            return false;
+        } catch (Exception $f) {
+            return false;
+        }
+        return true;
     }
-
 }
