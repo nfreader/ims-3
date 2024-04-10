@@ -89,3 +89,16 @@ form.addEventListener("submit", function (e) {
   }, 100);
 });
 
+const markdownLinks = document.querySelectorAll('.comment-content a')
+const linksToIconify = [...markdownLinks].map(function(e){
+  if(!e.getAttribute('href').startsWith(window.location.origin)){
+    e.classList.add("external-link")
+    try {
+      let host = new URL(e.getAttribute('href'))
+      e.setAttribute("style",
+      `--url: url("https://v1.indieweb-avatar.11ty.dev/${encodeURIComponent(
+          `${host?.protocol}//${host?.hostname}`,
+      )}")`,)
+    } catch {}
+  }
+})

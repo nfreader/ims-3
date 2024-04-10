@@ -185,3 +185,15 @@ blockquote.twitter-tweet:before {
 [data-bs-toggle="popover"] strong {
   text-decoration: underline dotted;
 }
+
+a.external-link::after {
+  content: "";
+  display: inline-block;
+  vertical-align: middle;
+  width: 1.1rem;
+  height: 1.1rem;
+  margin: 0 .2em 3px;
+  border-radius: 3px;
+  background-size: contain;
+  background-image: var(--url);
+}
