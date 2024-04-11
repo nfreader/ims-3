@@ -278,7 +278,11 @@ return [
     },
 
     MessageDispatcherService::class => function (ContainerInterface $container) {
-        return MessageDispatcherService::newFromDSN($container->get('settings')['messenger']['dsn']);
+        if($dsn = $container->get('settings')['messenger']['dsn'] ?? null) {
+            return MessageDispatcherService::newFromDSN($dsn);
+        } else {
+            return null;
+        }
     }
 
 ];

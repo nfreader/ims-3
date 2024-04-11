@@ -37,7 +37,7 @@ class EmailNotificationConsumer
         $this->fromAddress = $settings['mail']['fromAddress'];
     }
 
-    public function consume(AMQPMessage $message)
+    public function consume(AMQPMessage $message): void
     {
         $message->getRoutingKey();
         $data = unserialize($message->getBody());
@@ -48,7 +48,7 @@ class EmailNotificationConsumer
         }
     }
 
-    private function sendPasswordResetEmail(PasswordResetToken $token)
+    public function sendPasswordResetEmail(PasswordResetToken $token): void
     {
         $this->sendTemplateEmail(
             $token->getUser()->getEmail(),
@@ -58,7 +58,7 @@ class EmailNotificationConsumer
         );
     }
 
-    private function sendTemplateEmail(string $to, string $subject, string $template, array $context)
+    private function sendTemplateEmail(string $to, string $subject, string $template, array $context): void
     {
         $email = (new TemplatedEmail())
             ->to(self::createAddress($to))

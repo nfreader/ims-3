@@ -2,6 +2,7 @@
 
 namespace App\Domain\User\Service;
 
+use App\Consumer\EmailNotificationConsumer;
 use App\Domain\User\Data\PasswordResetToken;
 use App\Domain\User\Repository\UserPasswordResetRepository;
 use App\Domain\User\Repository\UserRepository;
@@ -9,6 +10,7 @@ use App\Messenger\MessageDispatcherService;
 use App\Service\ApplicationSettingsService;
 use Doctrine\DBAL\Exception\UniqueConstraintViolationException;
 use Exception;
+use PhpAmqpLib\Message\AMQPMessage;
 use Symfony\Component\HttpFoundation\Session\Session;
 
 /**
@@ -27,7 +29,7 @@ class ResetPasswordService
         private UserPasswordResetRepository $resetRepository,
         private ApplicationSettingsService $settings,
         private Session $session,
-        private MessageDispatcherService $message
+        private ?MessageDispatcherService $message = null
     ) {
     }
 
@@ -47,10 +49,14 @@ class ResetPasswordService
             return;
         }
         $token = PasswordResetToken::newToken($user);
-        if($this->persistPasswordResetToken($token)) {
+        if(!$this->persistPasswordResetToken($token)) {
+            throw new Exception("Your password reset request could not be processed", 500);
+        }
+        if($this->message) {
             $this->message->publishMessage($token, 'email.resetPassword');
         } else {
-            throw new Exception("Your password reset request could not be processed", 500);
+            $mailer = new EmailNotificationConsumer();
+            $mailer->sendPasswordResetEmail($token);
         }
     }
 
