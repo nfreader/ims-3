@@ -60,7 +60,7 @@ class UserPasswordResetRepository extends Repository
     {
         $queryBuilder = $this->qb();
         $queryBuilder->delete($this->table);
-        $queryBuilder->where('DATE_SUB(CURDATE(), INTERVAL 10 MINUTE) >= created');
+        $queryBuilder->where('DATE_SUB(CURDATE(), INTERVAL 10 MINUTE) <= created');
         $queryBuilder->executeStatement();
     }
 
